@@ -16,9 +16,7 @@ namespace MoMTool.Logic
         public ObservableCollection<MoMButton<FieldNote>> Notes = new ObservableCollection<MoMButton<FieldNote>>();
         public ObservableCollection<MoMButton<FieldAsset>> Assets = new ObservableCollection<MoMButton<FieldAsset>>();
         public ObservableCollection<MoMButton<PerformerNote<FieldLane>>> Performers = new ObservableCollection<MoMButton<PerformerNote<FieldLane>>>();
-        public ObservableCollection<MoMButton<TimeShift>> Times = new ObservableCollection<MoMButton<TimeShift>>();
-
-        public int ZoomVariable = 10;
+        public ObservableCollection<MoMButton<TimeShift<FieldLane>>> Times = new ObservableCollection<MoMButton<TimeShift<FieldLane>>>();
 
         // TODO Add ability to drag and drop notes ALREADY on the lanes
         // TODO Remove MoMButton from UI after deleting (That's why ObservableCollection?)
@@ -188,138 +186,6 @@ namespace MoMTool.Logic
                 toolTip.SetToolTip(momButton.Button, (controlRelatedCoords.X * this.ZoomVariable).ToString());
 
                 this.AddToLane(lane, momButton.Button);
-            }
-        }
-
-        public void LoadChart(FieldBattleSong fieldBattleSong)
-        {
-            var toolTip = new ToolTip();
-
-            this.ResetChart();
-
-            var songLength = (fieldBattleSong.Notes.OrderByDescending(x => x.HitTime).FirstOrDefault().HitTime);
-
-            this.songTypeDropdown.SelectedItem = "Field Battle";
-            this.notesCheckbox.Checked = true;
-            this.assetsCheckbox.Checked = true;
-            this.performerCheckbox.Checked = true;
-            this.chartTimeValue.Text = songLength.ToString();
-
-            for (int i = 0; i < fieldBattleSong.NoteCount; ++i)
-            {
-                var momButton = new MoMButton<FieldNote>
-                {
-                    Id = i,
-                    Type = "Note",
-                    Note = fieldBattleSong.Notes[i],
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = fieldBattleSong.Notes[i].ModelType == FieldModelType.GlideNote ? Color.Green : Color.Red,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"note-{i}",
-                        //TabIndex = -1,
-                        TabStop = false
-                    },
-                };
-
-                momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
-
-                momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.subChartComponent.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
-                this.Notes.Add(momButton);
-
-                toolTip.SetToolTip(momButton.Button, momButton.Note.HitTime.ToString());
-
-                this.AddToLane(momButton.Note.Lane, momButton.Button);
-            }
-
-            for (int i = 0; i < fieldBattleSong.AssetCount; ++i)
-            {
-                var momButton = new MoMButton<FieldAsset>
-                {
-                    Type = "Asset",
-                    Note = fieldBattleSong.FieldAssets[i],
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = Color.Blue,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"asset-{i}",
-                        //TabIndex = -1,
-                        TabStop = false
-                    },
-                };
-
-                momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
-
-                momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.subChartComponent.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
-                this.Assets.Add(momButton);
-
-                toolTip.SetToolTip(momButton.Button, momButton.Note.HitTime.ToString());
-
-                this.AddToLane(momButton.Note.Lane, momButton.Button);
-            }
-
-            for (int i = 0; i < fieldBattleSong.PerformerCount; ++i)
-            {
-                var momButton = new MoMButton<PerformerNote<FieldLane>>
-                {
-                    Type = "Performer",
-                    Note = fieldBattleSong.PerformerNotes[i],
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = Color.Purple,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"performer-{i}",
-                        //TabIndex = -1,
-                        TabStop = false
-                    },
-                };
-
-                momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
-
-                momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.subChartComponent.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
-                this.Performers.Add(momButton);
-
-                toolTip.SetToolTip(momButton.Button, momButton.Note.HitTime.ToString());
-
-                this.AddToLane(momButton.Note.Lane, momButton.Button);
-            }
-
-            for (int i = 0; i < fieldBattleSong.TimeShiftCount; ++i)
-            {
-                var momButton = new MoMButton<TimeShift>
-                {
-                    Type = "Time",
-                    Note = fieldBattleSong.TimeShifts[i],
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = Color.Yellow,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"time-{i}",
-                        //TabIndex = -1,
-                        TabStop = false
-                    },
-                };
-
-                momButton.Button.Location = new Point(momButton.Note.ChangeTime / this.ZoomVariable, 0);
-
-                momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.subChartComponent.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
-                this.Times.Add(momButton);
-
-                toolTip.SetToolTip(momButton.Button, momButton.Note.ChangeTime.ToString());
-
-                this.AddToLane(FieldLane.PlayerCenter, momButton.Button);
             }
         }
 

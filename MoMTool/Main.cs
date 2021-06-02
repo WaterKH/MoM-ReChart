@@ -15,8 +15,7 @@ namespace MoMTool
 {
     public partial class Main : Form
     {
-        public MusicFile MusicFile;
-        private int zoomVariable = 10;
+        public FieldBattleChartManager FieldBattleChartManager = null;
 
         public Main()
         {
@@ -41,52 +40,34 @@ namespace MoMTool
             
             this.recompileButton.Visible = true;
 
-            this.MusicFile = new SongProcessor().ProcessSong(this.fileName.Text, this.debugCheckbox.Checked);
+            var musicFile = new SongProcessor().ProcessSong(this.fileName.Text, this.debugCheckbox.Checked);
+            var songType = musicFile.SongPositions.FirstOrDefault().Value.SongType;
 
-            foreach (var song in this.MusicFile.SongPositions.Values)
+            this.GenerateChartManager(songType, musicFile);
+
+            switch (songType)
             {
-                switch (song.SongType)
-                {
-                    case SongType.FieldBattle:
-
-                        this.DecompileFieldBattleSong((FieldBattleSong)song);
-
-                        break;
-                    case SongType.BossBattle:
-                        BossBattleSong bossBattleSong = (BossBattleSong)song;
-
-                        break;
-                    case SongType.MemoryDive:
-                        MemoryDiveSong memoryDiveSong = (MemoryDiveSong)song;
-
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        // TODO Add control + click/ drag slider to text to move time up and down (Reference PhotoShop or Kimpchuu)
-        private void DecompileFieldBattleSong(FieldBattleSong song)
-        {
-            switch (song.Difficulty)
-            {
-                case Difficulty.Beginner:
-                    this.beginnerFieldChartComponent.LoadChart(song);
+                case SongType.FieldBattle:
+                    this.FieldBattleChartManager.DecompileFieldBattleSongs();
 
                     break;
-                case Difficulty.Standard:
-                    this.standardFieldChartComponent.LoadChart(song);
+                case SongType.BossBattle:
+                    BossBattleSong bossBattleSong = (BossBattleSong)song;
 
                     break;
-                case Difficulty.Proud:
-                    this.proudFieldChartComponent.LoadChart(song);
+                case SongType.MemoryDive:
+                    MemoryDiveSong memoryDiveSong = (MemoryDiveSong)song;
 
                     break;
                 default:
                     break;
             }
+
+            this.PlaceCharts();
         }
+
+        // TODO Add control + click/ drag slider to text to move time up and down (Reference PhotoShop or Kimpchuu)
+        
 
         // Refactor to get away from processing too much in the button click event
         private void recompileFieldSongButton_Click(object sender, EventArgs e)
