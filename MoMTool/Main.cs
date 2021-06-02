@@ -315,13 +315,6 @@ namespace MoMTool
             }
         }
 
-        private void clearChartButton_Click(object sender, EventArgs e)
-        {
-            this.recompileButton.Enabled = false;
-
-            this.ResetAllCharts();
-        }
-
         private void ResetAllCharts()
         {
             this.beginnerFieldChartComponent.ResetChart();
@@ -354,6 +347,22 @@ namespace MoMTool
         {
             this.decompileButton.Visible = !string.IsNullOrEmpty(((TextBox)sender).Text);
             this.debugCheckbox.Visible = !string.IsNullOrEmpty(((TextBox)sender).Text);
+        }
+
+        private void clearChartButton_Click(object sender, EventArgs e)
+        {
+            this.ResetAllCharts();
+        }
+
+        private void deleteChartButton_Click(object sender, EventArgs e)
+        {
+            this.MusicFile = null;
+
+            this.beginnerFieldChartComponent = null;
+            this.standardFieldChartComponent = null;
+            this.proudFieldChartComponent = null;
+
+            this.recompileButton.Visible = false;
         }
     }
 }
