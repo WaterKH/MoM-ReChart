@@ -1,0 +1,47 @@
+﻿using MoMMusicAnalysis;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace MoMTool.Logic
+{
+    public partial class SubFieldChartComponent : UserControl
+    {
+        public int ChartOffset { get; set; }
+        public int ChartLength { get; set; }
+        public FieldChartComponent ParentChartComponent;
+
+        public ObservableCollection<MoMButton<FieldAnimation>> Animations = new ObservableCollection<MoMButton<FieldAnimation>>();
+
+        public SubFieldChartComponent()
+        {
+            InitializeComponent();
+        }
+
+        private void closeAsset_Click(object sender, EventArgs e)
+        {
+            this.Visible = false;
+        }
+
+        private void saveAsset_Click(object sender, EventArgs e)
+        {
+            this.Visible = false;
+        }
+
+        private void deleteAsset_Click(object sender, EventArgs e)
+        {
+            this.Visible = false;
+        }
+
+        public void LoadSubChartComponent(int id, FieldAsset asset, FieldChartComponent parentChartComponent)
+        {
+            this.Visible = true;
+        }
+    }
+}

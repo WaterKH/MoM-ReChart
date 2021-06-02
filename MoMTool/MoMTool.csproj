@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Components\SelfContainedComponents\TimeShiftComponent.cs~RF222e87b.TMP" />
+    <None Remove="Components\SelfContainedComponents\TimeShiftComponent.cs~RF22d297b.TMP" />
+    <None Remove="Logic\ChartComponent.cs~RFd3cd21.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MoMMusicAnalysis" Version="1.0.12" />
+    <PackageReference Include="NAudio" Version="2.0.0" />
+    <PackageReference Include="NAudio.WaveFormRenderer" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Components\FieldBattle\FieldSubChartAssetComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Components\FieldBattle\FieldSubChartNoteComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Components\FieldBattle\FieldChartComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Components\SelfContainedComponents\TimeShiftComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Components\SelfContainedComponents\PerformerComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Components\SelfContainedComponents\FieldBattle\FieldAssetComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Components\SelfContainedComponents\FieldBattle\FieldAnimationComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Components\MemoryDive\MemoryChartComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\BossBattle\" />
+    <Folder Include="Components\SelfContainedComponents\BossBattle\" />
+    <Folder Include="Components\SelfContainedComponents\MemoryDive\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
+</Project>
