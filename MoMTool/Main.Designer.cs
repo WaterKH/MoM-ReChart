@@ -39,6 +39,7 @@ namespace MoMTool
             this.standardTab = new System.Windows.Forms.TabPage();
             this.standardFieldChartComponent = new MoMTool.Logic.FieldChartComponent();
             this.beginnerTab = new System.Windows.Forms.TabPage();
+            this.beginnerFieldChartComponent = new MoMTool.Logic.FieldChartComponent();
             this.difficultyControl = new System.Windows.Forms.TabControl();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -48,7 +49,7 @@ namespace MoMTool
             this.noteListLabel = new System.Windows.Forms.Label();
             this.debugCheckbox = new System.Windows.Forms.CheckBox();
             this.clearChartButton = new System.Windows.Forms.Button();
-            this.beginnerFieldChartComponent = new MoMTool.Logic.FieldChartComponent();
+            this.deleteChartButton = new System.Windows.Forms.Button();
             this.proudTab.SuspendLayout();
             this.standardTab.SuspendLayout();
             this.beginnerTab.SuspendLayout();
@@ -159,6 +160,18 @@ namespace MoMTool
             this.beginnerTab.Text = "Beginner";
             this.beginnerTab.UseVisualStyleBackColor = true;
             // 
+            // beginnerFieldChartComponent
+            // 
+            this.beginnerFieldChartComponent.AllowDrop = true;
+            this.beginnerFieldChartComponent.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.beginnerFieldChartComponent.CausesValidation = false;
+            this.beginnerFieldChartComponent.Location = new System.Drawing.Point(0, 0);
+            this.beginnerFieldChartComponent.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.beginnerFieldChartComponent.Name = "beginnerFieldChartComponent";
+            this.beginnerFieldChartComponent.Size = new System.Drawing.Size(706, 384);
+            this.beginnerFieldChartComponent.TabIndex = 0;
+            this.beginnerFieldChartComponent.Visible = false;
+            // 
             // difficultyControl
             // 
             this.difficultyControl.Controls.Add(this.beginnerTab);
@@ -250,31 +263,31 @@ namespace MoMTool
             // 
             // clearChartButton
             // 
-            this.clearChartButton.Location = new System.Drawing.Point(828, 4);
+            this.clearChartButton.Location = new System.Drawing.Point(726, 5);
             this.clearChartButton.Name = "clearChartButton";
-            this.clearChartButton.Size = new System.Drawing.Size(68, 22);
+            this.clearChartButton.Size = new System.Drawing.Size(90, 22);
             this.clearChartButton.TabIndex = 9;
             this.clearChartButton.Text = "Clear Chart";
             this.clearChartButton.UseVisualStyleBackColor = true;
             this.clearChartButton.Click += new System.EventHandler(this.clearChartButton_Click);
             // 
-            // beginnerFieldChartComponent
+            // deleteChartButton
             // 
-            this.beginnerFieldChartComponent.AllowDrop = true;
-            this.beginnerFieldChartComponent.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.beginnerFieldChartComponent.CausesValidation = false;
-            this.beginnerFieldChartComponent.Location = new System.Drawing.Point(0, 0);
-            this.beginnerFieldChartComponent.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.beginnerFieldChartComponent.Name = "beginnerFieldChartComponent";
-            this.beginnerFieldChartComponent.Size = new System.Drawing.Size(706, 384);
-            this.beginnerFieldChartComponent.TabIndex = 0;
-            this.beginnerFieldChartComponent.Visible = false;
+            this.deleteChartButton.BackColor = System.Drawing.Color.IndianRed;
+            this.deleteChartButton.Location = new System.Drawing.Point(822, 5);
+            this.deleteChartButton.Name = "deleteChartButton";
+            this.deleteChartButton.Size = new System.Drawing.Size(81, 22);
+            this.deleteChartButton.TabIndex = 10;
+            this.deleteChartButton.Text = "Delete Chart";
+            this.deleteChartButton.UseVisualStyleBackColor = false;
+            this.deleteChartButton.Click += new System.EventHandler(this.deleteChartButton_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(908, 468);
+            this.Controls.Add(this.deleteChartButton);
             this.Controls.Add(this.clearChartButton);
             this.Controls.Add(this.debugCheckbox);
             this.Controls.Add(this.noteListBox);
@@ -319,6 +332,7 @@ namespace MoMTool
         private CheckBox debugCheckbox;
         private Button clearChartButton;
         public Logic.FieldChartComponent beginnerFieldChartComponent;
+        private Button deleteChartButton;
     }
 }
 

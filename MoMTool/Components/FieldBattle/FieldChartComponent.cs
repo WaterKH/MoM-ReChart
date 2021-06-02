@@ -325,12 +325,6 @@ namespace MoMTool.Logic
 
         public void ResetChart()
         {
-            this.songTypeDropdown.SelectedItem = null;
-            this.notesCheckbox.Checked = false;
-            this.assetsCheckbox.Checked = false;
-            this.performerCheckbox.Checked = false;
-            this.chartLengthText.Text = string.Empty;
-
             this.Notes.Clear();
             this.Assets.Clear();
             this.Performers.Clear();
