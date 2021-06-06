@@ -32,7 +32,7 @@ namespace MoMTool.Logic
         /// </summary>
         private void InitializeComponent()
         {
-            this.fieldTimeShiftGroup = new System.Windows.Forms.GroupBox();
+            this.timeShiftGroup = new System.Windows.Forms.GroupBox();
             this.speedValue = new System.Windows.Forms.TextBox();
             this.speedLabel = new System.Windows.Forms.Label();
             this.msLabel = new System.Windows.Forms.Label();
@@ -41,77 +41,78 @@ namespace MoMTool.Logic
             this.deleteTimeShift = new System.Windows.Forms.Button();
             this.saveTimeShift = new System.Windows.Forms.Button();
             this.closeTime = new System.Windows.Forms.Button();
-            this.fieldTimeShiftGroup.SuspendLayout();
+            this.timeShiftGroup.SuspendLayout();
             this.SuspendLayout();
             // 
-            // fieldTimeShiftGroup
+            // timeShiftGroup
             // 
-            this.fieldTimeShiftGroup.Controls.Add(this.speedValue);
-            this.fieldTimeShiftGroup.Controls.Add(this.speedLabel);
-            this.fieldTimeShiftGroup.Controls.Add(this.msLabel);
-            this.fieldTimeShiftGroup.Controls.Add(this.timeValue);
-            this.fieldTimeShiftGroup.Controls.Add(this.timeLabel);
-            this.fieldTimeShiftGroup.Location = new System.Drawing.Point(10, 27);
-            this.fieldTimeShiftGroup.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.fieldTimeShiftGroup.Name = "fieldTimeShiftGroup";
-            this.fieldTimeShiftGroup.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.fieldTimeShiftGroup.Size = new System.Drawing.Size(250, 134);
-            this.fieldTimeShiftGroup.TabIndex = 0;
-            this.fieldTimeShiftGroup.TabStop = false;
-            this.fieldTimeShiftGroup.Text = "fieldTimeShiftGroup";
+            this.timeShiftGroup.Controls.Add(this.speedValue);
+            this.timeShiftGroup.Controls.Add(this.speedLabel);
+            this.timeShiftGroup.Controls.Add(this.msLabel);
+            this.timeShiftGroup.Controls.Add(this.timeValue);
+            this.timeShiftGroup.Controls.Add(this.timeLabel);
+            this.timeShiftGroup.Location = new System.Drawing.Point(19, 58);
+            this.timeShiftGroup.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.timeShiftGroup.Name = "timeShiftGroup";
+            this.timeShiftGroup.Padding = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.timeShiftGroup.Size = new System.Drawing.Size(464, 286);
+            this.timeShiftGroup.TabIndex = 0;
+            this.timeShiftGroup.TabStop = false;
+            this.timeShiftGroup.Text = "fieldTimeShiftGroup";
             // 
             // speedValue
             // 
-            this.speedValue.Location = new System.Drawing.Point(57, 58);
-            this.speedValue.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.speedValue.Location = new System.Drawing.Point(106, 124);
+            this.speedValue.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.speedValue.Name = "speedValue";
-            this.speedValue.Size = new System.Drawing.Size(139, 23);
+            this.speedValue.Size = new System.Drawing.Size(255, 39);
             this.speedValue.TabIndex = 4;
             // 
             // speedLabel
             // 
             this.speedLabel.AutoSize = true;
-            this.speedLabel.Location = new System.Drawing.Point(3, 60);
-            this.speedLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.speedLabel.Location = new System.Drawing.Point(6, 128);
+            this.speedLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.speedLabel.Name = "speedLabel";
-            this.speedLabel.Size = new System.Drawing.Size(42, 15);
+            this.speedLabel.Size = new System.Drawing.Size(86, 32);
             this.speedLabel.TabIndex = 3;
             this.speedLabel.Text = "Speed:";
             // 
             // msLabel
             // 
             this.msLabel.AutoSize = true;
-            this.msLabel.Location = new System.Drawing.Point(199, 28);
-            this.msLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.msLabel.Location = new System.Drawing.Point(370, 60);
+            this.msLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.msLabel.Name = "msLabel";
-            this.msLabel.Size = new System.Drawing.Size(23, 15);
+            this.msLabel.Size = new System.Drawing.Size(45, 32);
             this.msLabel.TabIndex = 2;
             this.msLabel.Text = "ms";
             // 
             // timeValue
             // 
-            this.timeValue.Location = new System.Drawing.Point(53, 27);
-            this.timeValue.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.timeValue.Location = new System.Drawing.Point(98, 58);
+            this.timeValue.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.timeValue.Name = "timeValue";
-            this.timeValue.Size = new System.Drawing.Size(139, 23);
+            this.timeValue.Size = new System.Drawing.Size(255, 39);
             this.timeValue.TabIndex = 1;
             // 
             // timeLabel
             // 
             this.timeLabel.AutoSize = true;
-            this.timeLabel.Location = new System.Drawing.Point(3, 28);
-            this.timeLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.timeLabel.Location = new System.Drawing.Point(6, 60);
+            this.timeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.timeLabel.Name = "timeLabel";
-            this.timeLabel.Size = new System.Drawing.Size(36, 15);
+            this.timeLabel.Size = new System.Drawing.Size(72, 32);
             this.timeLabel.TabIndex = 0;
             this.timeLabel.Text = "Time:";
             // 
             // deleteTimeShift
             // 
             this.deleteTimeShift.BackColor = System.Drawing.Color.Red;
-            this.deleteTimeShift.Location = new System.Drawing.Point(122, 315);
+            this.deleteTimeShift.Location = new System.Drawing.Point(227, 672);
+            this.deleteTimeShift.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.deleteTimeShift.Name = "deleteTimeShift";
-            this.deleteTimeShift.Size = new System.Drawing.Size(106, 25);
+            this.deleteTimeShift.Size = new System.Drawing.Size(197, 53);
             this.deleteTimeShift.TabIndex = 12;
             this.deleteTimeShift.Text = "Delete Time Shift";
             this.deleteTimeShift.UseVisualStyleBackColor = false;
@@ -119,9 +120,10 @@ namespace MoMTool.Logic
             // saveTimeShift
             // 
             this.saveTimeShift.BackColor = System.Drawing.Color.LimeGreen;
-            this.saveTimeShift.Location = new System.Drawing.Point(10, 315);
+            this.saveTimeShift.Location = new System.Drawing.Point(19, 672);
+            this.saveTimeShift.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.saveTimeShift.Name = "saveTimeShift";
-            this.saveTimeShift.Size = new System.Drawing.Size(106, 25);
+            this.saveTimeShift.Size = new System.Drawing.Size(197, 53);
             this.saveTimeShift.TabIndex = 11;
             this.saveTimeShift.Text = "Save Time Shift";
             this.saveTimeShift.UseVisualStyleBackColor = false;
@@ -130,28 +132,29 @@ namespace MoMTool.Logic
             // 
             this.closeTime.BackColor = System.Drawing.Color.Crimson;
             this.closeTime.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.closeTime.Location = new System.Drawing.Point(256, 0);
+            this.closeTime.Location = new System.Drawing.Point(475, 0);
+            this.closeTime.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.closeTime.Name = "closeTime";
-            this.closeTime.Size = new System.Drawing.Size(27, 23);
+            this.closeTime.Size = new System.Drawing.Size(50, 49);
             this.closeTime.TabIndex = 10;
             this.closeTime.Text = "x";
             this.closeTime.UseVisualStyleBackColor = false;
             // 
             // TimeShiftComponent
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.CausesValidation = false;
             this.Controls.Add(this.deleteTimeShift);
             this.Controls.Add(this.saveTimeShift);
             this.Controls.Add(this.closeTime);
-            this.Controls.Add(this.fieldTimeShiftGroup);
-            this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.Controls.Add(this.timeShiftGroup);
+            this.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.Name = "TimeShiftComponent";
-            this.Size = new System.Drawing.Size(288, 353);
-            this.fieldTimeShiftGroup.ResumeLayout(false);
-            this.fieldTimeShiftGroup.PerformLayout();
+            this.Size = new System.Drawing.Size(535, 753);
+            this.timeShiftGroup.ResumeLayout(false);
+            this.timeShiftGroup.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -163,7 +166,7 @@ namespace MoMTool.Logic
 
         public System.Windows.Forms.GroupBox fieldNoteGroup;
         public System.Windows.Forms.TextBox timeValue;
-        public GroupBox fieldTimeShiftGroup;
+        public GroupBox timeShiftGroup;
         public TextBox speedValue;
         private Button deleteTimeShift;
         private Button saveTimeShift;

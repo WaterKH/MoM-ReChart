@@ -33,6 +33,7 @@ namespace MoMTool.Logic
         private void InitializeComponent()
         {
             this.fieldNoteGroup = new System.Windows.Forms.GroupBox();
+            this.partyFlag = new System.Windows.Forms.CheckBox();
             this.projectileNoteEnemy = new System.Windows.Forms.TextBox();
             this.projectileNote = new System.Windows.Forms.Label();
             this.nextNoteValue = new System.Windows.Forms.TextBox();
@@ -47,7 +48,6 @@ namespace MoMTool.Logic
             this.msLabel = new System.Windows.Forms.Label();
             this.timeValue = new System.Windows.Forms.TextBox();
             this.timeLabel = new System.Windows.Forms.Label();
-            this.partyFlag = new System.Windows.Forms.CheckBox();
             this.fieldNoteGroup.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,6 +76,17 @@ namespace MoMTool.Logic
             this.fieldNoteGroup.TabIndex = 0;
             this.fieldNoteGroup.TabStop = false;
             this.fieldNoteGroup.Text = "fieldNoteGroup";
+            // 
+            // partyFlag
+            // 
+            this.partyFlag.AutoSize = true;
+            this.partyFlag.Location = new System.Drawing.Point(112, 218);
+            this.partyFlag.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.partyFlag.Name = "partyFlag";
+            this.partyFlag.Size = new System.Drawing.Size(87, 19);
+            this.partyFlag.TabIndex = 15;
+            this.partyFlag.Text = "Party Note?";
+            this.partyFlag.UseVisualStyleBackColor = true;
             // 
             // projectileNoteEnemy
             // 
@@ -162,10 +173,10 @@ namespace MoMTool.Logic
             "AerialUncommonEnemy",
             "MultiHitGroundEnemy",
             "MultiHitAerialEnemy",
-            "RareEnemyProjectile",
-            "RareEnemy",
-            "Projectile",
-            "ProjectileEnemy",
+            "EnemyShooterProjectile",
+            "EnemyShooter",
+            "AerialEnemyShooterProjectile",
+            "AerialEnemyShooter",
             "JumpingGroundEnemy",
             "JumpingAerialEnemy",
             "HiddenEnemy",
@@ -242,17 +253,6 @@ namespace MoMTool.Logic
             this.timeLabel.Size = new System.Drawing.Size(36, 15);
             this.timeLabel.TabIndex = 0;
             this.timeLabel.Text = "Time:";
-            // 
-            // partyFlag
-            // 
-            this.partyFlag.AutoSize = true;
-            this.partyFlag.Location = new System.Drawing.Point(112, 218);
-            this.partyFlag.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.partyFlag.Name = "partyFlag";
-            this.partyFlag.Size = new System.Drawing.Size(87, 19);
-            this.partyFlag.TabIndex = 15;
-            this.partyFlag.Text = "Party Note?";
-            this.partyFlag.UseVisualStyleBackColor = true;
             // 
             // FieldNoteComponent
             // 

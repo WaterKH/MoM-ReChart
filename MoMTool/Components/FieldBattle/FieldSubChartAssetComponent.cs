@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace MoMTool.Logic
 {
-    public partial class SubFieldChartComponent : UserControl
+    public partial class FieldSubChartAssetComponent : UserControl
     {
         public int ChartOffset { get; set; }
         public int ChartLength { get; set; }
@@ -19,7 +19,7 @@ namespace MoMTool.Logic
 
         public ObservableCollection<MoMButton<FieldAnimation>> Animations = new ObservableCollection<MoMButton<FieldAnimation>>();
 
-        public SubFieldChartComponent()
+        public FieldSubChartAssetComponent()
         {
             InitializeComponent();
         }

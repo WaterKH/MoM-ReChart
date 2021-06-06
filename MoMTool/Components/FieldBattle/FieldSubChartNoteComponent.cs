@@ -16,6 +16,7 @@ namespace MoMTool.Logic
         public int ChartOffset { get; set; }
         public int ChartLength { get; set; }
         public FieldChartComponent ParentChartComponent;
+        public FieldBattleSubChartManager FieldBattleSubChartManager;
 
         public ObservableCollection<MoMButton<FieldAnimation>> Animations = new ObservableCollection<MoMButton<FieldAnimation>>();
 
@@ -26,104 +27,12 @@ namespace MoMTool.Logic
 
         private void noteClose_Click(object sender, EventArgs e)
         {
-            this.Visible = false;
+            this.FieldBattleSubChartManager.Close();
         }
 
         private void animationClose_Click(object sender, EventArgs e)
         {
             this.animationPanel.Visible = false;
-        }
-
-        public void LoadSubChartComponent(int id, FieldNote note, FieldChartComponent parentChartComponent)
-        {
-            this.Visible = true;
-
-            this.ParentChartComponent = parentChartComponent;
-
-            //var note = momButton.Note;
-
-            this.fieldNoteComponent.fieldNoteGroup.Text = $"Field Note {id}";
-            this.fieldNoteComponent.timeValue.Text = note.HitTime.ToString();
-            this.fieldNoteComponent.laneDropdown.SelectedItem = note.Lane.ToString();
-            this.fieldNoteComponent.modelDropdown.SelectedItem = note.ModelType.ToString();
-            this.fieldNoteComponent.starFlag.Checked = note.StarFlag;
-            this.fieldNoteComponent.previousNoteValue.Text = note.PreviousEnemyNote.ToString();
-            this.fieldNoteComponent.nextNoteValue.Text = note.NextEnemyNote.ToString();
-            this.fieldNoteComponent.projectileNoteEnemy.Text = note.ProjectileOriginNote.ToString();
-
-            if (note.ModelType == FieldModelType.Projectile)
-            {
-                if (note.NoteType == 2)
-                    this.fieldNoteComponent.modelDropdown.SelectedItem = "Projectile";
-                else
-                    this.fieldNoteComponent.modelDropdown.SelectedItem = "ProjectileEnemy";
-            }
-            else if (note.ModelType == FieldModelType.RareEnemyProjectile)
-            {
-                if (note.NoteType == 2)
-                    this.fieldNoteComponent.modelDropdown.SelectedItem = "RareEnemyProjectile";
-                else
-                    this.fieldNoteComponent.modelDropdown.SelectedItem = "RareEnemy";
-            }
-
-            // Setup Animations
-            this.LoadAnimationChartComponent(note.Animations);
-        }
-
-        public void LoadSubChartComponent(int id, FieldAsset asset, FieldChartComponent parentChartComponent)
-        {
-            this.Visible = true;
-        }
-
-        public void LoadSubChartComponent(int id, PerformerNote<FieldLane> performer, FieldChartComponent parentChartComponent)
-        {
-            this.Visible = true;
-        }
-
-        public void LoadSubChartComponent(int id, TimeShift time, FieldChartComponent parentChartComponent)
-        {
-            this.Visible = true;
-        }
-
-        public void LoadAnimationChartComponent(List<FieldAnimation> anims)
-        {
-            this.ClearPanels();
-
-            var toolTip = new ToolTip();
-
-            foreach (var anim in anims)
-            {
-                var momButton = new MoMButton<FieldAnimation>
-                {
-                    Id = anim.Id,
-                    Type = "Animation",
-                    Note = anim,
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = Color.AliceBlue,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"anim-{anim.Id}",
-                        TabStop = false
-                    },
-                };
-
-                momButton.Button.Click += (object sender, EventArgs e) =>
-                {
-                    this.animationPanel.Visible = true;
-                    this.fieldAnimationComponent.LoadAnimationComponent(momButton);
-                };
-                this.Animations.Add(momButton);
-
-                toolTip.SetToolTip(momButton.Button, anim.AnimationEndTime.ToString());
-
-                this.AddToLane(anim.Lane, momButton.Button);
-            }
-
-            this.CalculateAnimationChartLength();
-            this.SetAnimationPositions();
         }
 
         public void ClearPanels()
@@ -198,8 +107,6 @@ namespace MoMTool.Logic
 
             var momButton = ParentChartComponent.Notes[noteIndex];
             var note = momButton.Note;
-
-            //this.RemoveFromLane(note.Lane, momButton.Button);
 
             note.NoteType = this.fieldNoteComponent.modelDropdown.SelectedItem.ToString().Contains("Crystal") ? 1 :
                     this.fieldNoteComponent.modelDropdown.SelectedItem.ToString().Contains("Projectile") ? 2 :
@@ -285,7 +192,7 @@ namespace MoMTool.Logic
             this.AddToLane(FieldLane.OutOfMapLeft, momButton.Button);
         }
 
-        private void AddToLane(FieldLane lane, Button buttonNote)
+        public void AddToLane(FieldLane lane, Button buttonNote)
         {
             switch (lane)
             {
@@ -333,7 +240,7 @@ namespace MoMTool.Logic
             }
         }
 
-        private void RemoveFromLane(FieldLane lane, Button buttonNote)
+        public void RemoveFromLane(FieldLane lane, Button buttonNote)
         {
             switch (lane)
             {
@@ -381,7 +288,7 @@ namespace MoMTool.Logic
             }
         }
 
-        private void CalculateAnimationChartLength()
+        public void CalculateAnimationChartLength()
         {
             this.ChartOffset = this.Animations.Select(x => x.Note.AnimationEndTime).OrderBy(x => x).FirstOrDefault();
             var endTime = this.Animations.Select(x => x.Note.AnimationEndTime).OrderByDescending(x => x).FirstOrDefault();
@@ -402,7 +309,7 @@ namespace MoMTool.Logic
             this.panelOutOfMapRight.Width = this.ChartLength;
         }
 
-        private void SetAnimationPositions()
+        public void SetAnimationPositions()
         {
             this.Animations.ToList().ForEach(x => x.Button.Location = new Point((x.Note.AnimationEndTime - this.ChartOffset) / 10, 0));
         }

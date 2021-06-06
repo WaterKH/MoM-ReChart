@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace MoMTool.Logic
 {
-    public partial class SubFieldChartComponent : UserControl
+    public partial class FieldSubChartAssetComponent : UserControl
     {
 
         /// <summary> 
@@ -35,7 +35,7 @@ namespace MoMTool.Logic
             this.closeAsset = new System.Windows.Forms.Button();
             this.saveAsset = new System.Windows.Forms.Button();
             this.deleteAsset = new System.Windows.Forms.Button();
-            this.fieldAssetComponent1 = new MoMTool.Logic.FieldAssetComponent();
+            this.fieldAssetComponent = new MoMTool.Logic.FieldAssetComponent();
             this.SuspendLayout();
             // 
             // closeAsset
@@ -72,29 +72,29 @@ namespace MoMTool.Logic
             this.deleteAsset.UseVisualStyleBackColor = false;
             this.deleteAsset.Click += new System.EventHandler(this.deleteAsset_Click);
             // 
-            // fieldAssetComponent1
+            // fieldAssetComponent
             // 
-            this.fieldAssetComponent1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.fieldAssetComponent1.CausesValidation = false;
-            this.fieldAssetComponent1.Location = new System.Drawing.Point(9, 26);
-            this.fieldAssetComponent1.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.fieldAssetComponent1.Name = "fieldAssetComponent1";
-            this.fieldAssetComponent1.Size = new System.Drawing.Size(250, 133);
-            this.fieldAssetComponent1.TabIndex = 10;
+            this.fieldAssetComponent.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.fieldAssetComponent.CausesValidation = false;
+            this.fieldAssetComponent.Location = new System.Drawing.Point(9, 26);
+            this.fieldAssetComponent.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.fieldAssetComponent.Name = "fieldAssetComponent";
+            this.fieldAssetComponent.Size = new System.Drawing.Size(250, 133);
+            this.fieldAssetComponent.TabIndex = 10;
             // 
-            // SubFieldChartComponent
+            // FieldSubChartAssetComponent
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.CausesValidation = false;
-            this.Controls.Add(this.fieldAssetComponent1);
+            this.Controls.Add(this.fieldAssetComponent);
             this.Controls.Add(this.deleteAsset);
             this.Controls.Add(this.saveAsset);
             this.Controls.Add(this.closeAsset);
             this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.Name = "SubFieldChartComponent";
+            this.Name = "FieldSubChartAssetComponent";
             this.Size = new System.Drawing.Size(288, 353);
             this.ResumeLayout(false);
 
@@ -104,6 +104,6 @@ namespace MoMTool.Logic
         private Button closeAsset;
         private Button saveAsset;
         private Button deleteAsset;
-        private FieldAssetComponent fieldAssetComponent1;
+        public FieldAssetComponent fieldAssetComponent;
     }
 }
