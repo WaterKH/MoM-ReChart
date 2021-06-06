@@ -272,7 +272,7 @@ namespace MoMTool
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button zoomInButton;
         private System.Windows.Forms.Button zoomOutButton;
-        private System.Windows.Forms.ListBox noteListBox;
+        public System.Windows.Forms.ListBox noteListBox;
         private System.Windows.Forms.Label noteListLabel;
         private CheckBox debugCheckbox;
         private Button clearChartButton;
