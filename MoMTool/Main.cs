@@ -167,12 +167,25 @@ namespace MoMTool
             {
                 case SongType.FieldBattle:
                     this.FieldBattleChartManager = new FieldBattleChartManager(musicFile);
+
+                    this.noteListBox.Items.AddRange(new object[] {
+                    "Field Note",
+                    "Asset",
+                    "Performer Note"});
                     break;
                 case SongType.MemoryDive:
                     this.MemoryDiveChartManager = new MemoryDiveChartManager(musicFile);
+
+                    this.noteListBox.Items.AddRange(new object[] {
+                    "Memory Note",
+                    "Performer Note"});
                     break;
                 case SongType.BossBattle:
                     this.BossBattleChartManager = new BossBattleChartManager(musicFile);
+                    
+                    this.noteListBox.Items.AddRange(new object[] {
+                    "Boss Note",
+                    "Performer Note"});
                     break;
                 default:
                     break;
@@ -182,8 +195,10 @@ namespace MoMTool
         private void RemovePreviousChartManager()
         {
             this.FieldBattleChartManager = null;
-            //this.BossBattleChartManager = null;
-            //this.MemoryDiveChartManager = null;
+            this.BossBattleChartManager = null;
+            this.MemoryDiveChartManager = null;
+
+            this.noteListBox.Items.Clear();
         }
 
         private void PlaceCharts<TControl>(Dictionary<Difficulty, TControl> charts) where TControl : UserControl

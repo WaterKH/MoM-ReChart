@@ -321,7 +321,7 @@ namespace MoMTool.Logic
             var lane = (FieldLane)Enum.Parse(typeof(FieldLane), panel.Name[5..]);
             var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
 
-            if (noteType.Equals("Enemy Note"))
+            if (noteType.Equals("Field Note"))
             {
                 var fieldChart = this.FieldCharts[difficulty];
                 var fieldNote = new FieldNote

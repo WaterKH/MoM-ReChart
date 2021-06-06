@@ -285,7 +285,7 @@ namespace MoMTool.Logic
             var lane = (BossLane)Enum.Parse(typeof(BossLane), panel.Name[5..]);
             var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
 
-            if (noteType.Equals("Memory Note"))
+            if (noteType.Equals("Boss Note"))
             {
                 var memoryChart = this.BossCharts[difficulty];
                 var memoryNote = new BossNote
