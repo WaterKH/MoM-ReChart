@@ -10,39 +10,39 @@ using System.Windows.Forms;
 
 namespace MoMTool.Logic
 {
-    public class FieldBattleChartManager
+    public class MemoryDiveChartManager
     {
         public MusicFile MusicFile;
-        public FieldBattleSubChartManager FieldBattleSubChartManager; // TODO Maybe make this private?
+        public MemoryDiveSubChartManager MemoryDiveSubChartManager; // TODO Maybe make this private?
 
         public int ZoomVariable = 10;
 
         public Difficulty CurrentDifficultyTab { get; set; } = Difficulty.Proud;
-        public Dictionary<Difficulty, FieldChartComponent> FieldCharts { get; set; }
+        public Dictionary<Difficulty, MemoryChartComponent> MemoryCharts { get; set; }
 
         private readonly ToolTip ToolTip = null;
 
-        public FieldBattleChartManager(MusicFile musicFile)
+        public MemoryDiveChartManager(MusicFile musicFile)
         {
-            this.MusicFile = musicFile; 
+            this.MusicFile = musicFile;
             this.ToolTip = new ToolTip();
-            this.FieldBattleSubChartManager = new FieldBattleSubChartManager(this);
+            this.MemoryDiveSubChartManager = new MemoryDiveSubChartManager(this);
         }
 
-        public void DecompileFieldBattleSongs()
+        public void DecompileMemoryDiveSongs()
         {
-            this.FieldCharts = new Dictionary<Difficulty, FieldChartComponent>();
+            this.MemoryCharts = new Dictionary<Difficulty, MemoryChartComponent>();
 
-            foreach (FieldBattleSong song in this.MusicFile.SongPositions.Values)
+            foreach (MemoryDiveSong song in this.MusicFile.SongPositions.Values)
             {
-                this.FieldCharts.Add(song.Difficulty, this.CreateChart(song));
+                this.MemoryCharts.Add(song.Difficulty, this.CreateChart(song));
             }
         }
 
 
-        #region Recompile Field Battle
+        #region Recompile Memory Dive
 
-        public void RecompileFieldBattleSongs()
+        public void RecompileMemoryDiveSongs()
         {
             var musicFile = new MusicFile
             {
@@ -152,12 +152,12 @@ namespace MoMTool.Logic
                     musicFile.Header.Sections[i].Offset = offset;
 
                     var song = this.MusicFile.SongPositions[i];
-                    var newSong = new FieldBattleSong(song.Difficulty, 0, SongType.FieldBattle)
+                    var newSong = new MemoryDiveSong(song.Difficulty, 0, SongType.FieldBattle)
                     {
-                        HasEmptyData = ((FieldBattleSong)song).HasEmptyData
+                        HasEmptyData = ((MemoryDiveSong)song).HasEmptyData
                     };
 
-                    this.RecompileFieldSong(ref newSong, this.FieldCharts[song.Difficulty]);
+                    this.RecompileMemorySong(ref newSong, this.MemoryCharts[song.Difficulty]);
 
                     musicFile.SongPositions.Add(i, newSong);
 
@@ -173,111 +173,76 @@ namespace MoMTool.Logic
             return offset;
         }
 
-        private void RecompileFieldSong(ref FieldBattleSong newSong, FieldChartComponent chart)
+        private void RecompileMemorySong(ref MemoryDiveSong newSong, MemoryChartComponent chart)
         {
-            var animations = chart.Notes.SelectMany(x => x.Note.Animations).Concat(chart.Assets.SelectMany(x => x.Note.Animations)).ToList();
-
             newSong.NoteCount = chart.Notes.Count;
-            newSong.AnimationCount = animations.Count;
-            newSong.AssetCount = chart.Assets.Count;
             newSong.PerformerCount = chart.Performers.Count;
             newSong.TimeShiftCount = chart.Times.Count;
 
             newSong.Unk1 = 1; // TODO Why? Is this the Identifier for FieldBattle?
 
-            var newNotes = new List<Note<FieldLane>>();
-            int count = 0;
-            int aerialCrystalCount = -1;
+            var newNotes = new List<Note<MemoryLane>>();
 
-            foreach (var anim in animations.OrderBy(x => x.AnimationEndTime))
+            foreach (MemoryNote note in chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime))
             {
-                anim.Id = count++;
-            }
-
-            foreach (var anim in animations)
-            {
-                newSong.FieldAnimations.Add(anim);
-            }
-
-            foreach (FieldNote note in chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime))
-            {
-                var modelString = note.ModelType.ToString();
-                var aerialFlag = modelString.Contains("Aerial") || (modelString == "GlideNote" && note.PreviousEnemyNote == -1) || modelString == "Projectile";
-
-                if (note.AerialFlag || aerialFlag || (note.ModelType == FieldModelType.CrystalEnemyCenter || note.ModelType == FieldModelType.CrystalEnemyLeftRight))
-                {
-                    note.AerialAndCrystalCounter = aerialCrystalCount++;
-                }
-
-                note.AnimationReference = note.Animations[0].Id;
-
                 newSong.Notes.Add(note);
             }
 
-            foreach (FieldAsset asset in chart.Assets.Select(x => x.Note).OrderBy(x => x.HitTime))
-            {
-                asset.AnimationReference = asset.Animations[0].Id;
-
-                newSong.FieldAssets.Add(asset);
-            }
-
-            foreach (PerformerNote<FieldLane> note in chart.Performers.Select(x => x.Note).OrderBy(x => x.HitTime))
+            foreach (PerformerNote<MemoryLane> note in chart.Performers.Select(x => x.Note).OrderBy(x => x.HitTime))
             {
                 newSong.PerformerNotes.Add(note);
             }
 
 
-            foreach (TimeShift<FieldLane> time in chart.Times.Select(x => x.Note).OrderBy(x => x.HitTime))
+            foreach (TimeShift<MemoryLane> time in chart.Times.Select(x => x.Note).OrderBy(x => x.HitTime))
             {
                 newSong.TimeShifts.Add(time);
             }
 
             // Add Note + Header Lengths
-            newSong.Length = (newSong.NoteCount * 0x48) + (newSong.AnimationCount * 0x3C) + (newSong.AssetCount * 0x44) + (newSong.PerformerCount * 0x30) + (newSong.TimeShiftCount * 0x08) + 0x28;
+            newSong.Length = (newSong.NoteCount * 0x48) + (newSong.PerformerCount * 0x30) + (newSong.TimeShiftCount * 0x08) + 0x28; // TODO UPDATE THIS TO REFLECT MEMORY DIVE LENGTHS
         }
 
-        #endregion Recompile Field Battle Music File
+        #endregion Recompile Memory Dive Music File
 
 
         #region Helper Methods
 
-        private FieldChartComponent CreateChart(FieldBattleSong fieldBattleSong)
+        private MemoryChartComponent CreateChart(MemoryDiveSong memoryDiveSong)
         {
-            var fieldChart = new FieldChartComponent
+            var memoryChart = new MemoryChartComponent
             {
-                FieldBattleChartManager = this
+                MemoryDiveChartManager = this
             };
 
-            var songLength = (fieldBattleSong.Notes.OrderByDescending(x => x.HitTime).FirstOrDefault().HitTime);
+            var songLength = (memoryDiveSong.Notes.OrderByDescending(x => x.HitTime).FirstOrDefault().HitTime);
 
-            fieldChart.songTypeDropdown.SelectedItem = "Field Battle";
-            fieldChart.notesCheckbox.Checked = true;
-            fieldChart.assetsCheckbox.Checked = true;
-            fieldChart.performerCheckbox.Checked = true;
-            fieldChart.chartTimeValue.Text = songLength.ToString();
+            memoryChart.songTypeDropdown.SelectedItem = "Memory Dive";
+            memoryChart.notesCheckbox.Checked = true;
+            memoryChart.performerCheckbox.Checked = true;
+            memoryChart.chartTimeValue.Text = songLength.ToString();
+            
 
+            memoryChart.Notes = this.CreateChartButtons(ref memoryChart, memoryDiveSong.NoteCount, memoryDiveSong.Notes, "Note", Color.Red);
+            memoryChart.Performers = this.CreateChartButtons(ref memoryChart, memoryDiveSong.PerformerCount, memoryDiveSong.PerformerNotes, "Performer", Color.Purple);
+            memoryChart.Times = this.CreateChartButtons(ref memoryChart, memoryDiveSong.TimeShiftCount, memoryDiveSong.TimeShifts, "Time", Color.Yellow);
 
-            fieldChart.Notes = this.CreateChartButtons(ref fieldChart, fieldBattleSong.NoteCount, fieldBattleSong.Notes, "Note", Color.Red);
-            fieldChart.Assets = this.CreateChartButtons(ref fieldChart, fieldBattleSong.AssetCount, fieldBattleSong.FieldAssets, "Asset", Color.Blue);
-            fieldChart.Performers = this.CreateChartButtons(ref fieldChart, fieldBattleSong.PerformerCount, fieldBattleSong.PerformerNotes, "Performer", Color.Purple);
-            fieldChart.Times = this.CreateChartButtons(ref fieldChart, fieldBattleSong.TimeShiftCount, fieldBattleSong.TimeShifts, "Time", Color.Yellow);
-
-            return fieldChart;
+            return memoryChart;
         }
 
-        private ObservableCollection<MoMButton<TNoteType>> CreateChartButtons<TNoteType>(ref FieldChartComponent fieldChart, int count, List<TNoteType> components, string type, Color color) where TNoteType : Note<FieldLane>
+        private ObservableCollection<MoMButton<TNoteType>> CreateChartButtons<TNoteType>(ref MemoryChartComponent memoryChart, int count, List<TNoteType> components, string type, Color color) where TNoteType : Note<MemoryLane>
         {
             var fieldChartButtons = new ObservableCollection<MoMButton<TNoteType>>();
 
             for (int i = 0; i < count; ++i)
             {
-                fieldChartButtons.Add(this.CreateChartButton(ref fieldChart, i, components[i], type, color));
+                fieldChartButtons.Add(this.CreateChartButton(ref memoryChart, i, components[i], type, color));
             }
 
             return fieldChartButtons;
         }
 
-        private MoMButton<TNoteType> CreateChartButton<TNoteType>(ref FieldChartComponent fieldChart, int id, TNoteType component, string type, Color color) where TNoteType : Note<FieldLane>
+        private MoMButton<TNoteType> CreateChartButton<TNoteType>(ref MemoryChartComponent memoryChart, int id, TNoteType component, string type, Color color) where TNoteType : Note<MemoryLane>
         {
             var momButton = new MoMButton<TNoteType>
             {
@@ -297,11 +262,11 @@ namespace MoMTool.Logic
             };
 
             momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
-            momButton.Button.Click += (object sender, EventArgs e) => { FieldBattleSubChartManager.LoadSubChartComponent(momButton.Id, momButton.Note); };
+            momButton.Button.Click += (object sender, EventArgs e) => { MemoryDiveSubChartManager.LoadSubChartComponent(momButton.Id, momButton.Note); };
 
             ToolTip.SetToolTip(momButton.Button, momButton.Note.HitTime.ToString());
 
-            fieldChart.AddToLane(momButton.Note.Lane, momButton.Button);
+            memoryChart.AddToLane(momButton.Note.Lane, momButton.Button);
 
             return momButton;
         }
@@ -318,41 +283,30 @@ namespace MoMTool.Logic
         {
             Point controlRelatedCoords = panel.PointToClient(point);
 
-            var lane = (FieldLane)Enum.Parse(typeof(FieldLane), panel.Name[5..]);
+            var lane = (MemoryLane)Enum.Parse(typeof(MemoryLane), panel.Name[5..]);
             var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
 
-            if (noteType.Equals("Enemy Note"))
+            if (noteType.Equals("Memory Note"))
             {
-                var fieldChart = this.FieldCharts[difficulty];
-                var fieldNote = new FieldNote
+                var memoryChart = this.MemoryCharts[difficulty];
+                var memoryNote = new MemoryNote
                 {
                     HitTime = controlRelatedCoords.X * this.ZoomVariable,
                     Lane = lane
                 };
 
-                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
-            }
-            else if (noteType.Equals("Asset"))
-            {
-                var fieldChart = this.FieldCharts[difficulty];
-                var fieldAsset = new FieldAsset
-                {
-                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
-                    Lane = lane
-                };
-
-                this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Assets.Count, fieldAsset, "Asset", Color.Blue));
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
             }
             else if (noteType.Equals("Performer Note"))
             {
-                var fieldChart = this.FieldCharts[difficulty];
-                var performer = new PerformerNote<FieldLane>
+                var memoryChart = this.MemoryCharts[difficulty];
+                var performer = new PerformerNote<MemoryLane>
                 {
                     HitTime = controlRelatedCoords.X * this.ZoomVariable,
                     Lane = lane
                 };
 
-                this.FieldCharts[difficulty].Performers.Add(this.CreateChartButton(ref fieldChart, fieldChart.Performers.Count, performer, "Performer", Color.Purple));
+                this.MemoryCharts[difficulty].Performers.Add(this.CreateChartButton(ref memoryChart, memoryChart.Performers.Count, performer, "Performer", Color.Purple));
             }
         }
 

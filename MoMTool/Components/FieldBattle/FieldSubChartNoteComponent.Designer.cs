@@ -349,7 +349,7 @@ namespace MoMTool.Logic
         public Panel panelOutOfMapLeft;
         private Panel chartAnimationPanel;
         private Label animationText;
-        private Panel animationPanel;
+        public Panel animationPanel;
         private Button animationClose;
         public FieldAnimationComponent fieldAnimationComponent;
         private Button saveAnimation;

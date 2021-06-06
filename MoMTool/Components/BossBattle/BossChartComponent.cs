@@ -11,13 +11,13 @@ using System.Windows.Forms;
 
 namespace MoMTool.Logic
 {
-    public partial class MemoryChartComponent : UserControl
+    public partial class BossChartComponent : UserControl
     {
-        public MemoryDiveChartManager MemoryDiveChartManager;
+        public BossBattleChartManager BossBattleChartManager;
 
-        public ObservableCollection<MoMButton<MemoryNote>> Notes = new ObservableCollection<MoMButton<MemoryNote>>();
-        public ObservableCollection<MoMButton<PerformerNote<MemoryLane>>> Performers = new ObservableCollection<MoMButton<PerformerNote<MemoryLane>>>();
-        public ObservableCollection<MoMButton<TimeShift<MemoryLane>>> Times = new ObservableCollection<MoMButton<TimeShift<MemoryLane>>>();
+        public ObservableCollection<MoMButton<BossNote>> Notes = new ObservableCollection<MoMButton<BossNote>>();
+        public ObservableCollection<MoMButton<PerformerNote<BossLane>>> Performers = new ObservableCollection<MoMButton<PerformerNote<BossLane>>>();
+        public ObservableCollection<MoMButton<TimeShift<BossLane>>> Times = new ObservableCollection<MoMButton<TimeShift<BossLane>>>();
 
         public int ZoomVariable = 10;
 
@@ -26,7 +26,7 @@ namespace MoMTool.Logic
         // TODO Add default animations to different note types
         // TODO Draw lines between Multi hit/ Glide Notes
         // TODO Account for overlapping lines
-        public MemoryChartComponent()
+        public BossChartComponent()
         {
             InitializeComponent();
 
@@ -81,15 +81,15 @@ namespace MoMTool.Logic
             Point pt = new Point(e.X, e.Y);
             Point controlRelatedCoords = panel.PointToClient(pt);
 
-            var lane = (MemoryLane)Enum.Parse(typeof(MemoryLane), panel.Name[5..]);
+            var lane = (BossLane)Enum.Parse(typeof(BossLane), panel.Name[5..]);
 
             if (noteType.Equals("Enemy Note"))
             {
-                var momButton = new MoMButton<MemoryNote>
+                var momButton = new MoMButton<BossNote>
                 {
                     Id = Notes.Count,
                     Type = "Note",
-                    Note = new MemoryNote(),
+                    Note = new BossNote(),
                     Button = new Button
                     {
                         Text = "",
@@ -114,11 +114,11 @@ namespace MoMTool.Logic
             }
             else if (noteType.Equals("Performer Note"))
             {
-                var momButton = new MoMButton<PerformerNote<MemoryLane>>
+                var momButton = new MoMButton<PerformerNote<BossLane>>
                 {
                     Id = Performers.Count,
                     Type = "Performer",
-                    Note = new PerformerNote<MemoryLane>(),
+                    Note = new PerformerNote<BossLane>(),
                     Button = new Button
                     {
                         Text = "",
@@ -144,26 +144,26 @@ namespace MoMTool.Logic
             }
         }
 
-        public void LoadChart(MemoryDiveSong memoryDiveSong)
+        public void LoadChart(BossBattleSong bossBattleSong)
         {
             var toolTip = new ToolTip();
 
             this.ResetChart();
 
-            var songLength = (memoryDiveSong.Notes.OrderByDescending(x => x.HitTime).FirstOrDefault().HitTime);
+            var songLength = (bossBattleSong.Notes.OrderByDescending(x => x.HitTime).FirstOrDefault().HitTime);
 
-            this.songTypeDropdown.SelectedItem = "Memory Dive";
+            this.songTypeDropdown.SelectedItem = "Boss Battle";
             this.notesCheckbox.Checked = true;
             this.performerCheckbox.Checked = true;
             this.chartTimeValue.Text = songLength.ToString();
 
-            for (int i = 0; i < memoryDiveSong.NoteCount; ++i)
+            for (int i = 0; i < bossBattleSong.NoteCount; ++i)
             {
-                var momButton = new MoMButton<MemoryNote>
+                var momButton = new MoMButton<BossNote>
                 {
                     Id = i,
                     Type = "Note",
-                    Note = memoryDiveSong.Notes[i],
+                    Note = bossBattleSong.Notes[i],
                     Button = new Button
                     {
                         Text = "",
@@ -187,9 +187,9 @@ namespace MoMTool.Logic
                 this.AddToLane(momButton.Note.Lane, momButton.Button);
             }
 
-            for (int i = 0; i < memoryDiveSong.PerformerCount; ++i)
+            for (int i = 0; i < bossBattleSong.PerformerCount; ++i)
             {
-                var momButton = new MoMButton<PerformerNote<MemoryLane>>
+                var momButton = new MoMButton<PerformerNote<BossLane>>
                 {
                     Type = "Performer",
                     //Note = fieldBattleSong.PerformerNotes[i],
@@ -216,9 +216,9 @@ namespace MoMTool.Logic
                 //this.AddToLane(momButton.Note.Lane, momButton.Button);
             }
 
-            for (int i = 0; i < memoryDiveSong.TimeShiftCount; ++i)
+            for (int i = 0; i < bossBattleSong.TimeShiftCount; ++i)
             {
-                var momButton = new MoMButton<TimeShift<MemoryLane>>
+                var momButton = new MoMButton<TimeShift<BossLane>>
                 {
                     Type = "Time",
                     //Note = fieldBattleSong.TimeShifts[i],
@@ -242,7 +242,7 @@ namespace MoMTool.Logic
 
                 //toolTip.SetToolTip(momButton.Button, momButton.Note.ChangeTime.ToString());
 
-                this.AddToLane(MemoryLane.PlayerLeft, momButton.Button);
+                this.AddToLane(BossLane.PlayerTop, momButton.Button);
             }
         }
 
@@ -267,17 +267,17 @@ namespace MoMTool.Logic
             this.panelPlayerRight.Controls.Clear();
         }
 
-        public void AddToLane(MemoryLane lane, Button buttonNote)
+        public void AddToLane(BossLane lane, Button buttonNote)
         {
             switch (lane)
             {
-                case MemoryLane.PlayerLeft:
+                case BossLane.PlayerTop:
                     this.panelPlayerLeft.Controls.Add(buttonNote);
                     break;
-                case MemoryLane.PlayerCenter:
+                case BossLane.PlayerCenter:
                     this.panelPlayerCenter.Controls.Add(buttonNote);
                     break;
-                case MemoryLane.PlayerRight:
+                case BossLane.PlayerBottom:
                     this.panelPlayerRight.Controls.Add(buttonNote);
                     break;
                 default:
@@ -285,17 +285,17 @@ namespace MoMTool.Logic
             }
         }
 
-        public void RemoveFromLane(MemoryLane lane, Button buttonNote)
+        public void RemoveFromLane(BossLane lane, Button buttonNote)
         {
             switch (lane)
             {
-                case MemoryLane.PlayerLeft:
+                case BossLane.PlayerTop:
                     this.panelPlayerLeft.Controls.Remove(buttonNote);
                     break;
-                case MemoryLane.PlayerCenter:
+                case BossLane.PlayerCenter:
                     this.panelPlayerCenter.Controls.Remove(buttonNote);
                     break;
-                case MemoryLane.PlayerRight:
+                case BossLane.PlayerBottom:
                     this.panelPlayerRight.Controls.Remove(buttonNote);
                     break;
                 default:

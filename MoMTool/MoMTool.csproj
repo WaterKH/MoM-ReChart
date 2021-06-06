@@ -13,12 +13,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MoMMusicAnalysis" Version="1.0.13" />
+    <PackageReference Include="MoMMusicAnalysis" Version="1.0.14" />
     <PackageReference Include="NAudio" Version="2.0.0" />
     <PackageReference Include="NAudio.WaveFormRenderer" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Components\BossBattle\BossChartComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Components\BossBattle\BossSubChartNoteComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Components\FieldBattle\FieldSubChartAssetComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -26,6 +32,15 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Components\FieldBattle\FieldChartComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Components\MemoryDive\MemorySubChartNoteComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Components\SelfContainedComponents\BossBattle\BossNoteComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Components\SelfContainedComponents\MemoryDive\MemoryNoteComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Components\SelfContainedComponents\TimeShiftComponent.cs">
@@ -58,9 +73,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\BossBattle\" />
-    <Folder Include="Components\SelfContainedComponents\BossBattle\" />
-    <Folder Include="Components\SelfContainedComponents\MemoryDive\" />
     <Folder Include="Resources\" />
   </ItemGroup>
 
