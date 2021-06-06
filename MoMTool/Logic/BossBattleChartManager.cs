@@ -278,34 +278,125 @@ namespace MoMTool.Logic
             return 0;
         }
 
-        public void DragDrop(Panel panel, Point point, string noteType)
+        public void CreateDroppedNote(Panel panel, Point point, string noteType)
         {
             Point controlRelatedCoords = panel.PointToClient(point);
 
             var lane = (BossLane)Enum.Parse(typeof(BossLane), panel.Name[5..]);
             var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
 
-            if (noteType.Equals("Boss Note"))
+            var bossChart = this.BossCharts[difficulty];
+
+            if (noteType.Equals("Memory Note"))
             {
-                var memoryChart = this.BossCharts[difficulty];
-                var memoryNote = new BossNote
+                var BossNote = new BossNote
                 {
                     HitTime = controlRelatedCoords.X * this.ZoomVariable,
                     Lane = lane
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
             }
             else if (noteType.Equals("Performer Note"))
             {
-                var memoryChart = this.BossCharts[difficulty];
                 var performer = new PerformerNote<BossLane>
                 {
                     HitTime = controlRelatedCoords.X * this.ZoomVariable,
                     Lane = lane
                 };
 
-                this.BossCharts[difficulty].Performers.Add(this.CreateChartButton(ref memoryChart, memoryChart.Performers.Count, performer, "Performer", Color.Purple));
+                this.BossCharts[difficulty].Performers.Add(this.CreateChartButton(ref bossChart, bossChart.Performers.Count, performer, "Performer", Color.Purple));
+            }
+            else if (noteType.Equals("Time Shift"))
+            {
+                var time = new TimeShift<BossLane>
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = BossLane.PlayerTop
+                };
+
+                this.BossCharts[difficulty].Times.Add(this.CreateChartButton(ref bossChart, bossChart.Times.Count, time, "Time", Color.Yellow));
+            }
+            else if (noteType.Equals("Normal Note"))
+            {
+                var BossNote = new BossNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    BossNoteType = BossNoteType.Normal
+                };
+
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Swipe Up Note"))
+            {
+                var BossNote = new BossNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    BossNoteType = BossNoteType.Swipe,
+                    SwipeDirection = SwipeType.Up
+                };
+
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Swipe Right Note"))
+            {
+                var BossNote = new BossNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    BossNoteType = BossNoteType.Swipe,
+                    SwipeDirection = SwipeType.Right
+                };
+
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Swipe Down Note"))
+            {
+                var BossNote = new BossNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    BossNoteType = BossNoteType.Swipe,
+                    SwipeDirection = SwipeType.Down
+                };
+
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Swipe Left Note"))
+            {
+                var BossNote = new BossNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    BossNoteType = BossNoteType.Swipe,
+                    SwipeDirection = SwipeType.Left
+                };
+
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Hold Start Note"))
+            {
+                var BossNote = new BossNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    BossNoteType = BossNoteType.HoldStart
+                };
+
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Hold End Note"))
+            {
+                var BossNote = new BossNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    BossNoteType = BossNoteType.HoldEnd
+                };
+
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
             }
         }
 

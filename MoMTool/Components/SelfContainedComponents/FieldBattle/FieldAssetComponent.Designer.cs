@@ -46,38 +46,38 @@ namespace MoMTool.Logic
             // timeLabel
             // 
             this.timeLabel.AutoSize = true;
-            this.timeLabel.Location = new System.Drawing.Point(3, 28);
-            this.timeLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.timeLabel.Location = new System.Drawing.Point(6, 60);
+            this.timeLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.timeLabel.Name = "timeLabel";
-            this.timeLabel.Size = new System.Drawing.Size(36, 15);
+            this.timeLabel.Size = new System.Drawing.Size(72, 32);
             this.timeLabel.TabIndex = 0;
             this.timeLabel.Text = "Time:";
             // 
             // timeValue
             // 
-            this.timeValue.Location = new System.Drawing.Point(53, 27);
-            this.timeValue.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.timeValue.Location = new System.Drawing.Point(98, 58);
+            this.timeValue.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.timeValue.Name = "timeValue";
-            this.timeValue.Size = new System.Drawing.Size(139, 23);
+            this.timeValue.Size = new System.Drawing.Size(255, 39);
             this.timeValue.TabIndex = 1;
             // 
             // msLabel
             // 
             this.msLabel.AutoSize = true;
-            this.msLabel.Location = new System.Drawing.Point(199, 28);
-            this.msLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.msLabel.Location = new System.Drawing.Point(370, 60);
+            this.msLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.msLabel.Name = "msLabel";
-            this.msLabel.Size = new System.Drawing.Size(23, 15);
+            this.msLabel.Size = new System.Drawing.Size(45, 32);
             this.msLabel.TabIndex = 2;
             this.msLabel.Text = "ms";
             // 
             // laneLabel
             // 
             this.laneLabel.AutoSize = true;
-            this.laneLabel.Location = new System.Drawing.Point(3, 60);
-            this.laneLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.laneLabel.Location = new System.Drawing.Point(6, 128);
+            this.laneLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.laneLabel.Name = "laneLabel";
-            this.laneLabel.Size = new System.Drawing.Size(35, 15);
+            this.laneLabel.Size = new System.Drawing.Size(69, 32);
             this.laneLabel.TabIndex = 3;
             this.laneLabel.Text = "Lane:";
             // 
@@ -98,10 +98,10 @@ namespace MoMTool.Logic
             "PartyMember2Right",
             "SomewhereRight",
             "OutOfMapRight"});
-            this.laneDropdown.Location = new System.Drawing.Point(53, 59);
-            this.laneDropdown.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.laneDropdown.Location = new System.Drawing.Point(98, 126);
+            this.laneDropdown.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.laneDropdown.Name = "laneDropdown";
-            this.laneDropdown.Size = new System.Drawing.Size(139, 23);
+            this.laneDropdown.Size = new System.Drawing.Size(255, 40);
             this.laneDropdown.TabIndex = 4;
             // 
             // modelDropdown
@@ -111,24 +111,25 @@ namespace MoMTool.Logic
             "AerialCommonArrow",
             "AerialUncommonArrow",
             "MultiHitAerialArrow",
-            "RareEnemyProjectileArrow",
-            "ProjectileArrow",
+            "ShooterProjectileArrow",
+            "AerialShooterProjectileArrow",
+            "AerialShooterArrow",
             "CrystalRightLeft",
             "CrystalCenter",
             "GlideArrow"});
-            this.modelDropdown.Location = new System.Drawing.Point(93, 90);
-            this.modelDropdown.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.modelDropdown.Location = new System.Drawing.Point(173, 192);
+            this.modelDropdown.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.modelDropdown.Name = "modelDropdown";
-            this.modelDropdown.Size = new System.Drawing.Size(139, 23);
+            this.modelDropdown.Size = new System.Drawing.Size(255, 40);
             this.modelDropdown.TabIndex = 5;
             // 
             // modelLabel
             // 
             this.modelLabel.AutoSize = true;
-            this.modelLabel.Location = new System.Drawing.Point(3, 92);
-            this.modelLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.modelLabel.Location = new System.Drawing.Point(6, 196);
+            this.modelLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.modelLabel.Name = "modelLabel";
-            this.modelLabel.Size = new System.Drawing.Size(44, 15);
+            this.modelLabel.Size = new System.Drawing.Size(88, 32);
             this.modelLabel.TabIndex = 6;
             this.modelLabel.Text = "Model:";
             // 
@@ -142,24 +143,24 @@ namespace MoMTool.Logic
             this.fieldAssetGroup.Controls.Add(this.timeValue);
             this.fieldAssetGroup.Controls.Add(this.timeLabel);
             this.fieldAssetGroup.Location = new System.Drawing.Point(0, 0);
-            this.fieldAssetGroup.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.fieldAssetGroup.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.fieldAssetGroup.Name = "fieldAssetGroup";
-            this.fieldAssetGroup.Padding = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.fieldAssetGroup.Size = new System.Drawing.Size(250, 133);
+            this.fieldAssetGroup.Padding = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this.fieldAssetGroup.Size = new System.Drawing.Size(464, 284);
             this.fieldAssetGroup.TabIndex = 0;
             this.fieldAssetGroup.TabStop = false;
             this.fieldAssetGroup.Text = "fieldAssetGroup";
             // 
             // FieldAssetComponent
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.CausesValidation = false;
             this.Controls.Add(this.fieldAssetGroup);
-            this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.Name = "FieldAssetComponent";
-            this.Size = new System.Drawing.Size(250, 133);
+            this.Size = new System.Drawing.Size(464, 284);
             this.fieldAssetGroup.ResumeLayout(false);
             this.fieldAssetGroup.PerformLayout();
             this.ResumeLayout(false);

@@ -279,16 +279,17 @@ namespace MoMTool.Logic
             return 0;
         }
 
-        public void DragDrop(Panel panel, Point point, string noteType)
+        public void CreateDroppedNote(Panel panel, Point point, string noteType)
         {
             Point controlRelatedCoords = panel.PointToClient(point);
 
             var lane = (MemoryLane)Enum.Parse(typeof(MemoryLane), panel.Name[5..]);
             var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
 
+            var memoryChart = this.MemoryCharts[difficulty];
+
             if (noteType.Equals("Memory Note"))
             {
-                var memoryChart = this.MemoryCharts[difficulty];
                 var memoryNote = new MemoryNote
                 {
                     HitTime = controlRelatedCoords.X * this.ZoomVariable,
@@ -299,7 +300,6 @@ namespace MoMTool.Logic
             }
             else if (noteType.Equals("Performer Note"))
             {
-                var memoryChart = this.MemoryCharts[difficulty];
                 var performer = new PerformerNote<MemoryLane>
                 {
                     HitTime = controlRelatedCoords.X * this.ZoomVariable,
@@ -307,6 +307,97 @@ namespace MoMTool.Logic
                 };
 
                 this.MemoryCharts[difficulty].Performers.Add(this.CreateChartButton(ref memoryChart, memoryChart.Performers.Count, performer, "Performer", Color.Purple));
+            }
+            else if (noteType.Equals("Time Shift"))
+            {
+                var time = new TimeShift<MemoryLane>
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = MemoryLane.PlayerLeft
+                };
+
+                this.MemoryCharts[difficulty].Times.Add(this.CreateChartButton(ref memoryChart, memoryChart.Times.Count, time, "Time", Color.Yellow));
+            }
+            else if (noteType.Equals("Normal Note"))
+            {
+                var memoryNote = new MemoryNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    MemoryNoteType = MemoryNoteType.Normal
+                };
+
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Swipe Up Note"))
+            {
+                var memoryNote = new MemoryNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    MemoryNoteType = MemoryNoteType.Swipe,
+                    SwipeDirection = SwipeType.Up
+                };
+
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Swipe Right Note"))
+            {
+                var memoryNote = new MemoryNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    MemoryNoteType = MemoryNoteType.Swipe,
+                    SwipeDirection = SwipeType.Right
+                };
+
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Swipe Down Note"))
+            {
+                var memoryNote = new MemoryNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    MemoryNoteType = MemoryNoteType.Swipe,
+                    SwipeDirection = SwipeType.Down
+                };
+
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Swipe Left Note"))
+            {
+                var memoryNote = new MemoryNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    MemoryNoteType = MemoryNoteType.Swipe,
+                    SwipeDirection = SwipeType.Left
+                };
+
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Hold Start Note"))
+            {
+                var memoryNote = new MemoryNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    MemoryNoteType = MemoryNoteType.HoldStart
+                };
+
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Hold End Note"))
+            {
+                var memoryNote = new MemoryNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    MemoryNoteType = MemoryNoteType.HoldEnd
+                };
+
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
             }
         }
 

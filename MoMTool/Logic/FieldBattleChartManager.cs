@@ -314,16 +314,17 @@ namespace MoMTool.Logic
             return 0;
         }
 
-        public void DragDrop(Panel panel, Point point, string noteType)
+        public void CreateDroppedNote(Panel panel, Point point, string noteType)
         {
             Point controlRelatedCoords = panel.PointToClient(point);
 
             var lane = (FieldLane)Enum.Parse(typeof(FieldLane), panel.Name[5..]);
             var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
 
+            var fieldChart = this.FieldCharts[difficulty];
+
             if (noteType.Equals("Field Note"))
             {
-                var fieldChart = this.FieldCharts[difficulty];
                 var fieldNote = new FieldNote
                 {
                     HitTime = controlRelatedCoords.X * this.ZoomVariable,
@@ -332,9 +333,8 @@ namespace MoMTool.Logic
 
                 this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
             }
-            else if (noteType.Equals("Asset"))
+            else if (noteType.Equals("Field Asset"))
             {
-                var fieldChart = this.FieldCharts[difficulty];
                 var fieldAsset = new FieldAsset
                 {
                     HitTime = controlRelatedCoords.X * this.ZoomVariable,
@@ -345,7 +345,6 @@ namespace MoMTool.Logic
             }
             else if (noteType.Equals("Performer Note"))
             {
-                var fieldChart = this.FieldCharts[difficulty];
                 var performer = new PerformerNote<FieldLane>
                 {
                     HitTime = controlRelatedCoords.X * this.ZoomVariable,
@@ -353,6 +352,630 @@ namespace MoMTool.Logic
                 };
 
                 this.FieldCharts[difficulty].Performers.Add(this.CreateChartButton(ref fieldChart, fieldChart.Performers.Count, performer, "Performer", Color.Purple));
+            }
+            else if (noteType.Equals("Time Shift"))
+            {
+                var time = new TimeShift<FieldLane>
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = FieldLane.OutOfMapLeft
+                };
+
+                this.FieldCharts[difficulty].Times.Add(this.CreateChartButton(ref fieldChart, fieldChart.Times.Count, time, "Time", Color.Yellow));
+            }
+            else if (noteType.Equals("Common Enemy"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.CommonEnemy,
+                    Animations = new List<FieldAnimation> { 
+                        new FieldAnimation { 
+                            AnimationEndTime = controlRelatedCoords.X, 
+                            AnimationStartTime = controlRelatedCoords.X - 3
+                        } 
+                    }
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Aerial Common Enemy"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.AerialCommonEnemy,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 3
+                        }
+                    },
+                    AerialFlag = true
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Uncommon Enemy"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.UncommonEnemy,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    },
+
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Aerial Uncommon Enemy"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.AerialUncommonEnemy,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    },
+                    AerialFlag = true
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Multi-Hit Ground Enemy"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.MultiHitGroundEnemy,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 3
+                        }
+                    },
+
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Multi-Hit Aerial Enemy"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.MultiHitAerialEnemy,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 3
+                        }
+                    },
+                    AerialFlag = true
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Enemy Shooter Projectile"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.EnemyShooterProjectile,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    },
+                    AerialFlag = true,
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Enemy Shooter"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.EnemyShooter,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Aerial Enemy Shooter Projectile"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.AerialEnemyShooterProjectile,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    },
+                    AerialFlag = true
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Aerial Enemy Shooter"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.AerialEnemyShooter,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    },
+                    AerialFlag = true
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Jumping Ground Enemy"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.JumpingGroundEnemy,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Jumping Aerial Enemy"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.JumpingAerialEnemy,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Under Chart Enemy"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.HiddenEnemy,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Hittable Aerial Uncommon Enemy"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.HittableAerialUncommonEnemy,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Crystal Enemy Left"))
+            {
+                // TODO Make a note and asset for this?
+                
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.CrystalEnemyLeftRight,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Crystal Enemy Right"))
+            {
+                // TODO Make a note and asset for this?
+                
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.CrystalEnemyLeftRight,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Crystal Enemy Center"))
+            {
+                // TODO Make a note and asset for this?
+
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.CrystalEnemyCenter,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Glide Note"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.GlideNote,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Green));
+            }
+            else if (noteType.Equals("Barrel"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.Barrel,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Crate"))
+            {
+                var fieldNote = new FieldNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldModelType.Crate,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldNote.Animations[0].AnimationStartTime < 0)
+                    fieldNote.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+            }
+            else if (noteType.Equals("Aerial Common Arrow"))
+            {
+                var fieldAsset = new FieldAsset
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldAssetType.AerialCommonArrow,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldAsset.Animations[0].AnimationStartTime < 0)
+                    fieldAsset.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldAsset, "Asset", Color.Blue));
+            }
+            else if (noteType.Equals("Aerial Uncommon Arrow"))
+            {
+                var fieldAsset = new FieldAsset
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldAssetType.AerialUncommonArrow,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldAsset.Animations[0].AnimationStartTime < 0)
+                    fieldAsset.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldAsset, "Asset", Color.Blue));
+            }
+            else if (noteType.Equals("Multi-Hit Aerial Arrow"))
+            {
+                var fieldAsset = new FieldAsset
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldAssetType.MultiHitAerialArrow,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldAsset.Animations[0].AnimationStartTime < 0)
+                    fieldAsset.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldAsset, "Asset", Color.Blue));
+            }
+            else if (noteType.Equals("Shooter Projectile Arrow"))
+            {
+                var fieldAsset = new FieldAsset
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldAssetType.ShooterProjectileArrow,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldAsset.Animations[0].AnimationStartTime < 0)
+                    fieldAsset.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldAsset, "Asset", Color.Blue));
+            }
+            else if (noteType.Equals("Aerial Shooter Projectile Arrow"))
+            {
+                var fieldAsset = new FieldAsset
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldAssetType.AerialShooterProjectileArrow,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldAsset.Animations[0].AnimationStartTime < 0)
+                    fieldAsset.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldAsset, "Asset", Color.Blue));
+            }
+            else if (noteType.Equals("Aerial Shooter Arrow"))
+            {
+                var fieldAsset = new FieldAsset
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldAssetType.AerialShooterArrow,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldAsset.Animations[0].AnimationStartTime < 0)
+                    fieldAsset.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldAsset, "Asset", Color.Blue));
+            }
+            else if (noteType.Equals("Crystal Right"))
+            {
+                var fieldAsset = new FieldAsset
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldAssetType.CrystalRightLeft,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldAsset.Animations[0].AnimationStartTime < 0)
+                    fieldAsset.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldAsset, "Asset", Color.Blue));
+            }
+            else if (noteType.Equals("Crystal Left"))
+            {
+                var fieldAsset = new FieldAsset
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldAssetType.CrystalRightLeft,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldAsset.Animations[0].AnimationStartTime < 0)
+                    fieldAsset.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldAsset, "Asset", Color.Blue));
+            }
+            else if (noteType.Equals("Crystal Center"))
+            {
+                var fieldAsset = new FieldAsset
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldAssetType.CrystalCenter,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldAsset.Animations[0].AnimationStartTime < 0)
+                    fieldAsset.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldAsset, "Asset", Color.Blue));
+            }
+            else if (noteType.Equals("Glide Arrow"))
+            {
+                var fieldAsset = new FieldAsset
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    ModelType = FieldAssetType.GlideArrow,
+                    Animations = new List<FieldAnimation> {
+                        new FieldAnimation {
+                            AnimationEndTime = controlRelatedCoords.X,
+                            AnimationStartTime = controlRelatedCoords.X - 6
+                        }
+                    }
+                };
+
+                if (fieldAsset.Animations[0].AnimationStartTime < 0)
+                    fieldAsset.Animations[0].AnimationStartTime = 0;
+
+                this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldAsset, "Asset", Color.Blue));
             }
         }
 

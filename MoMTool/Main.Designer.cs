@@ -30,6 +30,9 @@ namespace MoMTool
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Default Types", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Pre-Configured Notes", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Pre-Configured Assets", System.Windows.Forms.HorizontalAlignment.Left);
             this.fileName = new System.Windows.Forms.TextBox();
             this.openFileExplorer = new System.Windows.Forms.Button();
             this.recompileButton = new System.Windows.Forms.Button();
@@ -41,11 +44,11 @@ namespace MoMTool
             this.label1 = new System.Windows.Forms.Label();
             this.zoomInButton = new System.Windows.Forms.Button();
             this.zoomOutButton = new System.Windows.Forms.Button();
-            this.noteListBox = new System.Windows.Forms.ListBox();
             this.noteListLabel = new System.Windows.Forms.Label();
             this.debugCheckbox = new System.Windows.Forms.CheckBox();
             this.clearChartButton = new System.Windows.Forms.Button();
             this.deleteChartButton = new System.Windows.Forms.Button();
+            this.noteListView = new System.Windows.Forms.ListView();
             this.difficultyControl.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -174,21 +177,6 @@ namespace MoMTool
             this.zoomOutButton.UseVisualStyleBackColor = true;
             this.zoomOutButton.Click += new System.EventHandler(this.zoomOutButton_Click);
             // 
-            // noteListBox
-            // 
-            this.noteListBox.AllowDrop = true;
-            this.noteListBox.FormattingEnabled = true;
-            this.noteListBox.ItemHeight = 32;
-            this.noteListBox.Items.AddRange(new object[] {
-            "Enemy Note",
-            "Asset",
-            "Performer Note"});
-            this.noteListBox.Location = new System.Drawing.Point(1348, 171);
-            this.noteListBox.Margin = new System.Windows.Forms.Padding(6);
-            this.noteListBox.Name = "noteListBox";
-            this.noteListBox.Size = new System.Drawing.Size(325, 804);
-            this.noteListBox.TabIndex = 0;
-            // 
             // noteListLabel
             // 
             this.noteListLabel.AutoSize = true;
@@ -234,15 +222,36 @@ namespace MoMTool
             this.deleteChartButton.UseVisualStyleBackColor = false;
             this.deleteChartButton.Click += new System.EventHandler(this.deleteChartButton_Click);
             // 
+            // noteListView
+            // 
+            this.noteListView.AutoArrange = false;
+            listViewGroup1.Header = "Default Types";
+            listViewGroup1.Name = "groupDefaultTypes";
+            listViewGroup2.Header = "Pre-Configured Notes";
+            listViewGroup2.Name = "groupPreConfiguredNotes";
+            listViewGroup3.Header = "Pre-Configured Assets";
+            listViewGroup3.Name = "groupPreConfiguredAssets";
+            this.noteListView.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3});
+            this.noteListView.HideSelection = false;
+            this.noteListView.Location = new System.Drawing.Point(1339, 168);
+            this.noteListView.Name = "noteListView";
+            this.noteListView.Size = new System.Drawing.Size(335, 818);
+            this.noteListView.TabIndex = 11;
+            this.noteListView.UseCompatibleStateImageBehavior = false;
+            this.noteListView.View = System.Windows.Forms.View.Tile;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1686, 998);
+            this.Controls.Add(this.noteListView);
             this.Controls.Add(this.deleteChartButton);
             this.Controls.Add(this.clearChartButton);
             this.Controls.Add(this.debugCheckbox);
-            this.Controls.Add(this.noteListBox);
             this.Controls.Add(this.noteListLabel);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.recompileButton);
@@ -272,11 +281,11 @@ namespace MoMTool
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button zoomInButton;
         private System.Windows.Forms.Button zoomOutButton;
-        public System.Windows.Forms.ListBox noteListBox;
         private System.Windows.Forms.Label noteListLabel;
         private CheckBox debugCheckbox;
         private Button clearChartButton;
         private Button deleteChartButton;
+        private ListView noteListView;
     }
 }
 
