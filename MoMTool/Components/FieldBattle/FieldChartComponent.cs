@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace MoMTool.Logic
@@ -94,9 +95,9 @@ namespace MoMTool.Logic
         {
             var panel = ((Panel)sender);
             var point = new Point(e.X, e.Y);
-            var noteType = e.Data.GetData(DataFormats.Text).ToString();
+            var noteType = Regex.Match(e.Data.GetData(DataFormats.Text).ToString(), "ListViewItem: {(.*)}").Groups[1].Value;
 
-            this.FieldBattleChartManager.DragDrop(panel, point, noteType);
+            this.FieldBattleChartManager.CreateDroppedNote(panel, point, noteType);
         }
 
         public void ResetChart()

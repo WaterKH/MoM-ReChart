@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace MoMTool.Logic
@@ -39,10 +40,10 @@ namespace MoMTool.Logic
 
         private void chartTimeValue_TextChanged(object sender, EventArgs e)
         {
-            if(string.IsNullOrEmpty(((TextBox)sender).Text))
-                return;
+            var value = this.MemoryDiveChartManager.CalculateChartLength(((TextBox)sender).Text);
 
-            var value = (int.Parse(((TextBox)sender).Text) + 5000) / this.ZoomVariable; // Add 5 seconds of padding
+            if (value == 0)
+                return;
 
             this.panelPlayerLeft.Width = value;
             this.panelPlayerCenter.Width = value;
@@ -75,73 +76,11 @@ namespace MoMTool.Logic
 
         private void chartLane_DragDrop(object sender, DragEventArgs e)
         {
-            var noteType = e.Data.GetData(DataFormats.Text).ToString();
+            var panel = ((Panel)sender);
+            var point = new Point(e.X, e.Y);
+            var noteType = Regex.Match(e.Data.GetData(DataFormats.Text).ToString(), "ListViewItem: {(.*)}").Groups[1].Value;
 
-            Panel panel = ((Panel)sender);
-            Point pt = new Point(e.X, e.Y);
-            Point controlRelatedCoords = panel.PointToClient(pt);
-
-            var lane = (MemoryLane)Enum.Parse(typeof(MemoryLane), panel.Name[5..]);
-
-            if (noteType.Equals("Enemy Note"))
-            {
-                var momButton = new MoMButton<MemoryNote>
-                {
-                    Id = Notes.Count,
-                    Type = "Note",
-                    Note = new MemoryNote(),
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = Color.Red,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"note-{Notes.Count}",
-                        TabStop = false
-                    },
-                };
-
-                momButton.Button.Location = new Point(controlRelatedCoords.X, 0);
-
-                //momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
-                this.Notes.Add(momButton);
-
-                var toolTip = new ToolTip();
-                toolTip.SetToolTip(momButton.Button, (controlRelatedCoords.X * this.ZoomVariable).ToString());
-
-                this.AddToLane(lane, momButton.Button);
-            }
-            else if (noteType.Equals("Performer Note"))
-            {
-                var momButton = new MoMButton<PerformerNote<MemoryLane>>
-                {
-                    Id = Performers.Count,
-                    Type = "Performer",
-                    Note = new PerformerNote<MemoryLane>(),
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = Color.Purple,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"performer-{Performers.Count}",
-                        //TabIndex = -1,
-                        TabStop = false
-                    },
-                };
-
-                momButton.Button.Location = new Point(controlRelatedCoords.X, 0);
-
-                //momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.subChartComponent.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
-                this.Performers.Add(momButton);
-
-                var toolTip = new ToolTip();
-                toolTip.SetToolTip(momButton.Button, (controlRelatedCoords.X * this.ZoomVariable).ToString());
-
-                this.AddToLane(lane, momButton.Button);
-            }
+            this.MemoryDiveChartManager.CreateDroppedNote(panel, point, noteType);
         }
 
         public void LoadChart(MemoryDiveSong memoryDiveSong)

@@ -25,7 +25,7 @@ namespace MoMTool
 
             this.recompileButton.Visible = false;
 
-            this.noteListBox.MouseDown += this.noteItem_MouseDown;
+            this.noteListView.MouseDown += this.noteItem_MouseDown;
             this.difficultyControl.SelectedTab = this.tabProud;
 
             this.difficultyControl.Selected += (sender, args) =>
@@ -58,14 +58,13 @@ namespace MoMTool
         private void noteItem_MouseDown(object sender, MouseEventArgs e)
         {
             // Determines which item was selected.
-            ListBox lb = ((ListBox)sender);
-            Point pt = new Point(e.X, e.Y);
-            int index = lb.IndexFromPoint(pt);
+            ListView lv = ((ListView)sender);
+            var item = lv.GetItemAt(e.X, e.Y); // TODO Fix
 
             // Starts a drag-and-drop operation with that item.
-            if (index >= 0)
+            if (item != null)
             {
-                lb.DoDragDrop(lb.Items[index].ToString(), DragDropEffects.Copy | DragDropEffects.Move);
+                lv.DoDragDrop(item.ToString(), DragDropEffects.Copy | DragDropEffects.Move);
             }
         }
 
@@ -168,29 +167,104 @@ namespace MoMTool
                 case SongType.FieldBattle:
                     this.FieldBattleChartManager = new FieldBattleChartManager(musicFile);
 
-                    this.noteListBox.Items.AddRange(new object[] {
-                    "Field Note",
-                    "Asset",
-                    "Performer Note"});
+                    this.noteListView.Items.AddRange(this.LoadFieldPreConfiguredNotes());
                     break;
                 case SongType.MemoryDive:
                     this.MemoryDiveChartManager = new MemoryDiveChartManager(musicFile);
 
-                    this.noteListBox.Items.AddRange(new object[] {
-                    "Memory Note",
-                    "Performer Note"});
+                    this.noteListView.Items.AddRange(this.LoadMemoryPreConfiguredNotes());
                     break;
                 case SongType.BossBattle:
                     this.BossBattleChartManager = new BossBattleChartManager(musicFile);
                     
-                    this.noteListBox.Items.AddRange(new object[] {
-                    "Boss Note",
-                    "Performer Note"});
+                    this.noteListView.Items.AddRange(this.LoadBossPreConfiguredNotes());
                     break;
                 default:
                     break;
             }
         }
+
+        private ListViewItem[] LoadFieldPreConfiguredNotes()
+        {
+            return new ListViewItem[]
+            {
+                new ListViewItem { Text = "Field Note", Group = this.noteListView.Groups[0] },
+                new ListViewItem { Text = "Field Asset", Group = this.noteListView.Groups[0] },
+                new ListViewItem { Text = "Performer Note", Group = this.noteListView.Groups[0] },
+                new ListViewItem { Text = "Time Shift", Group = this.noteListView.Groups[0] },
+
+                new ListViewItem { Text = "Common Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Aerial Common Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Uncommon Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Aerial Uncommon Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Multi-Hit Ground Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Multi-Hit Aerial Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Enemy Shooter's Projectile", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Enemy Shooter", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Aerial Enemy Shooter's Projectile", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Aerial Enemy Shooter", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Jumping Ground Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Jumping Aerial Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Under Chart Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Hittable Aerial Uncommon Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Crystal Left Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Crystal Right Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Crystal Center Enemy", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Glide Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Barrel", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Crate", Group = this.noteListView.Groups[1] },
+
+                new ListViewItem { Text = "Aerial Common Arrow", Group = this.noteListView.Groups[2] },
+                new ListViewItem { Text = "Aerial Uncommon Arrow", Group = this.noteListView.Groups[2] },
+                new ListViewItem { Text = "Multi Hit Aerial Arrow", Group = this.noteListView.Groups[2] },
+                new ListViewItem { Text = "Shooter Projectile Arrow", Group = this.noteListView.Groups[2] },
+                new ListViewItem { Text = "Aerial Shooter Projectile Arrow", Group = this.noteListView.Groups[2] },
+                new ListViewItem { Text = "Aerial Shooter Arrow", Group = this.noteListView.Groups[2] },
+                new ListViewItem { Text = "Crystal Right", Group = this.noteListView.Groups[2] },
+                new ListViewItem { Text = "Crystal Left", Group = this.noteListView.Groups[2] },
+                new ListViewItem { Text = "Crystal Center", Group = this.noteListView.Groups[2] },
+                new ListViewItem { Text = "Glide Arrow", Group = this.noteListView.Groups[2] },
+            };
+        }
+
+
+        private ListViewItem[] LoadMemoryPreConfiguredNotes()
+        {
+            return new ListViewItem[]
+            {
+                new ListViewItem { Text = "Memory Note", Group = this.noteListView.Groups[0] },
+                new ListViewItem { Text = "Performer Note", Group = this.noteListView.Groups[0] },
+                new ListViewItem { Text = "Time Shift", Group = this.noteListView.Groups[0] },
+
+                new ListViewItem { Text = "Normal Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Swipe Up Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Swipe Right Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Swipe Down Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Swipe Left Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Hold Start Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Hold End Note", Group = this.noteListView.Groups[1] },
+            };
+        }
+
+        private ListViewItem[] LoadBossPreConfiguredNotes()
+        {
+            return new ListViewItem[]
+            {
+                new ListViewItem { Text = "Boss Note", Group = this.noteListView.Groups[0] },
+                new ListViewItem { Text = "Performer Note", Group = this.noteListView.Groups[0] },
+                new ListViewItem { Text = "Time Shift", Group = this.noteListView.Groups[0] },
+
+                new ListViewItem { Text = "Normal Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Swipe Up Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Swipe Right Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Swipe Down Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Swipe Left Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Hold Start Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Hold End Note", Group = this.noteListView.Groups[1] },
+                new ListViewItem { Text = "Crystal Note", Group = this.noteListView.Groups[1] },
+            };
+        }
+
 
         private void RemovePreviousChartManager()
         {
@@ -198,7 +272,7 @@ namespace MoMTool
             this.BossBattleChartManager = null;
             this.MemoryDiveChartManager = null;
 
-            this.noteListBox.Items.Clear();
+            this.noteListView.Items.Clear();
         }
 
         private void PlaceCharts<TControl>(Dictionary<Difficulty, TControl> charts) where TControl : UserControl
