@@ -32,38 +32,38 @@ namespace MoMTool.Logic
         {
             this.Visible = false;
 
-            //var noteIndex = int.Parse(this.bossNoteComponent.memoryNoteGroup.Text.Split(' ')[^1]);
+            var noteIndex = int.Parse(this.bossNoteComponent.bossNoteGroup.Text.Split(' ')[^1]);
 
-            //var momButton = ParentChartComponent.Notes[noteIndex];
-            //var note = momButton.Note;
+            var momButton = ParentChartComponent.Notes[noteIndex];
+            var note = momButton.Note;
 
-            //note.NoteType = 0; // TODO Is this needed?
-            //note.HitTime = int.Parse(this.bossNoteComponent.timeValue.Text);
-            //note.Lane = (MemoryLane)Enum.Parse(typeof(MemoryLane), this.bossNoteComponent.laneDropdown.SelectedItem.ToString());
-            //note.StartHoldNote = int.Parse(this.bossNoteComponent.nextNoteValue.Text);
-            //note.EndHoldNote = int.Parse(this.bossNoteComponent.previousNoteValue.Text);
-            //note.BossNoteType = (BossNoteType)Enum.Parse(typeof(BossNoteType), this.bossNoteComponent.modelDropdown.SelectedItem.ToString());
+            note.NoteType = 0; // TODO Is this needed?
+            note.HitTime = int.Parse(this.bossNoteComponent.timeValue.Text);
+            note.Lane = (BossLane)Enum.Parse(typeof(BossLane), this.bossNoteComponent.laneDropdown.SelectedItem.ToString());
+            note.StartHoldNote = int.Parse(this.bossNoteComponent.nextNoteValue.Text);
+            note.EndHoldNote = int.Parse(this.bossNoteComponent.previousNoteValue.Text);
+            note.BossNoteType = (BossNoteType)Enum.Parse(typeof(BossNoteType), this.bossNoteComponent.modelDropdown.SelectedItem.ToString());
 
-            //ParentChartComponent.Notes[noteIndex].Note = note;
-            //momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10
+            ParentChartComponent.Notes[noteIndex].Note = note;
+            momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10
 
-            //this.ParentChartComponent.AddToLane(note.Lane, momButton.Button);
+            this.ParentChartComponent.AddToLane(note.Lane, momButton.Button);
             
-            //var toolTip = new ToolTip();
-            //toolTip.SetToolTip(momButton.Button, note.HitTime.ToString());
+            var toolTip = new ToolTip();
+            toolTip.SetToolTip(momButton.Button, note.HitTime.ToString());
         }
 
         private void deleteNote_Click(object sender, EventArgs e)
         {
             this.Visible = false;
 
-            //var noteIndex = int.Parse(this.bossNoteComponent.memoryNoteGroup.Text.Split(' ')[^1]);
+            var noteIndex = int.Parse(this.bossNoteComponent.bossNoteGroup.Text.Split(' ')[^1]);
 
-            //this.ParentChartComponent.RemoveFromLane(this.ParentChartComponent.Notes[noteIndex].Note.Lane, this.ParentChartComponent.Notes[noteIndex].Button);
+            this.ParentChartComponent.RemoveFromLane(this.ParentChartComponent.Notes[noteIndex].Note.Lane, this.ParentChartComponent.Notes[noteIndex].Button);
 
-            //this.ParentChartComponent.Notes[noteIndex].Button.Visible = false;
-            //this.ParentChartComponent.Notes[noteIndex].Button = null;
-            //this.ParentChartComponent.Notes.RemoveAt(noteIndex);
+            this.ParentChartComponent.Notes[noteIndex].Button.Visible = false;
+            this.ParentChartComponent.Notes[noteIndex].Button = null;
+            this.ParentChartComponent.Notes.RemoveAt(noteIndex);
         }
     }
 }

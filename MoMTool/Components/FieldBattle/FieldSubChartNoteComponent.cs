@@ -15,8 +15,8 @@ namespace MoMTool.Logic
     {
         public int ChartOffset { get; set; }
         public int ChartLength { get; set; }
-        public FieldChartComponent ParentChartComponent;
-        public FieldBattleSubChartManager FieldBattleSubChartManager;
+        public FieldChartComponent ParentChartComponent { get; set; }
+        public FieldBattleSubChartManager FieldBattleSubChartManager { get; set; }
 
         public ObservableCollection<MoMButton<FieldAnimation>> Animations = new ObservableCollection<MoMButton<FieldAnimation>>();
 

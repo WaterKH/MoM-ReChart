@@ -178,7 +178,7 @@ namespace MoMTool.Logic
             newSong.PerformerCount = chart.Performers.Count;
             newSong.TimeShiftCount = chart.Times.Count;
 
-            newSong.Unk1 = 1; // TODO Why? Is this the Identifier for FieldBattle?
+            newSong.Unk1 = 1;
 
             var newNotes = new List<Note<BossLane>>();
 
@@ -199,7 +199,7 @@ namespace MoMTool.Logic
             }
 
             // Add Note + Header Lengths
-            newSong.Length = (newSong.NoteCount * 0x48) + (newSong.PerformerCount * 0x30) + (newSong.TimeShiftCount * 0x08) + 0x28; // TODO UPDATE THIS TO REFLECT MEMORY DIVE LENGTHS
+            newSong.Length = (newSong.NoteCount * 0x40) + (newSong.PerformerCount * 0x30) + (newSong.TimeShiftCount * 0x08) + (newSong.DarkZoneCount * 0x10) + 0x28;
         }
 
         #endregion Recompile Memory Dive Music File
@@ -225,6 +225,7 @@ namespace MoMTool.Logic
             bossChart.Notes = this.CreateChartButtons(ref bossChart, bossBattleSong.NoteCount, bossBattleSong.Notes, "Note", Color.Red);
             bossChart.Performers = this.CreateChartButtons(ref bossChart, bossBattleSong.PerformerCount, bossBattleSong.PerformerNotes, "Performer", Color.Purple);
             bossChart.Times = this.CreateChartButtons(ref bossChart, bossBattleSong.TimeShiftCount, bossBattleSong.TimeShifts, "Time", Color.Yellow);
+            bossChart.DarkZones = this.CreateChartButtons(ref bossChart, bossBattleSong.DarkZoneCount, bossBattleSong.DarkZones, "DarkZone", Color.Black);
 
             return bossChart;
         }
@@ -287,7 +288,7 @@ namespace MoMTool.Logic
 
             var bossChart = this.BossCharts[difficulty];
 
-            if (noteType.Equals("Memory Note"))
+            if (noteType.Equals("Boss Note"))
             {
                 var BossNote = new BossNote
                 {
@@ -317,6 +318,19 @@ namespace MoMTool.Logic
 
                 this.BossCharts[difficulty].Times.Add(this.CreateChartButton(ref bossChart, bossChart.Times.Count, time, "Time", Color.Yellow));
             }
+            else if (noteType.Equals("Dark Zone"))
+            {
+                var darkZone = new BossDarkZone
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = BossLane.PlayerTop,
+                    EndTime = (controlRelatedCoords.X * this.ZoomVariable) + 6000,
+                    EndAttackTime = (controlRelatedCoords.X * this.ZoomVariable) + 12000,
+                };
+
+                this.BossCharts[difficulty].DarkZones.Add(this.CreateChartButton(ref bossChart, bossChart.DarkZones.Count, darkZone, "DarkZone", Color.Black));
+            }
+            // Specific Types
             else if (noteType.Equals("Normal Note"))
             {
                 var BossNote = new BossNote
@@ -397,6 +411,16 @@ namespace MoMTool.Logic
                 };
 
                 this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+            }
+
+
+            foreach (var note in this.BossCharts[this.CurrentDifficultyTab].Notes.Where(x => x.Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable))
+            {
+                if (note.Note.StartHoldNote != -1 && this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.StartHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
+                    this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.BossCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.StartHoldNote += 1;
+
+                if (note.Note.EndHoldNote != -1 && this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.EndHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
+                    this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.BossCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.EndHoldNote += 1;
             }
         }
 

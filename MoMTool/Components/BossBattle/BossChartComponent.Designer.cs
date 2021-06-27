@@ -33,8 +33,8 @@ namespace MoMTool.Logic
         private void InitializeComponent()
         {
             this.chartNotePanel = new System.Windows.Forms.Panel();
-            this.panelPlayerRight = new System.Windows.Forms.Panel();
-            this.panelPlayerLeft = new System.Windows.Forms.Panel();
+            this.panelPlayerBottom = new System.Windows.Forms.Panel();
+            this.panelPlayerTop = new System.Windows.Forms.Panel();
             this.panelPlayerCenter = new System.Windows.Forms.Panel();
             this.displayText = new System.Windows.Forms.Label();
             this.notesCheckbox = new System.Windows.Forms.CheckBox();
@@ -50,31 +50,31 @@ namespace MoMTool.Logic
             // 
             this.chartNotePanel.AllowDrop = true;
             this.chartNotePanel.AutoScroll = true;
-            this.chartNotePanel.Controls.Add(this.panelPlayerRight);
-            this.chartNotePanel.Controls.Add(this.panelPlayerLeft);
+            this.chartNotePanel.Controls.Add(this.panelPlayerBottom);
+            this.chartNotePanel.Controls.Add(this.panelPlayerTop);
             this.chartNotePanel.Controls.Add(this.panelPlayerCenter);
             this.chartNotePanel.Location = new System.Drawing.Point(0, 35);
             this.chartNotePanel.Name = "chartNotePanel";
             this.chartNotePanel.Size = new System.Drawing.Size(706, 348);
             this.chartNotePanel.TabIndex = 0;
             // 
-            // panelPlayerRight
+            // panelPlayerBottom
             // 
-            this.panelPlayerRight.AllowDrop = true;
-            this.panelPlayerRight.BackColor = System.Drawing.Color.Pink;
-            this.panelPlayerRight.Location = new System.Drawing.Point(0, 175);
-            this.panelPlayerRight.Name = "panelPlayerRight";
-            this.panelPlayerRight.Size = new System.Drawing.Size(0, 19);
-            this.panelPlayerRight.TabIndex = 7;
+            this.panelPlayerBottom.AllowDrop = true;
+            this.panelPlayerBottom.BackColor = System.Drawing.Color.Pink;
+            this.panelPlayerBottom.Location = new System.Drawing.Point(0, 175);
+            this.panelPlayerBottom.Name = "panelPlayerBottom";
+            this.panelPlayerBottom.Size = new System.Drawing.Size(0, 19);
+            this.panelPlayerBottom.TabIndex = 7;
             // 
-            // panelPlayerLeft
+            // panelPlayerTop
             // 
-            this.panelPlayerLeft.AllowDrop = true;
-            this.panelPlayerLeft.BackColor = System.Drawing.Color.Pink;
-            this.panelPlayerLeft.Location = new System.Drawing.Point(0, 125);
-            this.panelPlayerLeft.Name = "panelPlayerLeft";
-            this.panelPlayerLeft.Size = new System.Drawing.Size(0, 19);
-            this.panelPlayerLeft.TabIndex = 5;
+            this.panelPlayerTop.AllowDrop = true;
+            this.panelPlayerTop.BackColor = System.Drawing.Color.Pink;
+            this.panelPlayerTop.Location = new System.Drawing.Point(0, 125);
+            this.panelPlayerTop.Name = "panelPlayerTop";
+            this.panelPlayerTop.Size = new System.Drawing.Size(0, 19);
+            this.panelPlayerTop.TabIndex = 5;
             // 
             // panelPlayerCenter
             // 
@@ -193,8 +193,8 @@ namespace MoMTool.Logic
         private Label songTypeText;
         private Label chartLengthText;
         public TextBox chartTimeValue;
-        public Panel panelPlayerRight;
-        public Panel panelPlayerLeft;
+        public Panel panelPlayerBottom;
+        public Panel panelPlayerTop;
         public Panel panelPlayerCenter;
     }
 }

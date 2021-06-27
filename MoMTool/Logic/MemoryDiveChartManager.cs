@@ -179,7 +179,7 @@ namespace MoMTool.Logic
             newSong.PerformerCount = chart.Performers.Count;
             newSong.TimeShiftCount = chart.Times.Count;
 
-            newSong.Unk1 = 1; // TODO Why? Is this the Identifier for FieldBattle?
+            newSong.Unk1 = 1;
 
             var newNotes = new List<Note<MemoryLane>>();
 
@@ -200,7 +200,7 @@ namespace MoMTool.Logic
             }
 
             // Add Note + Header Lengths
-            newSong.Length = (newSong.NoteCount * 0x48) + (newSong.PerformerCount * 0x30) + (newSong.TimeShiftCount * 0x08) + 0x28; // TODO UPDATE THIS TO REFLECT MEMORY DIVE LENGTHS
+            newSong.Length = (newSong.NoteCount * 0x40) + (newSong.PerformerCount * 0x30) + (newSong.TimeShiftCount * 0x08) + 0x28;
         }
 
         #endregion Recompile Memory Dive Music File
@@ -398,6 +398,16 @@ namespace MoMTool.Logic
                 };
 
                 this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+            }
+
+
+            foreach (var note in this.MemoryCharts[this.CurrentDifficultyTab].Notes.Where(x => x.Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable))
+            {
+                if (note.Note.StartHoldNote != -1 && this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.StartHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
+                    this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.MemoryCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.StartHoldNote += 1;
+
+                if (note.Note.EndHoldNote != -1 && this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.EndHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
+                    this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.MemoryCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.EndHoldNote += 1;
             }
         }
 
