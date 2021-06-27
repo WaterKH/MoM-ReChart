@@ -44,6 +44,8 @@ namespace MoMTool.Logic
 
             this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.Add(this.FieldSubChartComponent);
             this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Controls[^1].BringToFront();
+
+            this.FieldSubChartComponent.ParentChartComponent = this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab];
         }
 
         public void LoadSubChartComponent(int id, FieldNote note)
@@ -82,6 +84,7 @@ namespace MoMTool.Logic
         public void LoadSubChartComponent(int id, FieldAsset asset)
         {
             this.FieldSubChartComponent = new FieldSubChartAssetComponent { Visible = true };
+            this.FieldSubChartComponent.FieldBattleSubChartManager = this;
 
             this.FieldSubChartComponent.fieldAssetComponent.fieldAssetGroup.Text = $"Field Asset {id}";
             this.FieldSubChartComponent.fieldAssetComponent.timeValue.Text = asset.HitTime.ToString();
@@ -92,6 +95,8 @@ namespace MoMTool.Logic
         public void LoadSubChartComponent(int id, PerformerNote<FieldLane> performer)
         {
             this.FieldSubChartComponent = new PerformerComponent { Visible = true };
+            this.FieldSubChartComponent.SubChartManager = this;
+            this.FieldSubChartComponent.UpdateLane(typeof(FieldLane));
 
             this.FieldSubChartComponent.performerGroup.Text = $"Performer Note {id}";
             this.FieldSubChartComponent.timeValue.Text = performer.HitTime.ToString();
@@ -102,7 +107,8 @@ namespace MoMTool.Logic
         public void LoadSubChartComponent(int id, TimeShift<FieldLane> time)
         {
             this.FieldSubChartComponent = new TimeShiftComponent { Visible = true };
-            
+            this.FieldSubChartComponent.SubChartManager = this;
+
             this.FieldSubChartComponent.timeShiftGroup.Text = $"Time Shift {id}";
             this.FieldSubChartComponent.timeValue.Text = time.HitTime.ToString();
             this.FieldSubChartComponent.speedValue.Text = time.Speed.ToString();

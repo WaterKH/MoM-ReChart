@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace MoMTool.Logic
@@ -18,6 +19,7 @@ namespace MoMTool.Logic
         public ObservableCollection<MoMButton<BossNote>> Notes = new ObservableCollection<MoMButton<BossNote>>();
         public ObservableCollection<MoMButton<PerformerNote<BossLane>>> Performers = new ObservableCollection<MoMButton<PerformerNote<BossLane>>>();
         public ObservableCollection<MoMButton<TimeShift<BossLane>>> Times = new ObservableCollection<MoMButton<TimeShift<BossLane>>>();
+        public ObservableCollection<MoMButton<BossDarkZone>> DarkZones = new ObservableCollection<MoMButton<BossDarkZone>>();
 
         public int ZoomVariable = 10;
 
@@ -44,9 +46,9 @@ namespace MoMTool.Logic
 
             var value = (int.Parse(((TextBox)sender).Text) + 5000) / this.ZoomVariable; // Add 5 seconds of padding
 
-            this.panelPlayerLeft.Width = value;
+            this.panelPlayerTop.Width = value;
             this.panelPlayerCenter.Width = value;
-            this.panelPlayerRight.Width = value;
+            this.panelPlayerBottom.Width = value;
         }
 
         private void notesCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -75,73 +77,11 @@ namespace MoMTool.Logic
 
         private void chartLane_DragDrop(object sender, DragEventArgs e)
         {
-            var noteType = e.Data.GetData(DataFormats.Text).ToString();
+            var panel = ((Panel)sender);
+            var point = new Point(e.X, e.Y);
+            var noteType = Regex.Match(e.Data.GetData(DataFormats.Text).ToString(), "ListViewItem: {(.*)}").Groups[1].Value;
 
-            Panel panel = ((Panel)sender);
-            Point pt = new Point(e.X, e.Y);
-            Point controlRelatedCoords = panel.PointToClient(pt);
-
-            var lane = (BossLane)Enum.Parse(typeof(BossLane), panel.Name[5..]);
-
-            if (noteType.Equals("Enemy Note"))
-            {
-                var momButton = new MoMButton<BossNote>
-                {
-                    Id = Notes.Count,
-                    Type = "Note",
-                    Note = new BossNote(),
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = Color.Red,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"note-{Notes.Count}",
-                        TabStop = false
-                    },
-                };
-
-                momButton.Button.Location = new Point(controlRelatedCoords.X, 0);
-
-                //momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
-                this.Notes.Add(momButton);
-
-                var toolTip = new ToolTip();
-                toolTip.SetToolTip(momButton.Button, (controlRelatedCoords.X * this.ZoomVariable).ToString());
-
-                this.AddToLane(lane, momButton.Button);
-            }
-            else if (noteType.Equals("Performer Note"))
-            {
-                var momButton = new MoMButton<PerformerNote<BossLane>>
-                {
-                    Id = Performers.Count,
-                    Type = "Performer",
-                    Note = new PerformerNote<BossLane>(),
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = Color.Purple,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"performer-{Performers.Count}",
-                        //TabIndex = -1,
-                        TabStop = false
-                    },
-                };
-
-                momButton.Button.Location = new Point(controlRelatedCoords.X, 0);
-
-                //momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.subChartComponent.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
-                this.Performers.Add(momButton);
-
-                var toolTip = new ToolTip();
-                toolTip.SetToolTip(momButton.Button, (controlRelatedCoords.X * this.ZoomVariable).ToString());
-
-                this.AddToLane(lane, momButton.Button);
-            }
+            this.BossBattleChartManager.CreateDroppedNote(panel, point, noteType);
         }
 
         public void LoadChart(BossBattleSong bossBattleSong)
@@ -244,6 +184,35 @@ namespace MoMTool.Logic
 
                 this.AddToLane(BossLane.PlayerTop, momButton.Button);
             }
+
+            for (int i = 0; i < bossBattleSong.DarkZoneCount; ++i)
+            {
+                var momButton = new MoMButton<BossDarkZone>
+                {
+                    Type = "DarkZone",
+                    //Note = fieldBattleSong.TimeShifts[i],
+                    Button = new Button
+                    {
+                        Text = "",
+                        //Image = Image.FromFile("Resources/note_shadow.png"),
+                        BackColor = Color.Black,
+                        Height = 19,
+                        Width = 19,
+                        Name = $"darkZone-{i}",
+                        //TabIndex = -1,
+                        TabStop = false
+                    },
+                };
+
+                //momButton.Button.Location = new Point(momButton.Note.ChangeTime / this.ZoomVariable, 0);
+
+                //momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.subChartComponent.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
+                this.DarkZones.Add(momButton);
+
+                //toolTip.SetToolTip(momButton.Button, momButton.Note.ChangeTime.ToString());
+
+                this.AddToLane(BossLane.PlayerTop, momButton.Button);
+            }
         }
 
         public void ResetChart()
@@ -262,9 +231,9 @@ namespace MoMTool.Logic
 
         private void ClearPanels()
         {
-            this.panelPlayerLeft.Controls.Clear();
+            this.panelPlayerTop.Controls.Clear();
             this.panelPlayerCenter.Controls.Clear();
-            this.panelPlayerRight.Controls.Clear();
+            this.panelPlayerBottom.Controls.Clear();
         }
 
         public void AddToLane(BossLane lane, Button buttonNote)
@@ -272,13 +241,13 @@ namespace MoMTool.Logic
             switch (lane)
             {
                 case BossLane.PlayerTop:
-                    this.panelPlayerLeft.Controls.Add(buttonNote);
+                    this.panelPlayerTop.Controls.Add(buttonNote);
                     break;
                 case BossLane.PlayerCenter:
                     this.panelPlayerCenter.Controls.Add(buttonNote);
                     break;
                 case BossLane.PlayerBottom:
-                    this.panelPlayerRight.Controls.Add(buttonNote);
+                    this.panelPlayerBottom.Controls.Add(buttonNote);
                     break;
                 default:
                     break;
@@ -290,13 +259,13 @@ namespace MoMTool.Logic
             switch (lane)
             {
                 case BossLane.PlayerTop:
-                    this.panelPlayerLeft.Controls.Remove(buttonNote);
+                    this.panelPlayerTop.Controls.Remove(buttonNote);
                     break;
                 case BossLane.PlayerCenter:
                     this.panelPlayerCenter.Controls.Remove(buttonNote);
                     break;
                 case BossLane.PlayerBottom:
-                    this.panelPlayerRight.Controls.Remove(buttonNote);
+                    this.panelPlayerBottom.Controls.Remove(buttonNote);
                     break;
                 default:
                     break;

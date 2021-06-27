@@ -41,6 +41,8 @@ namespace MoMTool.Logic
 
             this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.Add(this.MemorySubChartComponent);
             this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab].Controls[^1].BringToFront();
+
+            this.MemorySubChartComponent.ParentChartComponent = this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab];
         }
 
         public void LoadSubChartComponent(int id, MemoryNote note)
@@ -60,6 +62,8 @@ namespace MoMTool.Logic
         public void LoadSubChartComponent(int id, PerformerNote<MemoryLane> performer)
         {
             this.MemorySubChartComponent = new PerformerComponent { Visible = true };
+            this.MemorySubChartComponent.SubChartManager = this;
+            this.MemorySubChartComponent.UpdateLane(typeof(MemoryLane));
             
             this.MemorySubChartComponent.performerGroup.Text = $"Performer Note {id}";
             this.MemorySubChartComponent.timeValue.Text = performer.HitTime.ToString();
@@ -70,7 +74,8 @@ namespace MoMTool.Logic
         public void LoadSubChartComponent(int id, TimeShift<MemoryLane> time)
         {
             this.MemorySubChartComponent = new TimeShiftComponent { Visible = true };
-            
+            this.MemorySubChartComponent.SubChartManager = this;
+
             this.MemorySubChartComponent.timeShiftGroup.Text = $"Time Shift {id}";
             this.MemorySubChartComponent.timeValue.Text = time.HitTime.ToString();
             this.MemorySubChartComponent.speedValue.Text = time.Speed.ToString();
