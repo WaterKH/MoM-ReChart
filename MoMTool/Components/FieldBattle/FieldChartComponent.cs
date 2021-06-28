@@ -95,9 +95,17 @@ namespace MoMTool.Logic
         {
             var panel = ((Panel)sender);
             var point = new Point(e.X, e.Y);
-            var noteType = Regex.Match(e.Data.GetData(DataFormats.Text).ToString(), "ListViewItem: {(.*)}").Groups[1].Value;
+            var data = e.Data.GetData(DataFormats.Text).ToString();
+            var noteType = Regex.Match(data, "ListViewItem: {(.*)}").Groups[1].Value;
 
-            this.FieldBattleChartManager.CreateDroppedNote(panel, point, noteType);
+            if (noteType != "")
+            {
+                this.FieldBattleChartManager.CreateDroppedNote(panel, point, noteType);
+            }
+            else
+            {
+                this.FieldBattleChartManager.MoveChartNote(panel, point, data);
+            }
         }
 
         public void ResetChart()

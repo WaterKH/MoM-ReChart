@@ -41,10 +41,10 @@ namespace MoMTool.Logic
 
         private void chartTimeValue_TextChanged(object sender, EventArgs e)
         {
-            if(string.IsNullOrEmpty(((TextBox)sender).Text))
-                return;
+            var value = this.BossBattleChartManager.CalculateChartLength(((TextBox)sender).Text);
 
-            var value = (int.Parse(((TextBox)sender).Text) + 5000) / this.ZoomVariable; // Add 5 seconds of padding
+            if (string.IsNullOrEmpty(((TextBox)sender).Text))
+                return;
 
             this.panelPlayerTop.Width = value;
             this.panelPlayerCenter.Width = value;
@@ -79,139 +79,16 @@ namespace MoMTool.Logic
         {
             var panel = ((Panel)sender);
             var point = new Point(e.X, e.Y);
-            var noteType = Regex.Match(e.Data.GetData(DataFormats.Text).ToString(), "ListViewItem: {(.*)}").Groups[1].Value;
+            var data = e.Data.GetData(DataFormats.Text).ToString();
+            var noteType = Regex.Match(data, "ListViewItem: {(.*)}").Groups[1].Value;
 
-            this.BossBattleChartManager.CreateDroppedNote(panel, point, noteType);
-        }
-
-        public void LoadChart(BossBattleSong bossBattleSong)
-        {
-            var toolTip = new ToolTip();
-
-            this.ResetChart();
-
-            var songLength = (bossBattleSong.Notes.OrderByDescending(x => x.HitTime).FirstOrDefault().HitTime);
-
-            this.songTypeDropdown.SelectedItem = "Boss Battle";
-            this.notesCheckbox.Checked = true;
-            this.performerCheckbox.Checked = true;
-            this.chartTimeValue.Text = songLength.ToString();
-
-            for (int i = 0; i < bossBattleSong.NoteCount; ++i)
+            if (noteType != "")
             {
-                var momButton = new MoMButton<BossNote>
-                {
-                    Id = i,
-                    Type = "Note",
-                    Note = bossBattleSong.Notes[i],
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = Color.Red,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"note-{i}",
-                        //TabIndex = -1,
-                        TabStop = false
-                    },
-                };
-
-                momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
-
-                //momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.subChartComponent.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
-                this.Notes.Add(momButton);
-
-                toolTip.SetToolTip(momButton.Button, momButton.Note.HitTime.ToString());
-
-                this.AddToLane(momButton.Note.Lane, momButton.Button);
+                this.BossBattleChartManager.CreateDroppedNote(panel, point, noteType);
             }
-
-            for (int i = 0; i < bossBattleSong.PerformerCount; ++i)
+            else
             {
-                var momButton = new MoMButton<PerformerNote<BossLane>>
-                {
-                    Type = "Performer",
-                    //Note = fieldBattleSong.PerformerNotes[i],
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = Color.Purple,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"performer-{i}",
-                        //TabIndex = -1,
-                        TabStop = false
-                    },
-                };
-
-                momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
-
-                //momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.subChartComponent.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
-                this.Performers.Add(momButton);
-
-                toolTip.SetToolTip(momButton.Button, momButton.Note.HitTime.ToString());
-
-                //this.AddToLane(momButton.Note.Lane, momButton.Button);
-            }
-
-            for (int i = 0; i < bossBattleSong.TimeShiftCount; ++i)
-            {
-                var momButton = new MoMButton<TimeShift<BossLane>>
-                {
-                    Type = "Time",
-                    //Note = fieldBattleSong.TimeShifts[i],
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = Color.Yellow,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"time-{i}",
-                        //TabIndex = -1,
-                        TabStop = false
-                    },
-                };
-
-                //momButton.Button.Location = new Point(momButton.Note.ChangeTime / this.ZoomVariable, 0);
-
-                //momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.subChartComponent.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
-                this.Times.Add(momButton);
-
-                //toolTip.SetToolTip(momButton.Button, momButton.Note.ChangeTime.ToString());
-
-                this.AddToLane(BossLane.PlayerTop, momButton.Button);
-            }
-
-            for (int i = 0; i < bossBattleSong.DarkZoneCount; ++i)
-            {
-                var momButton = new MoMButton<BossDarkZone>
-                {
-                    Type = "DarkZone",
-                    //Note = fieldBattleSong.TimeShifts[i],
-                    Button = new Button
-                    {
-                        Text = "",
-                        //Image = Image.FromFile("Resources/note_shadow.png"),
-                        BackColor = Color.Black,
-                        Height = 19,
-                        Width = 19,
-                        Name = $"darkZone-{i}",
-                        //TabIndex = -1,
-                        TabStop = false
-                    },
-                };
-
-                //momButton.Button.Location = new Point(momButton.Note.ChangeTime / this.ZoomVariable, 0);
-
-                //momButton.Button.Click += (object sender, EventArgs e) => { momButton.Button.Focus(); this.subChartComponent.LoadSubChartComponent(momButton.Id, momButton.Note, this); };
-                this.DarkZones.Add(momButton);
-
-                //toolTip.SetToolTip(momButton.Button, momButton.Note.ChangeTime.ToString());
-
-                this.AddToLane(BossLane.PlayerTop, momButton.Button);
+                this.BossBattleChartManager.MoveChartNote(panel, point, data);
             }
         }
 

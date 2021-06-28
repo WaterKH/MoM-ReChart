@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace MoMTool.Logic
@@ -263,6 +264,7 @@ namespace MoMTool.Logic
 
             momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
             momButton.Button.Click += (object sender, EventArgs e) => { BossBattleSubChartManager.LoadSubChartComponent(momButton.Id, momButton.Note); };
+            momButton.Button.MouseDown += (object sender, MouseEventArgs e) => { this.MouseDown(sender, e); };
 
             ToolTip.SetToolTip(momButton.Button, momButton.Note.HitTime.ToString());
 
@@ -277,6 +279,52 @@ namespace MoMTool.Logic
                 return (value + 5000) / this.ZoomVariable; // Add 5 seconds and apply our zoom
 
             return 0;
+        }
+
+        public void MoveChartNote(Panel panel, Point point, string buttonName)
+        {
+            var buttonType = buttonName.Split('-')[0];
+            Point controlRelatedCoords = panel.PointToClient(point);
+
+            var lane = (BossLane)Enum.Parse(typeof(BossLane), panel.Name[5..]);
+            var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
+
+            if (buttonType == "note")
+            {
+                this.BossCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.BossCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
+                this.BossCharts[difficulty].AddToLane(lane, this.BossCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+            }
+            else if (buttonType == "performer")
+            {
+                this.BossCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.BossCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
+                this.BossCharts[difficulty].AddToLane(lane, this.BossCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+            }
+            else if (buttonType == "time")
+            {
+                this.BossCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.BossCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
+                this.BossCharts[difficulty].AddToLane(lane, this.BossCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+            }
+            else if (buttonType == "darkzone")
+            {
+                this.BossCharts[difficulty].DarkZones.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.BossCharts[difficulty].DarkZones.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
+                this.BossCharts[difficulty].AddToLane(lane, this.BossCharts[difficulty].DarkZones.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+            }
+        }
+
+        private void MouseDown(object sender, MouseEventArgs e)
+        {
+            // Determines which item was selected.
+            var button = ((Button)sender);
+
+            // Starts a drag-and-drop operation with that item.
+            if (button != null && Utilities.IsControlDown())
+            {
+                button.DoDragDrop(button.Name, DragDropEffects.Copy | DragDropEffects.Move);
+            }
         }
 
         public void CreateDroppedNote(Panel panel, Point point, string noteType)
