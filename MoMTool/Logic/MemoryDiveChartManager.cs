@@ -263,6 +263,7 @@ namespace MoMTool.Logic
 
             momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
             momButton.Button.Click += (object sender, EventArgs e) => { MemoryDiveSubChartManager.LoadSubChartComponent(momButton.Id, momButton.Note); };
+            momButton.Button.MouseDown += (object sender, MouseEventArgs e) => { this.MouseDown(sender, e); };
 
             ToolTip.SetToolTip(momButton.Button, momButton.Note.HitTime.ToString());
 
@@ -277,6 +278,46 @@ namespace MoMTool.Logic
                 return (value + 5000) / this.ZoomVariable; // Add 5 seconds and apply our zoom
 
             return 0;
+        }
+
+        public void MoveChartNote(Panel panel, Point point, string buttonName)
+        {
+            var buttonType = buttonName.Split('-')[0];
+            Point controlRelatedCoords = panel.PointToClient(point);
+
+            var lane = (MemoryLane)Enum.Parse(typeof(MemoryLane), panel.Name[5..]);
+            var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
+
+            if (buttonType == "note")
+            {
+                this.MemoryCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.MemoryCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
+                this.MemoryCharts[difficulty].AddToLane(lane, this.MemoryCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+            }
+            else if (buttonType == "performer")
+            {
+                this.MemoryCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.MemoryCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
+                this.MemoryCharts[difficulty].AddToLane(lane, this.MemoryCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+            }
+            else if (buttonType == "time")
+            {
+                this.MemoryCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.MemoryCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
+                this.MemoryCharts[difficulty].AddToLane(lane, this.MemoryCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+            }
+        }
+
+        private void MouseDown(object sender, MouseEventArgs e)
+        {
+            // Determines which item was selected.
+            var button = ((Button)sender);
+
+            // Starts a drag-and-drop operation with that item.
+            if (button != null && Utilities.IsControlDown())
+            {
+                button.DoDragDrop(button.Name, DragDropEffects.Copy | DragDropEffects.Move);
+            }
         }
 
         public void CreateDroppedNote(Panel panel, Point point, string noteType)

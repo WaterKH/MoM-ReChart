@@ -367,6 +367,7 @@ namespace MoMTool.Logic
 
             momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
             momButton.Button.Click += (object sender, EventArgs e) => { FieldBattleSubChartManager.LoadSubChartComponent(momButton.Id, momButton.Note); };
+            momButton.Button.MouseDown += (object sender, MouseEventArgs e) => { this.MouseDown(sender, e); };
 
             ToolTip.SetToolTip(momButton.Button, momButton.Note.HitTime.ToString());
 
@@ -381,6 +382,78 @@ namespace MoMTool.Logic
                 return (value + 5000) / this.ZoomVariable; // Add 5 seconds and apply our zoom
 
             return 0;
+        }
+
+        public void MoveChartNote(Panel panel, Point point, string buttonName)
+        {
+            var buttonType = buttonName.Split('-')[0];
+            Point controlRelatedCoords = panel.PointToClient(point);
+
+            var lane = (FieldLane)Enum.Parse(typeof(FieldLane), panel.Name[5..]);
+            var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
+
+            if (buttonType == "note")
+            {
+                var diff = this.FieldCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime - (controlRelatedCoords.X * this.ZoomVariable);
+
+                this.FieldCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.FieldCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
+                this.FieldCharts[difficulty].AddToLane(lane, this.FieldCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+
+                this.FieldCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Note.Animations.ForEach(x =>
+                {
+                    x.AnimationEndTime -= diff;
+                    x.AnimationStartTime -= diff;
+
+                    if (x.AnimationStartTime <= 0)
+                    {
+                        x.AnimationStartTime = 0;
+                    }
+                });
+            }
+            else if (buttonType == "asset")
+            {
+                var diff = this.FieldCharts[difficulty].Assets.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime - (controlRelatedCoords.X * this.ZoomVariable);
+
+                this.FieldCharts[difficulty].Assets.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.FieldCharts[difficulty].Assets.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
+                this.FieldCharts[difficulty].AddToLane(lane, this.FieldCharts[difficulty].Assets.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+
+                this.FieldCharts[difficulty].Assets.FirstOrDefault(x => x.Button.Name == buttonName).Note.Animations.ForEach(x =>
+                {
+                    x.AnimationEndTime += diff;
+                    x.AnimationStartTime += diff;
+
+                    if (x.AnimationStartTime <= 0)
+                    {
+                        x.AnimationStartTime = 0;
+                    }
+                });
+            }
+            else if (buttonType == "performer")
+            {
+                this.FieldCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.FieldCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
+                this.FieldCharts[difficulty].AddToLane(lane, this.FieldCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+            }
+            else if (buttonType == "time")
+            {
+                this.FieldCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.FieldCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
+                this.FieldCharts[difficulty].AddToLane(lane, this.FieldCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+            }
+        }
+
+        private void MouseDown(object sender, MouseEventArgs e)
+        {
+            // Determines which item was selected.
+            var button = ((Button)sender);
+
+            // Starts a drag-and-drop operation with that item.
+            if (button != null && Utilities.IsControlDown())
+            {
+                button.DoDragDrop(button.Name, DragDropEffects.Copy | DragDropEffects.Move);
+            }
         }
 
         public void CreateDroppedNote(Panel panel, Point point, string noteType)
