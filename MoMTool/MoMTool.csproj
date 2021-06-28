@@ -7,13 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Components\SelfContainedComponents\MemoryDive\MemoryNoteComponent.cs~RFbb98095.TMP" />
     <None Remove="Components\SelfContainedComponents\TimeShiftComponent.cs~RF222e87b.TMP" />
     <None Remove="Components\SelfContainedComponents\TimeShiftComponent.cs~RF22d297b.TMP" />
     <None Remove="Logic\ChartComponent.cs~RFd3cd21.TMP" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MoMMusicAnalysis" Version="1.0.19" />
+    <PackageReference Include="MoMMusicAnalysis" Version="1.0.22" />
     <PackageReference Include="NAudio" Version="2.0.0" />
     <PackageReference Include="NAudio.WaveFormRenderer" Version="1.0.0" />
   </ItemGroup>

@@ -23,6 +23,8 @@ namespace MoMTool.Logic
         public FieldSubChartNoteComponent()
         {
             InitializeComponent();
+
+            this.fieldNoteComponent.modelDropdown.SelectedIndexChanged += this.modelDropdown_SelectedIndexChanged;
         }
 
         private void noteClose_Click(object sender, EventArgs e)
@@ -55,6 +57,46 @@ namespace MoMTool.Logic
             this.panelPartyMember2Right.Controls.Clear();
             this.panelSomewhereRight.Controls.Clear();
             this.panelOutOfMapRight.Controls.Clear();
+        }
+
+        private void modelDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var item = ((ComboBox)sender).SelectedItem.ToString();
+
+            var visible = item.Contains("Multi") || item.Contains("Glide");
+            var time = int.Parse(this.fieldNoteComponent.timeValue.Text);
+
+            this.fieldNoteComponent.nextNote.Visible = visible;
+            this.fieldNoteComponent.nextNoteDropdown.Visible = visible;
+            this.fieldNoteComponent.previousNote.Visible = visible;
+            this.fieldNoteComponent.previousNoteDropdown.Visible = visible;
+
+            if (visible)
+            {
+                // TODO Look into this and make sure the Enum is being parsed correctly (Issue with multiple Enums with same number)
+                var nextItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.ModelType.ToString() == item && x.HitTime > time);
+                this.fieldNoteComponent.nextNoteDropdown.Items.AddRange(nextItems.ToArray());
+
+                var prevItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.ModelType.ToString() == item && x.HitTime < time);
+                this.fieldNoteComponent.previousNoteDropdown.Items.AddRange(prevItems.ToArray());
+            }
+
+            visible = item.Equals("EnemyShooterProjectile") || item.Equals("AerialEnemyShooterProjectile");
+
+            this.fieldNoteComponent.projectileNote.Visible = visible;
+            this.fieldNoteComponent.shooterDropdown.Visible = visible;
+
+            if (visible)
+            {
+                IEnumerable<FieldNote> shooterItems = null;
+
+                if (item == "EnemyShooterProjectile")
+                    shooterItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.ModelType.ToString() == "EnemyShooterProjectile" && x.NoteType == 0 && x.HitTime > time);
+                else if (item == "AerialEnemyShooterProjectile")
+                    shooterItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.ModelType.ToString() == "AerialEnemyShooterProjectile" && x.NoteType == 0 && x.HitTime > time);
+
+                this.fieldNoteComponent.shooterDropdown.Items.AddRange(shooterItems.ToArray());
+            }
         }
 
         private void saveAnimation_Click(object sender, EventArgs e)
@@ -117,11 +159,11 @@ namespace MoMTool.Logic
             note.HitTime = int.Parse(this.fieldNoteComponent.timeValue.Text);
             note.Lane = (FieldLane)Enum.Parse(typeof(FieldLane), this.fieldNoteComponent.laneDropdown.SelectedItem.ToString());
             note.AerialFlag = (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString().Contains("Aerial") && this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() != "HittableAerialUncommonEnemy") ||
-                        (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() == "GlideNote" && this.fieldNoteComponent.previousNoteValue.Text == "-1") || this.fieldNoteComponent.modelDropdown.SelectedItem.ToString().Contains("Aerial") ||
+                        (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() == "GlideNote" && this.fieldNoteComponent.previousNoteDropdown.SelectedItem == null) || this.fieldNoteComponent.modelDropdown.SelectedItem.ToString().Contains("Aerial") ||
                         this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() == "Projectile"; //|| (note.modelDropdown.SelectedItem.ToString() == "ProjectileEnemy" && note.aerialFlag.Checked))
-            note.ProjectileOriginNote = int.Parse(this.fieldNoteComponent.projectileNoteEnemy.Text);
-            note.NextEnemyNote = int.Parse(this.fieldNoteComponent.nextNoteValue.Text);
-            note.PreviousEnemyNote = int.Parse(this.fieldNoteComponent.previousNoteValue.Text);
+            note.ProjectileOriginNote = (FieldNote)this.fieldNoteComponent.shooterDropdown.SelectedItem;
+            note.NextEnemyNote = (FieldNote)this.fieldNoteComponent.nextNoteDropdown.SelectedItem;
+            note.PreviousEnemyNote = (FieldNote)this.fieldNoteComponent.previousNoteDropdown.SelectedItem;
             note.ModelType = (FieldModelType)Enum.Parse(typeof(FieldModelType), this.fieldNoteComponent.modelDropdown.SelectedItem.ToString());
             note.StarFlag = this.fieldNoteComponent.starFlag.Checked;
             note.PartyFlag = this.fieldNoteComponent.partyFlag.Checked;

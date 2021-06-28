@@ -13,19 +13,50 @@ namespace MoMTool.Logic
 {
     public partial class MemorySubChartNoteComponent : UserControl
     {
-        public int ChartOffset { get; set; }
-        public int ChartLength { get; set; }
-        public MemoryChartComponent ParentChartComponent;
-        public MemoryDiveSubChartManager MemoryDiveSubChartManager;
+        public MemoryChartComponent ParentChartComponent { get; set; }
+        public MemoryDiveSubChartManager MemoryDiveSubChartManager { get; set; }
 
         public MemorySubChartNoteComponent()
         {
             InitializeComponent();
+
+            this.memoryNoteComponent.modelDropdown.SelectedIndexChanged += this.modelDropdown_SelectedIndexChanged;
         }
 
         private void noteClose_Click(object sender, EventArgs e)
         {
             this.MemoryDiveSubChartManager.Close();
+        }
+
+        private void modelDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var item = ((ComboBox)sender).SelectedItem.ToString();
+
+            var visible = item.Equals("HoldStart");
+            var time = int.Parse(this.memoryNoteComponent.timeValue.Text);
+
+            this.memoryNoteComponent.nextNote.Visible = visible;
+            this.memoryNoteComponent.nextNoteDropdown.Visible = visible;
+
+            if (visible)
+            {
+                var nextItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.MemoryNoteType.ToString() == "HoldEnd" && x.HitTime > time);
+                this.memoryNoteComponent.nextNoteDropdown.Items.AddRange(nextItems.ToArray());
+            }
+
+            visible = item.Equals("HoldEnd");
+
+            this.memoryNoteComponent.previousNote.Visible = visible;
+            this.memoryNoteComponent.previousNoteDropdown.Visible = visible;
+
+            if (visible)
+            {
+                var prevItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.MemoryNoteType.ToString() == "HoldStart" && x.HitTime < time);
+                this.memoryNoteComponent.previousNoteDropdown.Items.AddRange(prevItems.ToArray());
+            }
+
+            this.memoryNoteComponent.swipeText.Visible = item.Equals("Swipe");
+            this.memoryNoteComponent.swipeDropdown.Visible = item.Equals("Swipe");
         }
 
         private void saveNote_Click(object sender, EventArgs e)
@@ -40,8 +71,8 @@ namespace MoMTool.Logic
             note.NoteType = 0; // TODO Is this needed?
             note.HitTime = int.Parse(this.memoryNoteComponent.timeValue.Text);
             note.Lane = (MemoryLane)Enum.Parse(typeof(MemoryLane), this.memoryNoteComponent.laneDropdown.SelectedItem.ToString());
-            note.StartHoldNote = int.Parse(this.memoryNoteComponent.nextNoteValue.Text);
-            note.EndHoldNote = int.Parse(this.memoryNoteComponent.previousNoteValue.Text);
+            note.StartHoldNote = (MemoryNote)this.memoryNoteComponent.previousNoteDropdown.SelectedItem;
+            note.EndHoldNote = (MemoryNote)this.memoryNoteComponent.nextNoteDropdown.SelectedItem;
             note.MemoryNoteType = (MemoryNoteType)Enum.Parse(typeof(MemoryNoteType), this.memoryNoteComponent.modelDropdown.SelectedItem.ToString());
 
             ParentChartComponent.Notes[noteIndex].Note = note;

@@ -14,17 +14,5 @@ namespace MoMTool.Logic
         {
             InitializeComponent();
         }
-
-        private void modelDropdown_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var item = ((ComboBox)sender).SelectedItem.ToString();
-
-            this.nextNote.Visible = item.Equals("HoldStart");
-            this.nextNoteValue.Visible = item.Equals("HoldStart");
-            this.previousNote.Visible = item.Equals("HoldEnd");
-            this.previousNoteValue.Visible = item.Equals("HoldEnd");
-            this.swipeText.Visible = item.Equals("Swipe");
-            this.swipeDropdown.Visible = item.Equals("Swipe");
-        }
     }
 }

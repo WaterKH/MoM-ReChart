@@ -39,10 +39,5 @@ namespace MoMTool.Logic
         {
             this.Visible = false;
         }
-
-        public void LoadSubChartComponent(int id, FieldAsset asset, FieldChartComponent parentChartComponent)
-        {
-            this.Visible = true;
-        }
     }
 }
