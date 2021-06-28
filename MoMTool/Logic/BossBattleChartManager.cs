@@ -40,9 +40,9 @@ namespace MoMTool.Logic
             }
         }
 
-        #region Recompile Memory Dive
+        #region Recompile Boss BattleF
 
-        public void RecompileMemoryDiveSongs()
+        public void RecompileBossBattleSongs()
         {
             var musicFile = new MusicFile
             {
@@ -152,12 +152,12 @@ namespace MoMTool.Logic
                     musicFile.Header.Sections[i].Offset = offset;
 
                     var song = this.MusicFile.SongPositions[i];
-                    var newSong = new BossBattleSong(song.Difficulty, 0, SongType.FieldBattle)
+                    var newSong = new BossBattleSong(song.Difficulty, 0, SongType.BossBattle)
                     {
                         HasEmptyData = ((BossBattleSong)song).HasEmptyData
                     };
 
-                    this.RecompileMemorySong(ref newSong, this.BossCharts[song.Difficulty]);
+                    this.RecompileBossSong(ref newSong, this.BossCharts[song.Difficulty]);
 
                     musicFile.SongPositions.Add(i, newSong);
 
@@ -173,7 +173,7 @@ namespace MoMTool.Logic
             return offset;
         }
 
-        private void RecompileMemorySong(ref BossBattleSong newSong, BossChartComponent chart)
+        private void RecompileBossSong(ref BossBattleSong newSong, BossChartComponent chart)
         {
             newSong.NoteCount = chart.Notes.Count;
             newSong.PerformerCount = chart.Performers.Count;
@@ -185,6 +185,12 @@ namespace MoMTool.Logic
 
             foreach (BossNote note in chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime))
             {
+                if (note.StartHoldNote != null)
+                    note.StartHoldNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.StartHoldNote);
+
+                if (note.EndHoldNote != null)
+                    note.EndHoldNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.EndHoldNote);
+
                 newSong.Notes.Add(note);
             }
 
@@ -203,7 +209,7 @@ namespace MoMTool.Logic
             newSong.Length = (newSong.NoteCount * 0x40) + (newSong.PerformerCount * 0x30) + (newSong.TimeShiftCount * 0x08) + (newSong.DarkZoneCount * 0x10) + 0x28;
         }
 
-        #endregion Recompile Memory Dive Music File
+        #endregion Recompile Boss Battle Music File
 
 
         #region Helper Methods
@@ -227,6 +233,15 @@ namespace MoMTool.Logic
             bossChart.Performers = this.CreateChartButtons(ref bossChart, bossBattleSong.PerformerCount, bossBattleSong.PerformerNotes, "Performer", Color.Purple);
             bossChart.Times = this.CreateChartButtons(ref bossChart, bossBattleSong.TimeShiftCount, bossBattleSong.TimeShifts, "Time", Color.Yellow);
             bossChart.DarkZones = this.CreateChartButtons(ref bossChart, bossBattleSong.DarkZoneCount, bossBattleSong.DarkZones, "DarkZone", Color.Black);
+
+            foreach (var bossNote in bossChart.Notes.Select(x => x.Note))
+            {
+                if (bossNote.StartHoldNoteIndex != -1)
+                    bossNote.StartHoldNote = bossChart.Notes.ElementAt(bossNote.StartHoldNoteIndex).Note;
+
+                if (bossNote.EndHoldNoteIndex != -1)
+                    bossNote.EndHoldNote = bossChart.Notes.ElementAt(bossNote.EndHoldNoteIndex).Note;
+            }
 
             return bossChart;
         }
@@ -462,14 +477,14 @@ namespace MoMTool.Logic
             }
 
 
-            foreach (var note in this.BossCharts[this.CurrentDifficultyTab].Notes.Where(x => x.Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable))
-            {
-                if (note.Note.StartHoldNote != -1 && this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.StartHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
-                    this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.BossCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.StartHoldNote += 1;
+            //foreach (var note in this.BossCharts[this.CurrentDifficultyTab].Notes.Where(x => x.Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable))
+            //{
+            //    if (note.Note.StartHoldNote != -1 && this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.StartHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
+            //        this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.BossCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.StartHoldNote += 1;
 
-                if (note.Note.EndHoldNote != -1 && this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.EndHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
-                    this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.BossCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.EndHoldNote += 1;
-            }
+            //    if (note.Note.EndHoldNote != -1 && this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.EndHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
+            //        this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.BossCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.EndHoldNote += 1;
+            //}
         }
 
         #endregion Helper Methods

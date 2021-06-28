@@ -44,23 +44,22 @@ namespace MoMTool.Logic
 
             this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.Add(this.FieldSubChartComponent);
             this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Controls[^1].BringToFront();
-
-            this.FieldSubChartComponent.ParentChartComponent = this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab];
         }
 
         public void LoadSubChartComponent(int id, FieldNote note)
         {
             this.FieldSubChartComponent = new FieldSubChartNoteComponent { Visible = true };
             this.FieldSubChartComponent.FieldBattleSubChartManager = this;
+            this.FieldSubChartComponent.ParentChartComponent = this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab];
 
             this.FieldSubChartComponent.fieldNoteComponent.fieldNoteGroup.Text = $"Field Note {id}";
             this.FieldSubChartComponent.fieldNoteComponent.timeValue.Text = note.HitTime.ToString();
             this.FieldSubChartComponent.fieldNoteComponent.laneDropdown.SelectedItem = note.Lane.ToString();
             this.FieldSubChartComponent.fieldNoteComponent.modelDropdown.SelectedItem = note.ModelType.ToString();
             this.FieldSubChartComponent.fieldNoteComponent.starFlag.Checked = note.StarFlag;
-            this.FieldSubChartComponent.fieldNoteComponent.previousNoteValue.Text = note.PreviousEnemyNote.ToString();
-            this.FieldSubChartComponent.fieldNoteComponent.nextNoteValue.Text = note.NextEnemyNote.ToString();
-            this.FieldSubChartComponent.fieldNoteComponent.projectileNoteEnemy.Text = note.ProjectileOriginNote.ToString();
+            this.FieldSubChartComponent.fieldNoteComponent.previousNoteDropdown.SelectedItem = note.PreviousEnemyNote;
+            this.FieldSubChartComponent.fieldNoteComponent.nextNoteDropdown.SelectedItem = note.NextEnemyNote;
+            this.FieldSubChartComponent.fieldNoteComponent.shooterDropdown.SelectedItem = note.ProjectileOriginNote;
 
             if (note.ModelType == FieldModelType.EnemyShooterProjectile)
             {
@@ -85,6 +84,7 @@ namespace MoMTool.Logic
         {
             this.FieldSubChartComponent = new FieldSubChartAssetComponent { Visible = true };
             this.FieldSubChartComponent.FieldBattleSubChartManager = this;
+            this.FieldSubChartComponent.ParentChartComponent = this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab];
 
             this.FieldSubChartComponent.fieldAssetComponent.fieldAssetGroup.Text = $"Field Asset {id}";
             this.FieldSubChartComponent.fieldAssetComponent.timeValue.Text = asset.HitTime.ToString();
@@ -97,6 +97,7 @@ namespace MoMTool.Logic
             this.FieldSubChartComponent = new PerformerComponent { Visible = true };
             this.FieldSubChartComponent.SubChartManager = this;
             this.FieldSubChartComponent.UpdateLane(typeof(FieldLane));
+            this.FieldSubChartComponent.ParentChartComponent = this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab];
 
             this.FieldSubChartComponent.performerGroup.Text = $"Performer Note {id}";
             this.FieldSubChartComponent.timeValue.Text = performer.HitTime.ToString();
@@ -108,6 +109,7 @@ namespace MoMTool.Logic
         {
             this.FieldSubChartComponent = new TimeShiftComponent { Visible = true };
             this.FieldSubChartComponent.SubChartManager = this;
+            this.FieldSubChartComponent.ParentChartComponent = this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab];
 
             this.FieldSubChartComponent.timeShiftGroup.Text = $"Time Shift {id}";
             this.FieldSubChartComponent.timeValue.Text = time.HitTime.ToString();
@@ -150,12 +152,6 @@ namespace MoMTool.Logic
 
             this.FieldSubChartComponent.CalculateAnimationChartLength();
             this.FieldSubChartComponent.SetAnimationPositions();
-        }
-
-
-        public void SaveNote()
-        {
-
         }
 
         public void Close()

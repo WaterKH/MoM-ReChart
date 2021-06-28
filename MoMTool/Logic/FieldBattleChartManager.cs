@@ -216,7 +216,7 @@ namespace MoMTool.Logic
                     modelString = note.ModelType.ToString();
                 
                 var aerialFlag = modelString.Contains("Aerial") && modelString != "HittableAerialUncommonEnemy" || 
-                    (modelString == "GlideNote" && note.PreviousEnemyNote == -1) || 
+                    (modelString == "GlideNote" && note.PreviousEnemyNote == null) || 
                     modelString.Contains("Projectile");
 
                 if (aerialFlag || (note.ModelType == FieldModelType.CrystalEnemyCenter || note.ModelType == FieldModelType.CrystalEnemyLeftRight))
@@ -224,6 +224,14 @@ namespace MoMTool.Logic
                     note.AerialAndCrystalCounter = aerialCrystalCount++;
                 }
 
+                if (note.PreviousEnemyNote != null)
+                    note.PreviousEnemyNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.PreviousEnemyNote);
+
+                if (note.NextEnemyNote != null)
+                    note.NextEnemyNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.NextEnemyNote);
+
+                if (note.ProjectileOriginNote != null)
+                    note.ProjectileOriginNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.ProjectileOriginNote);
 
                 for (int i = 0; i < note.Animations.Count; ++i)
                 {
@@ -330,6 +338,18 @@ namespace MoMTool.Logic
             fieldChart.Assets = this.CreateChartButtons(ref fieldChart, fieldBattleSong.AssetCount, fieldBattleSong.FieldAssets, "Asset", Color.Blue);
             fieldChart.Performers = this.CreateChartButtons(ref fieldChart, fieldBattleSong.PerformerCount, fieldBattleSong.PerformerNotes, "Performer", Color.Purple);
             fieldChart.Times = this.CreateChartButtons(ref fieldChart, fieldBattleSong.TimeShiftCount, fieldBattleSong.TimeShifts, "Time", Color.Yellow);
+
+            foreach (var fieldNote in fieldChart.Notes.Select(x => x.Note))
+            {
+                if (fieldNote.PreviousEnemyNoteIndex != -1)
+                    fieldNote.PreviousEnemyNote = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.PreviousEnemyNoteIndex).Note;
+
+                if (fieldNote.NextEnemyNoteIndex != -1)
+                    fieldNote.NextEnemyNote = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.NextEnemyNoteIndex).Note;
+
+                if (fieldNote.ProjectileOriginNoteIndex != -1)
+                    fieldNote.ProjectileOriginNote = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.ProjectileOriginNoteIndex).Note;
+            }
 
             return fieldChart;
         }
@@ -604,14 +624,14 @@ namespace MoMTool.Logic
             }
 
 
-            foreach (var note in this.FieldCharts[this.CurrentDifficultyTab].Notes.Where(x => x.Note.HitTime >= time))
-            {
-                if (note.Note.PreviousEnemyNote != -1 && this.FieldCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.PreviousEnemyNote).Note.HitTime >= time)
-                    this.FieldCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.FieldCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.PreviousEnemyNote += 1;
+            //foreach (var note in this.FieldCharts[this.CurrentDifficultyTab].Notes.Where(x => x.Note.HitTime >= time))
+            //{
+            //    if (note.Note.PreviousEnemyNote != -1 && this.FieldCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.PreviousEnemyNote).Note.HitTime >= time)
+            //        this.FieldCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.FieldCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.PreviousEnemyNote += 1;
 
-                if (note.Note.NextEnemyNote != -1 && this.FieldCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.NextEnemyNote).Note.HitTime >= time)
-                    this.FieldCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.FieldCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.NextEnemyNote += 1;
-            }
+           //    if (note.Note.NextEnemyNote != -1 && this.FieldCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.NextEnemyNote).Note.HitTime >= time)
+           //         this.FieldCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.FieldCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.NextEnemyNote += 1;
+           //}
 
             return fieldNote;
         }

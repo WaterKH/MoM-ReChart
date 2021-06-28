@@ -15,28 +15,43 @@ namespace MoMTool
 {
     public partial class Main : Form
     {
-        public FieldBattleChartManager FieldBattleChartManager = null;
-        public MemoryDiveChartManager MemoryDiveChartManager = null;
-        public BossBattleChartManager BossBattleChartManager = null;
+        public FieldBattleChartManager FieldBattleChartManager { get; set; } = null;
+        public MemoryDiveChartManager MemoryDiveChartManager { get; set; } = null;
+        public BossBattleChartManager BossBattleChartManager { get; set; } = null;
 
         public Main()
         {
             InitializeComponent();
 
-            this.recompileButton.Visible = false;
+            this.recompileFieldButton.Visible = false;
 
             this.noteListView.MouseDown += this.noteItem_MouseDown;
             this.difficultyControl.SelectedTab = this.tabProud;
 
             this.difficultyControl.Selected += (sender, args) =>
             {
-                this.FieldBattleChartManager.CurrentDifficultyTab = (Difficulty)(args.TabPageIndex + 1);
+                if (this.FieldBattleChartManager != null)
+                    this.FieldBattleChartManager.CurrentDifficultyTab = (Difficulty)(args.TabPageIndex + 1);
+                else if (this.MemoryDiveChartManager != null)
+                    this.MemoryDiveChartManager.CurrentDifficultyTab = (Difficulty)(args.TabPageIndex + 1);
+                else if (this.BossBattleChartManager != null)
+                    this.BossBattleChartManager.CurrentDifficultyTab = (Difficulty)(args.TabPageIndex + 1);
             };
         }
 
         private void recompileFieldSongButton_Click(object sender, EventArgs e)
         {
             this.FieldBattleChartManager.RecompileFieldBattleSongs();
+        }
+
+        private void recompileMemorySongButton_Click(object sender, EventArgs e)
+        {
+            this.MemoryDiveChartManager.RecompileMemoryDiveSongs();
+        }
+
+        private void recompileBossSongButton_Click(object sender, EventArgs e)
+        {
+            this.BossBattleChartManager.RecompileBossBattleSongs();
         }
 
         private void zoomInButton_Click(object sender, EventArgs e)
@@ -91,18 +106,14 @@ namespace MoMTool
             this.Decompile();
         }
 
-        private void fileName_TextChanged(object sender, EventArgs e)
-        {
-            //this.decompileButton.Visible = !string.IsNullOrEmpty(((TextBox)sender).Text);
-            //this.debugCheckbox.Visible = !string.IsNullOrEmpty(((TextBox)sender).Text);
-        }
-
         private void clearChartButton_Click(object sender, EventArgs e)
         {
             if (this.FieldBattleChartManager != null)
                 this.FieldBattleChartManager.FieldCharts.Values.ToList().ForEach(x => x.ResetChart());
-
-            // TODO Memory and Boss
+            else if (this.MemoryDiveChartManager != null)
+                this.MemoryDiveChartManager.MemoryCharts.Values.ToList().ForEach(x => x.ResetChart());
+            else if (this.BossBattleChartManager != null)
+                this.BossBattleChartManager.BossCharts.Values.ToList().ForEach(x => x.ResetChart());
         }
 
         private void deleteChartButton_Click(object sender, EventArgs e)
@@ -113,7 +124,9 @@ namespace MoMTool
             //this.standardFieldChartComponent = null;
             //this.proudFieldChartComponent = null;
 
-            this.recompileButton.Visible = false;
+            this.recompileFieldButton.Visible = false;
+            this.recompileMemoryButton.Visible = false;
+            this.recompileBossButton.Visible = false;
         }
 
         #region Helper Methods
@@ -126,10 +139,27 @@ namespace MoMTool
                 return;
             }
 
-            this.recompileButton.Visible = true;
-
             var musicFile = new SongProcessor().ProcessSong(this.fileName.Text, this.debugCheckbox.Checked);
             var songType = musicFile.SongPositions.FirstOrDefault().Value.SongType;
+
+            if (songType == SongType.FieldBattle)
+            {
+                this.recompileFieldButton.Visible = true;
+                this.recompileMemoryButton.Visible = false;
+                this.recompileBossButton.Visible = false;
+            }
+            else if (songType == SongType.MemoryDive)
+            {
+                this.recompileFieldButton.Visible = false;
+                this.recompileMemoryButton.Visible = true;
+                this.recompileBossButton.Visible = false;
+            }
+            else if (songType == SongType.BossBattle)
+            {
+                this.recompileFieldButton.Visible = false;
+                this.recompileMemoryButton.Visible = false;
+                this.recompileBossButton.Visible = true;
+            }
 
             this.GenerateChartManager(songType, musicFile);
 

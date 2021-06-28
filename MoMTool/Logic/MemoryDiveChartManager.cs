@@ -152,7 +152,7 @@ namespace MoMTool.Logic
                     musicFile.Header.Sections[i].Offset = offset;
 
                     var song = this.MusicFile.SongPositions[i];
-                    var newSong = new MemoryDiveSong(song.Difficulty, 0, SongType.FieldBattle)
+                    var newSong = new MemoryDiveSong(song.Difficulty, 0, SongType.MemoryDive)
                     {
                         HasEmptyData = ((MemoryDiveSong)song).HasEmptyData
                     };
@@ -185,6 +185,12 @@ namespace MoMTool.Logic
 
             foreach (MemoryNote note in chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime))
             {
+                if (note.StartHoldNote != null)
+                    note.StartHoldNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.StartHoldNote);
+
+                if (note.EndHoldNote != null)
+                    note.EndHoldNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.EndHoldNote);
+
                 newSong.Notes.Add(note);
             }
 
@@ -193,14 +199,13 @@ namespace MoMTool.Logic
                 newSong.PerformerNotes.Add(note);
             }
 
-
             foreach (TimeShift<MemoryLane> time in chart.Times.Select(x => x.Note).OrderBy(x => x.HitTime))
             {
                 newSong.TimeShifts.Add(time);
             }
 
             // Add Note + Header Lengths
-            newSong.Length = (newSong.NoteCount * 0x40) + (newSong.PerformerCount * 0x30) + (newSong.TimeShiftCount * 0x08) + 0x28;
+            newSong.Length = (newSong.NoteCount * 0x40) + (newSong.PerformerCount * 0x30) + (newSong.TimeShiftCount * 0x08) + 0x24;
         }
 
         #endregion Recompile Memory Dive Music File
@@ -226,6 +231,15 @@ namespace MoMTool.Logic
             memoryChart.Notes = this.CreateChartButtons(ref memoryChart, memoryDiveSong.NoteCount, memoryDiveSong.Notes, "Note", Color.Red);
             memoryChart.Performers = this.CreateChartButtons(ref memoryChart, memoryDiveSong.PerformerCount, memoryDiveSong.PerformerNotes, "Performer", Color.Purple);
             memoryChart.Times = this.CreateChartButtons(ref memoryChart, memoryDiveSong.TimeShiftCount, memoryDiveSong.TimeShifts, "Time", Color.Yellow);
+
+            foreach (var memoryNote in memoryChart.Notes.Select(x => x.Note))
+            {
+                if (memoryNote.StartHoldNoteIndex != -1)
+                    memoryNote.StartHoldNote = memoryChart.Notes.ElementAt(memoryNote.StartHoldNoteIndex).Note;
+
+                if (memoryNote.EndHoldNoteIndex != -1)
+                    memoryNote.EndHoldNote = memoryChart.Notes.ElementAt(memoryNote.EndHoldNoteIndex).Note;
+            }
 
             return memoryChart;
         }
@@ -442,14 +456,14 @@ namespace MoMTool.Logic
             }
 
 
-            foreach (var note in this.MemoryCharts[this.CurrentDifficultyTab].Notes.Where(x => x.Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable))
-            {
-                if (note.Note.StartHoldNote != -1 && this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.StartHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
-                    this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.MemoryCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.StartHoldNote += 1;
+            //foreach (var note in this.MemoryCharts[this.CurrentDifficultyTab].Notes.Where(x => x.Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable))
+            //{
+            //    if (note.Note.StartHoldNote != -1 && this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.StartHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
+            //        this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.MemoryCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.StartHoldNote += 1;
 
-                if (note.Note.EndHoldNote != -1 && this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.EndHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
-                    this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.MemoryCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.EndHoldNote += 1;
-            }
+            //    if (note.Note.EndHoldNote != -1 && this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.EndHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
+            //        this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.MemoryCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.EndHoldNote += 1;
+            //}
         }
 
         #endregion Helper Methods

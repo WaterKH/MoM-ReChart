@@ -41,21 +41,20 @@ namespace MoMTool.Logic
 
             this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.Add(this.MemorySubChartComponent);
             this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab].Controls[^1].BringToFront();
-
-            this.MemorySubChartComponent.ParentChartComponent = this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab];
         }
 
         public void LoadSubChartComponent(int id, MemoryNote note)
         {
             this.MemorySubChartComponent = new MemorySubChartNoteComponent { Visible = true };
             this.MemorySubChartComponent.MemoryDiveSubChartManager = this;
+            this.MemorySubChartComponent.ParentChartComponent = this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab];
 
             this.MemorySubChartComponent.memoryNoteComponent.memoryNoteGroup.Text = $"Memory Note {id}";
             this.MemorySubChartComponent.memoryNoteComponent.timeValue.Text = note.HitTime.ToString();
             this.MemorySubChartComponent.memoryNoteComponent.laneDropdown.SelectedItem = note.Lane.ToString();
             this.MemorySubChartComponent.memoryNoteComponent.modelDropdown.SelectedItem = note.MemoryNoteType.ToString();
-            this.MemorySubChartComponent.memoryNoteComponent.previousNoteValue.Text = note.StartHoldNote.ToString();
-            this.MemorySubChartComponent.memoryNoteComponent.nextNoteValue.Text = note.EndHoldNote.ToString();
+            this.MemorySubChartComponent.memoryNoteComponent.previousNoteDropdown.SelectedItem = note.StartHoldNote;
+            this.MemorySubChartComponent.memoryNoteComponent.nextNoteDropdown.SelectedItem = note.EndHoldNote;
             this.MemorySubChartComponent.memoryNoteComponent.swipeDropdown.SelectedItem = note.SwipeDirection.ToString();
         }
 
@@ -64,7 +63,8 @@ namespace MoMTool.Logic
             this.MemorySubChartComponent = new PerformerComponent { Visible = true };
             this.MemorySubChartComponent.SubChartManager = this;
             this.MemorySubChartComponent.UpdateLane(typeof(MemoryLane));
-            
+            this.MemorySubChartComponent.ParentChartComponent = this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab];
+
             this.MemorySubChartComponent.performerGroup.Text = $"Performer Note {id}";
             this.MemorySubChartComponent.timeValue.Text = performer.HitTime.ToString();
             this.MemorySubChartComponent.laneDropdown.SelectedItem = performer.Lane.ToString();
@@ -75,15 +75,11 @@ namespace MoMTool.Logic
         {
             this.MemorySubChartComponent = new TimeShiftComponent { Visible = true };
             this.MemorySubChartComponent.SubChartManager = this;
+            this.MemorySubChartComponent.ParentChartComponent = this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab];
 
             this.MemorySubChartComponent.timeShiftGroup.Text = $"Time Shift {id}";
             this.MemorySubChartComponent.timeValue.Text = time.HitTime.ToString();
             this.MemorySubChartComponent.speedValue.Text = time.Speed.ToString();
-        }
-
-        public void SaveNote()
-        {
-
         }
 
         public void Close()

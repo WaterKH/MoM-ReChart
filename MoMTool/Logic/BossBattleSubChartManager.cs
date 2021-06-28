@@ -43,21 +43,20 @@ namespace MoMTool.Logic
 
             this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.Add(this.BossSubChartComponent);
             this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab].Controls[^1].BringToFront();
-
-            this.BossSubChartComponent.ParentChartComponent = this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab];
         }
 
         public void LoadSubChartComponent(int id, BossNote note)
         {
             this.BossSubChartComponent = new BossSubChartNoteComponent { Visible = true };
             this.BossSubChartComponent.BossBattleSubChartManager = this;
-            
+            this.BossSubChartComponent.ParentChartComponent = this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab];
+
             this.BossSubChartComponent.bossNoteComponent.bossNoteGroup.Text = $"Boss Battle {id}";
             this.BossSubChartComponent.bossNoteComponent.timeValue.Text = note.HitTime.ToString();
             this.BossSubChartComponent.bossNoteComponent.laneDropdown.SelectedItem = note.Lane.ToString();
             this.BossSubChartComponent.bossNoteComponent.modelDropdown.SelectedItem = note.BossNoteType.ToString();
-            this.BossSubChartComponent.bossNoteComponent.previousNoteValue.Text = note.StartHoldNote.ToString();
-            this.BossSubChartComponent.bossNoteComponent.nextNoteValue.Text = note.EndHoldNote.ToString();
+            this.BossSubChartComponent.bossNoteComponent.previousNoteDropdown.SelectedItem = note.StartHoldNote;
+            this.BossSubChartComponent.bossNoteComponent.nextNoteDropdown.SelectedItem = note.EndHoldNote;
             this.BossSubChartComponent.bossNoteComponent.swipeDropdown.SelectedItem = note.SwipeDirection.ToString();
         }
 
@@ -66,6 +65,7 @@ namespace MoMTool.Logic
             this.BossSubChartComponent = new PerformerComponent { Visible = true };
             this.BossSubChartComponent.SubChartManager = this;
             this.BossSubChartComponent.UpdateLane(typeof(BossLane));
+            this.BossSubChartComponent.ParentChartComponent = this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab];
 
             this.BossSubChartComponent.performerGroup.Text = $"Performer Note {id}";
             this.BossSubChartComponent.timeValue.Text = performer.HitTime.ToString();
@@ -77,6 +77,7 @@ namespace MoMTool.Logic
         {
             this.BossSubChartComponent = new TimeShiftComponent { Visible = true };
             this.BossSubChartComponent.SubChartManager = this;
+            this.BossSubChartComponent.ParentChartComponent = this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab];
 
             this.BossSubChartComponent.timeShiftGroup.Text = $"Time Shift {id}";
             this.BossSubChartComponent.timeValue.Text = time.HitTime.ToString();
@@ -87,16 +88,12 @@ namespace MoMTool.Logic
         {
             this.BossSubChartComponent = new BossDarkZoneComponent { Visible = true };
             this.BossSubChartComponent.BossBattleSubChartManager = this;
+            this.BossSubChartComponent.ParentChartComponent = this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab];
 
             this.BossSubChartComponent.darkZoneGroup.Text = $"Dark Zone {id}";
             this.BossSubChartComponent.startTimeValue.Text = darkZone.HitTime.ToString();
             this.BossSubChartComponent.endTimeValue.Text = darkZone.EndTime.ToString();
             this.BossSubChartComponent.endAttackTimeValue.Text = darkZone.EndAttackTime.ToString();
-        }
-
-        public void SaveNote()
-        {
-
         }
 
         public void Close()

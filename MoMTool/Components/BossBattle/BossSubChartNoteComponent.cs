@@ -13,19 +13,50 @@ namespace MoMTool.Logic
 {
     public partial class BossSubChartNoteComponent : UserControl
     {
-        public int ChartOffset { get; set; }
-        public int ChartLength { get; set; }
-        public BossChartComponent ParentChartComponent;
-        public BossBattleSubChartManager BossBattleSubChartManager;
+        public BossChartComponent ParentChartComponent { get; set; }
+        public BossBattleSubChartManager BossBattleSubChartManager { get; set; }
 
         public BossSubChartNoteComponent()
         {
             InitializeComponent();
+
+            this.bossNoteComponent.modelDropdown.SelectedIndexChanged += this.modelDropdown_SelectedIndexChanged;
         }
 
         private void noteClose_Click(object sender, EventArgs e)
         {
             this.BossBattleSubChartManager.Close();
+        }
+
+        private void modelDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var item = ((ComboBox)sender).SelectedItem.ToString();
+
+            var visible = item.Equals("HoldStart");
+            var time = int.Parse(this.bossNoteComponent.timeValue.Text);
+
+            this.bossNoteComponent.nextNote.Visible = visible;
+            this.bossNoteComponent.nextNoteDropdown.Visible = visible;
+
+            if (visible)
+            {
+                var nextItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.BossNoteType.ToString() == "HoldEnd" && x.HitTime > time);
+                this.bossNoteComponent.nextNoteDropdown.Items.AddRange(nextItems.ToArray());
+            }
+
+            visible = item.Equals("HoldEnd");
+
+            this.bossNoteComponent.previousNote.Visible = visible;
+            this.bossNoteComponent.previousNoteDropdown.Visible = visible;
+
+            if (visible)
+            {
+                var prevItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.BossNoteType.ToString() == "HoldStart" && x.HitTime < time);
+                this.bossNoteComponent.previousNoteDropdown.Items.AddRange(prevItems.ToArray());
+            }
+
+            this.bossNoteComponent.swipeText.Visible = item.Equals("Swipe");
+            this.bossNoteComponent.swipeDropdown.Visible = item.Equals("Swipe");
         }
 
         private void saveNote_Click(object sender, EventArgs e)
@@ -40,8 +71,8 @@ namespace MoMTool.Logic
             note.NoteType = 0; // TODO Is this needed?
             note.HitTime = int.Parse(this.bossNoteComponent.timeValue.Text);
             note.Lane = (BossLane)Enum.Parse(typeof(BossLane), this.bossNoteComponent.laneDropdown.SelectedItem.ToString());
-            note.StartHoldNote = int.Parse(this.bossNoteComponent.nextNoteValue.Text);
-            note.EndHoldNote = int.Parse(this.bossNoteComponent.previousNoteValue.Text);
+            note.StartHoldNote = (BossNote)this.bossNoteComponent.previousNoteDropdown.SelectedItem;
+            note.EndHoldNote = (BossNote)this.bossNoteComponent.nextNoteDropdown.SelectedItem;
             note.BossNoteType = (BossNoteType)Enum.Parse(typeof(BossNoteType), this.bossNoteComponent.modelDropdown.SelectedItem.ToString());
 
             ParentChartComponent.Notes[noteIndex].Note = note;
