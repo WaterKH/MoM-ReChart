@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Components\DrawingPanel.cs~RF11a23bdc.TMP" />
     <None Remove="Components\SelfContainedComponents\MemoryDive\MemoryNoteComponent.cs~RFbb98095.TMP" />
     <None Remove="Components\SelfContainedComponents\TimeShiftComponent.cs~RF222e87b.TMP" />
     <None Remove="Components\SelfContainedComponents\TimeShiftComponent.cs~RF22d297b.TMP" />
@@ -17,6 +18,7 @@
     <PackageReference Include="MoMMusicAnalysis" Version="1.0.22" />
     <PackageReference Include="NAudio" Version="2.0.0" />
     <PackageReference Include="NAudio.WaveFormRenderer" Version="1.0.0" />
+    <PackageReference Include="VisualBasic.PowerPacks.Vs" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

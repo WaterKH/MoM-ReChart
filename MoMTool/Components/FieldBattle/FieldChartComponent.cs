@@ -1,4 +1,5 @@
-﻿using MoMMusicAnalysis;
+﻿using Microsoft.VisualBasic.PowerPacks;
+using MoMMusicAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,20 +22,31 @@ namespace MoMTool.Logic
         public ObservableCollection<MoMButton<PerformerNote<FieldLane>>> Performers = new ObservableCollection<MoMButton<PerformerNote<FieldLane>>>();
         public ObservableCollection<MoMButton<TimeShift<FieldLane>>> Times = new ObservableCollection<MoMButton<TimeShift<FieldLane>>>();
 
-        // TODO Add ability to drag and drop notes ALREADY on the lanes
+        public Button Origin { get; set; }
+        public Button Destination { get; set; }
+        public ShapeContainer ShapeContainer { get; set; } = new ShapeContainer();
+
         // TODO Remove MoMButton from UI after deleting (That's why ObservableCollection?)
-        // TODO Add default animations to different note types
         // TODO Draw lines between Multi hit/ Glide Notes
         // TODO Account for overlapping lines
         public FieldChartComponent()
         {
             InitializeComponent();
 
-            foreach(Panel lane in this.chartNotePanel.Controls)
+            foreach (Panel lane in this.chartNotePanel.Controls)
             {
                 lane.DragEnter += this.chartLane_DragEnter;
                 lane.DragDrop += this.chartLane_DragDrop;
+                //lane.Paint += this.PaintPanelOrButton;
             }
+
+            //this.chartNotePanel.Paint += this.PaintPanelOrButton;
+            //this.ShapeContainer.Location = this.chartNotePanel.Location;
+            //this.ShapeContainer.Height = this.chartNotePanel.Height;
+            //this.ShapeContainer.BringToFront();
+            this.ShapeContainer.Parent = this.panelPlayerCenter;
+
+            this.Controls.Add(this.ShapeContainer);
         }
 
         private void chartTimeValue_TextChanged(object sender, EventArgs e)
@@ -57,6 +69,9 @@ namespace MoMTool.Logic
             this.panelPartyMember2Right.Width = value;
             this.panelSomewhereRight.Width = value;
             this.panelOutOfMapRight.Width = value;
+
+            this.ShapeContainer.BringToFront();
+            this.ShapeContainer.Size = new Size(this.chartNotePanel.Height, value);
         }
 
         private void notesCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -230,5 +245,17 @@ namespace MoMTool.Logic
                     break;
             }
         }
+
+        //private void PaintPanelOrButton(object sender, PaintEventArgs e)
+        //{
+        //    if (this.Origin != null && this.Destination != null)
+        //    {
+        //        // center the line endpoints on each button
+        //        Point pt1 = new Point(Origin.Left + (Origin.Width / 2), Origin.Top + (Origin.Height / 2));
+        //        Point pt2 = new Point(Destination.Left + (Destination.Width / 2), Destination.Top + (Destination.Height / 2));
+
+        //        e.Graphics.DrawLine(new Pen(Color.Red, 4.0F), 20, 0, 20, 5000);
+        //    }
+        //}
     }
 }

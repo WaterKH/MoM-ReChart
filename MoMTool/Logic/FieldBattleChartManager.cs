@@ -1,4 +1,5 @@
-﻿using MoMMusicAnalysis;
+﻿using Microsoft.VisualBasic.PowerPacks;
+using MoMMusicAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -339,16 +340,48 @@ namespace MoMTool.Logic
             fieldChart.Performers = this.CreateChartButtons(ref fieldChart, fieldBattleSong.PerformerCount, fieldBattleSong.PerformerNotes, "Performer", Color.Purple);
             fieldChart.Times = this.CreateChartButtons(ref fieldChart, fieldBattleSong.TimeShiftCount, fieldBattleSong.TimeShifts, "Time", Color.Yellow);
 
-            foreach (var fieldNote in fieldChart.Notes.Select(x => x.Note))
+            foreach (var fieldNote in fieldChart.Notes)
             {
-                if (fieldNote.PreviousEnemyNoteIndex != -1)
-                    fieldNote.PreviousEnemyNote = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.PreviousEnemyNoteIndex).Note;
+                if (fieldNote.Note.PreviousEnemyNoteIndex != -1)
+                {
+                    var prevMoMButton = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.Note.PreviousEnemyNoteIndex);
+                    fieldNote.Note.PreviousEnemyNote = prevMoMButton.Note;
 
-                if (fieldNote.NextEnemyNoteIndex != -1)
-                    fieldNote.NextEnemyNote = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.NextEnemyNoteIndex).Note;
+                    fieldChart.Origin = fieldNote.Button;
+                    fieldChart.Destination = prevMoMButton.Button;
+                    var origin = fieldNote.Button.PointToScreen(Point.Empty);
+                    var destination = prevMoMButton.Button.PointToScreen(Point.Empty);
 
-                if (fieldNote.ProjectileOriginNoteIndex != -1)
-                    fieldNote.ProjectileOriginNote = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.ProjectileOriginNoteIndex).Note;
+                    var line = new LineShape(origin.X, origin.Y, destination.X, destination.Y)
+                    {
+                        BorderColor = Color.Black,
+                        Parent = fieldChart.ShapeContainer
+                    };
+
+                    fieldChart.Refresh();
+                }
+
+                if (fieldNote.Note.NextEnemyNoteIndex != -1)
+                {
+                    var nextMoMButton = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.Note.NextEnemyNoteIndex);
+                    fieldNote.Note.NextEnemyNote = nextMoMButton.Note;
+
+                    fieldChart.Origin = fieldNote.Button;
+                    fieldChart.Destination = nextMoMButton.Button;
+
+                    fieldChart.Refresh();
+                }
+
+                if (fieldNote.Note.ProjectileOriginNoteIndex != -1)
+                {
+                    var projectileMoMButton = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.Note.ProjectileOriginNoteIndex);
+                    fieldNote.Note.ProjectileOriginNote = projectileMoMButton.Note;
+
+                    fieldChart.Origin = fieldNote.Button;
+                    fieldChart.Destination = projectileMoMButton.Button;
+
+                    fieldChart.Refresh();
+                }
             }
 
             return fieldChart;
