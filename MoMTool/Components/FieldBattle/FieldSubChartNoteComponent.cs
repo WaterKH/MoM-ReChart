@@ -18,13 +18,19 @@ namespace MoMTool.Logic
         public FieldChartComponent ParentChartComponent { get; set; }
         public FieldBattleSubChartManager FieldBattleSubChartManager { get; set; }
 
-        public ObservableCollection<MoMButton<FieldAnimation>> Animations = new ObservableCollection<MoMButton<FieldAnimation>>();
+        public int CurrentNoteId { get; set; }
+        public ObservableCollection<MoMButton<FieldAnimation>> Animations { get; set; } = new ObservableCollection<MoMButton<FieldAnimation>>();
 
         public FieldSubChartNoteComponent()
         {
             InitializeComponent();
 
-            this.fieldNoteComponent.modelDropdown.SelectedIndexChanged += this.modelDropdown_SelectedIndexChanged;
+            this.fieldNoteComponent.modelDropdown.SelectedIndexChanged += this.modelDropdown_SelectedIndexChanged; 
+            foreach (Panel lane in this.chartAnimationPanel.Controls)
+            {
+                lane.DragEnter += this.chartLane_DragEnter;
+                lane.DragDrop += this.chartLane_DragDrop;
+            }
         }
 
         private void noteClose_Click(object sender, EventArgs e)
@@ -98,6 +104,24 @@ namespace MoMTool.Logic
                 this.fieldNoteComponent.shooterDropdown.Items.AddRange(shooterItems.ToArray());
             }
         }
+
+        private void chartLane_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.Text))
+                e.Effect = DragDropEffects.Copy;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void chartLane_DragDrop(object sender, DragEventArgs e)
+        {
+            var panel = ((Panel)sender);
+            var point = new Point(e.X, e.Y);
+            var data = e.Data.GetData(DataFormats.Text).ToString();
+
+            this.FieldBattleSubChartManager.MoveChartAnimation(panel, point, data);
+        }
+
 
         private void saveAnimation_Click(object sender, EventArgs e)
         {

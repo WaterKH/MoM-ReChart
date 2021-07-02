@@ -85,6 +85,7 @@ namespace MoMTool.Logic
             // 
             // panelOutOfMapRight
             // 
+            this.panelOutOfMapRight.AllowDrop = true;
             this.panelOutOfMapRight.BackColor = System.Drawing.SystemColors.Window;
             this.panelOutOfMapRight.Location = new System.Drawing.Point(0, 300);
             this.panelOutOfMapRight.Name = "panelOutOfMapRight";
@@ -93,6 +94,7 @@ namespace MoMTool.Logic
             // 
             // panelSomewhereRight
             // 
+            this.panelSomewhereRight.AllowDrop = true;
             this.panelSomewhereRight.BackColor = System.Drawing.SystemColors.Window;
             this.panelSomewhereRight.Location = new System.Drawing.Point(0, 275);
             this.panelSomewhereRight.Name = "panelSomewhereRight";
@@ -101,6 +103,7 @@ namespace MoMTool.Logic
             // 
             // panelPlayerRight
             // 
+            this.panelPlayerRight.AllowDrop = true;
             this.panelPlayerRight.BackColor = System.Drawing.Color.Pink;
             this.panelPlayerRight.Location = new System.Drawing.Point(0, 175);
             this.panelPlayerRight.Name = "panelPlayerRight";
@@ -109,6 +112,7 @@ namespace MoMTool.Logic
             // 
             // panelPartyMember2Center
             // 
+            this.panelPartyMember2Center.AllowDrop = true;
             this.panelPartyMember2Center.BackColor = System.Drawing.Color.PaleGreen;
             this.panelPartyMember2Center.Location = new System.Drawing.Point(0, 225);
             this.panelPartyMember2Center.Name = "panelPartyMember2Center";
@@ -117,6 +121,7 @@ namespace MoMTool.Logic
             // 
             // panelPartyMember1Center
             // 
+            this.panelPartyMember1Center.AllowDrop = true;
             this.panelPartyMember1Center.BackColor = System.Drawing.Color.PowderBlue;
             this.panelPartyMember1Center.Location = new System.Drawing.Point(0, 75);
             this.panelPartyMember1Center.Name = "panelPartyMember1Center";
@@ -125,6 +130,7 @@ namespace MoMTool.Logic
             // 
             // panelPartyMember2Right
             // 
+            this.panelPartyMember2Right.AllowDrop = true;
             this.panelPartyMember2Right.BackColor = System.Drawing.Color.PaleGreen;
             this.panelPartyMember2Right.Location = new System.Drawing.Point(0, 250);
             this.panelPartyMember2Right.Name = "panelPartyMember2Right";
@@ -133,6 +139,7 @@ namespace MoMTool.Logic
             // 
             // panelPlayerLeft
             // 
+            this.panelPlayerLeft.AllowDrop = true;
             this.panelPlayerLeft.BackColor = System.Drawing.Color.Pink;
             this.panelPlayerLeft.Location = new System.Drawing.Point(0, 125);
             this.panelPlayerLeft.Name = "panelPlayerLeft";
@@ -141,6 +148,7 @@ namespace MoMTool.Logic
             // 
             // panelPartyMember2Left
             // 
+            this.panelPartyMember2Left.AllowDrop = true;
             this.panelPartyMember2Left.BackColor = System.Drawing.Color.PaleGreen;
             this.panelPartyMember2Left.Location = new System.Drawing.Point(0, 200);
             this.panelPartyMember2Left.Name = "panelPartyMember2Left";
@@ -149,6 +157,7 @@ namespace MoMTool.Logic
             // 
             // panelSomewhereLeft
             // 
+            this.panelSomewhereLeft.AllowDrop = true;
             this.panelSomewhereLeft.BackColor = System.Drawing.SystemColors.Window;
             this.panelSomewhereLeft.Location = new System.Drawing.Point(0, 25);
             this.panelSomewhereLeft.Name = "panelSomewhereLeft";
@@ -157,6 +166,7 @@ namespace MoMTool.Logic
             // 
             // panelPlayerCenter
             // 
+            this.panelPlayerCenter.AllowDrop = true;
             this.panelPlayerCenter.BackColor = System.Drawing.Color.Pink;
             this.panelPlayerCenter.Location = new System.Drawing.Point(0, 150);
             this.panelPlayerCenter.Name = "panelPlayerCenter";
@@ -165,6 +175,7 @@ namespace MoMTool.Logic
             // 
             // panelPartyMember1Left
             // 
+            this.panelPartyMember1Left.AllowDrop = true;
             this.panelPartyMember1Left.BackColor = System.Drawing.Color.PowderBlue;
             this.panelPartyMember1Left.Location = new System.Drawing.Point(0, 50);
             this.panelPartyMember1Left.Name = "panelPartyMember1Left";
@@ -173,6 +184,7 @@ namespace MoMTool.Logic
             // 
             // panelPartyMember1Right
             // 
+            this.panelPartyMember1Right.AllowDrop = true;
             this.panelPartyMember1Right.BackColor = System.Drawing.Color.PowderBlue;
             this.panelPartyMember1Right.Location = new System.Drawing.Point(0, 100);
             this.panelPartyMember1Right.Name = "panelPartyMember1Right";
@@ -181,6 +193,7 @@ namespace MoMTool.Logic
             // 
             // panelOutOfMapLeft
             // 
+            this.panelOutOfMapLeft.AllowDrop = true;
             this.panelOutOfMapLeft.BackColor = System.Drawing.SystemColors.Window;
             this.panelOutOfMapLeft.Location = new System.Drawing.Point(0, 0);
             this.panelOutOfMapLeft.Name = "panelOutOfMapLeft";

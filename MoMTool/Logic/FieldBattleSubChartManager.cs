@@ -49,6 +49,7 @@ namespace MoMTool.Logic
         public void LoadSubChartComponent(int id, FieldNote note)
         {
             this.FieldSubChartComponent = new FieldSubChartNoteComponent { Visible = true };
+            this.FieldSubChartComponent.CurrentNoteId = id;
             this.FieldSubChartComponent.FieldBattleSubChartManager = this;
             this.FieldSubChartComponent.ParentChartComponent = this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab];
 
@@ -83,6 +84,7 @@ namespace MoMTool.Logic
         public void LoadSubChartComponent(int id, FieldAsset asset)
         {
             this.FieldSubChartComponent = new FieldSubChartAssetComponent { Visible = true };
+            this.FieldSubChartComponent.CurrentAssetId = id;
             this.FieldSubChartComponent.FieldBattleSubChartManager = this;
             this.FieldSubChartComponent.ParentChartComponent = this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab];
 
@@ -145,6 +147,8 @@ namespace MoMTool.Logic
                     this.FieldSubChartComponent.animationPanel.Visible = true;
                     this.FieldSubChartComponent.fieldAnimationComponent.LoadAnimationComponent(momButton);
                 };
+                momButton.Button.MouseDown += (object sender, MouseEventArgs e) => { this.MouseDown(sender, e); };
+
                 this.FieldSubChartComponent.Animations.Add(momButton);
 
                 toolTip.SetToolTip(momButton.Button, anim.AnimationEndTime.ToString());
@@ -154,6 +158,62 @@ namespace MoMTool.Logic
 
             this.FieldSubChartComponent.CalculateAnimationChartLength();
             this.FieldSubChartComponent.SetAnimationPositions();
+        }
+
+
+        public void MoveChartAnimation(Panel panel, Point point, string buttonName)
+        {
+            var buttonId = buttonName.Split('-')[1];
+            Point controlRelatedCoords = panel.PointToClient(point);
+
+            var lane = (FieldLane)Enum.Parse(typeof(FieldLane), panel.Name[5..]);
+            
+            if (this.FieldSubChartComponent.GetType() == typeof(FieldSubChartNoteComponent))
+            {
+                this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Notes
+                    .FirstOrDefault(x => x.Id == ((FieldSubChartNoteComponent)this.FieldSubChartComponent).CurrentNoteId)
+                    .Note.Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).AnimationEndTime += (controlRelatedCoords.X * 10);
+                this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Notes
+                    .FirstOrDefault(x => x.Id == ((FieldSubChartNoteComponent)this.FieldSubChartComponent).CurrentNoteId)
+                    .Note.Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).AnimationStartTime += (controlRelatedCoords.X * 10);
+
+                ((FieldSubChartNoteComponent)this.FieldSubChartComponent).Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).Note.AnimationEndTime += (controlRelatedCoords.X * 10);
+                ((FieldSubChartNoteComponent)this.FieldSubChartComponent).Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).Note.AnimationStartTime += (controlRelatedCoords.X * 10);
+                ((FieldSubChartNoteComponent)this.FieldSubChartComponent).Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).Button.Location = 
+                    new Point(((FieldSubChartNoteComponent)this.FieldSubChartComponent).Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).Button.Location.X + (controlRelatedCoords.X), 0);
+
+                if (((FieldSubChartNoteComponent)this.FieldSubChartComponent).Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).Note.AnimationStartTime < 0)
+                    ((FieldSubChartNoteComponent)this.FieldSubChartComponent).Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).Note.AnimationStartTime = 0;
+            }
+            else if (this.FieldSubChartComponent.GetType() == typeof(FieldSubChartAssetComponent))
+            {
+                this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Assets
+                    .FirstOrDefault(x => x.Id == ((FieldSubChartAssetComponent)this.FieldSubChartComponent).CurrentAssetId)
+                    .Note.Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).AnimationEndTime += (controlRelatedCoords.X * 10);
+                this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Assets
+                    .FirstOrDefault(x => x.Id == ((FieldSubChartAssetComponent)this.FieldSubChartComponent).CurrentAssetId)
+                    .Note.Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).AnimationStartTime += (controlRelatedCoords.X * 10);
+                
+                ((FieldSubChartAssetComponent)this.FieldSubChartComponent).Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).Note.AnimationEndTime += (controlRelatedCoords.X * 10);
+                ((FieldSubChartAssetComponent)this.FieldSubChartComponent).Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).Note.AnimationStartTime += (controlRelatedCoords.X * 10);
+                ((FieldSubChartAssetComponent)this.FieldSubChartComponent).Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).Button.Location = 
+                    new Point(((FieldSubChartAssetComponent)this.FieldSubChartComponent).Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).Button.Location.X + (controlRelatedCoords.X), 0);
+
+                if (((FieldSubChartAssetComponent)this.FieldSubChartComponent).Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).Note.AnimationStartTime < 0)
+                    ((FieldSubChartAssetComponent)this.FieldSubChartComponent).Animations.FirstOrDefault(x => x.Id.ToString() == buttonId).Note.AnimationStartTime = 0;
+            }
+        }
+
+        private void MouseDown(object sender, MouseEventArgs e)
+        {
+            // Determines which item was selected.
+            var button = ((Button)sender);
+
+            // Starts a drag-and-drop operation with that item.
+            if (button != null && Utilities.IsControlDown())
+            {
+                button.DoDragDrop(button.Name, DragDropEffects.Copy | DragDropEffects.Move);
+            }
         }
 
         public void Close()
