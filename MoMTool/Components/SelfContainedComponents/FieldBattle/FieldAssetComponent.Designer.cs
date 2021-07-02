@@ -115,6 +115,7 @@ namespace MoMTool.Logic
             "ShooterProjectileArrow",
             "AerialShooterProjectileArrow",
             "AerialShooterArrow",
+            "JumpingAerialArrow",
             "CrystalRightLeft",
             "CrystalCenter",
             "GlideArrow"});
