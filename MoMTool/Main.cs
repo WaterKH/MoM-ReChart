@@ -30,12 +30,13 @@ namespace MoMTool
 
             this.difficultyControl.Selected += (sender, args) =>
             {
+                // Add an additional 49 as Difficulty -> Beginner: 49; Standard: 50; Proud: 51;
                 if (this.FieldBattleChartManager != null)
-                    this.FieldBattleChartManager.CurrentDifficultyTab = (Difficulty)(args.TabPageIndex + 1);
+                    this.FieldBattleChartManager.CurrentDifficultyTab = (Difficulty)(args.TabPageIndex + 49);
                 else if (this.MemoryDiveChartManager != null)
-                    this.MemoryDiveChartManager.CurrentDifficultyTab = (Difficulty)(args.TabPageIndex + 1);
+                    this.MemoryDiveChartManager.CurrentDifficultyTab = (Difficulty)(args.TabPageIndex + 49);
                 else if (this.BossBattleChartManager != null)
-                    this.BossBattleChartManager.CurrentDifficultyTab = (Difficulty)(args.TabPageIndex + 1);
+                    this.BossBattleChartManager.CurrentDifficultyTab = (Difficulty)(args.TabPageIndex + 49);
             };
         }
 
