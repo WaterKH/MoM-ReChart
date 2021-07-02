@@ -90,6 +90,9 @@ namespace MoMTool.Logic
             this.FieldSubChartComponent.fieldAssetComponent.timeValue.Text = asset.HitTime.ToString();
             this.FieldSubChartComponent.fieldAssetComponent.laneDropdown.SelectedItem = asset.Lane.ToString();
             this.FieldSubChartComponent.fieldAssetComponent.modelDropdown.SelectedItem = asset.ModelType.ToString();
+
+            // Setup Animations
+            this.LoadAnimationChartComponent(asset.Animations);
         }
 
         public void LoadSubChartComponent(int id, PerformerNote<FieldLane> performer)
@@ -115,7 +118,6 @@ namespace MoMTool.Logic
             this.FieldSubChartComponent.timeValue.Text = time.HitTime.ToString();
             this.FieldSubChartComponent.speedValue.Text = time.Speed.ToString();
         }
-
 
         private void LoadAnimationChartComponent(List<FieldAnimation> anims)
         {
