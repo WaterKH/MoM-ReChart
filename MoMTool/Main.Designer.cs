@@ -30,9 +30,9 @@ namespace MoMTool
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Default Types", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Pre-Configured Notes", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Pre-Configured Assets", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Default Types", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Pre-Configured Notes", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Pre-Configured Assets", System.Windows.Forms.HorizontalAlignment.Left);
             this.fileName = new System.Windows.Forms.TextBox();
             this.openFileExplorer = new System.Windows.Forms.Button();
             this.recompileFieldButton = new System.Windows.Forms.Button();
@@ -226,16 +226,16 @@ namespace MoMTool
             // noteListView
             // 
             this.noteListView.AutoArrange = false;
-            listViewGroup1.Header = "Default Types";
-            listViewGroup1.Name = "groupDefaultTypes";
-            listViewGroup2.Header = "Pre-Configured Notes";
-            listViewGroup2.Name = "groupPreConfiguredNotes";
-            listViewGroup3.Header = "Pre-Configured Assets";
-            listViewGroup3.Name = "groupPreConfiguredAssets";
+            listViewGroup4.Header = "Default Types";
+            listViewGroup4.Name = "groupDefaultTypes";
+            listViewGroup5.Header = "Pre-Configured Notes";
+            listViewGroup5.Name = "groupPreConfiguredNotes";
+            listViewGroup6.Header = "Pre-Configured Assets";
+            listViewGroup6.Name = "groupPreConfiguredAssets";
             this.noteListView.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3});
+            listViewGroup4,
+            listViewGroup5,
+            listViewGroup6});
             this.noteListView.HideSelection = false;
             this.noteListView.Location = new System.Drawing.Point(824, 105);
             this.noteListView.Margin = new System.Windows.Forms.Padding(2);

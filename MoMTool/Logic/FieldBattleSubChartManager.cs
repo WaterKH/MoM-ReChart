@@ -91,6 +91,11 @@ namespace MoMTool.Logic
             this.FieldSubChartComponent.fieldAssetComponent.laneDropdown.SelectedItem = asset.Lane.ToString();
             this.FieldSubChartComponent.fieldAssetComponent.modelDropdown.SelectedItem = asset.ModelType.ToString();
 
+            if (asset.ModelType == FieldAssetType.AerialShooterArrow)
+            {
+                this.FieldSubChartComponent.fieldAssetComponent.modelDropdown.SelectedItem = "AerialShooterArrow";
+            }
+
             // Setup Animations
             this.LoadAnimationChartComponent(asset.Animations);
         }

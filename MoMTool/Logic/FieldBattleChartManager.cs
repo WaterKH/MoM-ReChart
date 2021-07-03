@@ -215,9 +215,8 @@ namespace MoMTool.Logic
                 else
                     modelString = note.ModelType.ToString();
                 
-                var aerialFlag = modelString.Contains("Aerial") && modelString != "HittableAerialUncommonEnemy" || 
-                    (modelString == "GlideNote" && note.PreviousEnemyNote == null) || 
-                    modelString.Contains("Projectile");
+                var aerialFlag = (modelString.Contains("Aerial") && (modelString != "AerialEnemyShooterProjectile" || modelString != "HittableAerialUncommonEnemy")) ||
+                    (modelString == "GlideNote" && note.PreviousEnemyNote == null);
 
                 if (aerialFlag || (note.ModelType == FieldModelType.CrystalEnemyCenter || note.ModelType == FieldModelType.CrystalEnemyLeftRight))
                 {
@@ -525,6 +524,7 @@ namespace MoMTool.Logic
                     this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
 
                     var assetType = FieldAssetType.None;
+                    var assetTime = 0;
                     // Create Asset For FieldNote
                     switch (noteType)
                     {
@@ -534,14 +534,16 @@ namespace MoMTool.Logic
                         case "Aerial Uncommon Enemy":
                             assetType = FieldAssetType.AerialUncommonArrow;
                             break;
-                        case "Multi-Hit Aerial Enemy":
+                        case "Multi Hit Aerial Enemy":
                             assetType = FieldAssetType.MultiHitAerialArrow;
                             break;
                         case "Enemy Shooter Projectile":
                             assetType = FieldAssetType.ShooterProjectileArrow;
+                            assetTime = hitTime;
                             break;
                         case "Aerial Enemy Shooter Projectile":
                             assetType = FieldAssetType.AerialShooterProjectileArrow;
+                            assetTime = hitTime;
                             break;
                         case "Aerial Enemy Shooter":
                             assetType = FieldAssetType.AerialShooterArrow;
@@ -549,14 +551,20 @@ namespace MoMTool.Logic
                         case "Jumping Aerial Enemy":
                             assetType = FieldAssetType.JumpingAerialArrow;
                             break;
-                        case "Crystal Left Enemy":
+                        case "Crystal Enemy Left":
                             assetType = FieldAssetType.CrystalRightLeft;
+                            assetTime = hitTime + 1650;
+                            lane = FieldLane.OutOfMapLeft;
                             break;
-                        case "Crystal Right Enemy":
+                        case "Crystal Enemy Right":
                             assetType = FieldAssetType.CrystalRightLeft;
+                            assetTime = hitTime + 1650;
+                            lane = FieldLane.OutOfMapRight;
                             break;
-                        case "Crystal Center Enemy":
+                        case "Crystal Enemy Center":
                             assetType = FieldAssetType.CrystalCenter;
+                            assetTime = hitTime + 1800;
+                            lane = FieldLane.PlayerCenter;
                             break;
                         case "Glide Note Start":
                             assetType = FieldAssetType.GlideArrow;
@@ -564,10 +572,14 @@ namespace MoMTool.Logic
                         default:
                             break;
                     }
-
                     if (assetType != FieldAssetType.None)
                     {
-                        if (this.CreateFieldAsset(hitTime - 500, lane, assetType.ToString(), hitTime - 3500, hitTime - 500) is var fieldAsset && fieldAsset != null)
+                        if (assetTime == 0)
+                        {
+                            assetTime = hitTime - 500;
+                        }
+
+                        if (this.CreateFieldAsset(assetTime, lane, assetType, assetTime - 3000, assetTime) is var fieldAsset && fieldAsset != null)
                         {
                             this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Assets.Count, fieldAsset, "Asset", Color.Blue));
                         }
@@ -583,30 +595,80 @@ namespace MoMTool.Logic
         public FieldNote CreateFieldNote(int time, FieldLane lane, string modelString = "", int animationStart = -1, int animationEnd = -1)
         {
             var model = FieldModelType.None;
-            if (!string.IsNullOrEmpty(modelString))
+            var noteType = 0;
+            var unk3 = 0;
+            if (modelString == "Enemy Shooter Projectile")
             {
-                if (Enum.TryParse(typeof(FieldModelType), modelString.Replace(" ", ""), out var modelObj))
-                {
-                    model = (FieldModelType)modelObj;
-                }
-                else
-                {
-                    return null;
-                }
+                model = FieldModelType.EnemyShooterProjectile;
+                noteType = 2;
+                animationStart = time - 1200;
+                animationEnd = time + 1200;
             }
-            
-            var aerialFlag = modelString.Contains("Aerial") && modelString != "Hittable Aerial UncommonEnemy" ||
-                    modelString == "Glide Note Start" ||
-                    modelString.Contains("Projectile");
+            else if (modelString == "Aerial Enemy Shooter Projectile")
+            {
+                model = FieldModelType.AerialEnemyShooterProjectile;
+                noteType = 2;
+                animationStart = time - 2850;
+                animationEnd = time + 2850;
+            }
+            else if (modelString == "Crate")
+            {
+                model = FieldModelType.Crate;
+                noteType = 4;
+                unk3 = 1;
+            }
+            if (modelString == "Barrel")
+            {
+                model = FieldModelType.Barrel;
+                noteType = 4;
+            }
+            else if (modelString == "Crystal Enemy Right")
+            {
+                model = FieldModelType.CrystalEnemyLeftRight;
+                noteType = 1;
+                lane = FieldLane.PlayerLeft;
+                animationStart = time - 4050;
+                animationEnd = time;
+            }
+            else if (modelString == "Crystal Enemy Left")
+            {
+                model = FieldModelType.CrystalEnemyLeftRight;
+                noteType = 1;
+                lane = FieldLane.PlayerRight;
+                animationStart = time - 4050;
+                animationEnd = time;
+            }
+            else if (modelString == "Crystal Enemy Center")
+            {
+                model = FieldModelType.CrystalEnemyCenter;
+                noteType = 1;
+                lane = FieldLane.PlayerCenter;
+                animationStart = time - 3200;
+                animationEnd = time;
+            }
+            else if (modelString == "Glide Note Start" || modelString == "Glide Note")
+            {
+                model = FieldModelType.GlideNote;
+                noteType = 3;
+            }
+            else
+            {
+                model = (FieldModelType)Enum.Parse(typeof(FieldModelType), modelString.Replace(" ", ""));
+            }
+
+            var aerialFlag = modelString.Contains("Aerial") && (modelString != "Hittable Aerial UncommonEnemy" && modelString != "Aerial Enemy Shooter Projectile") || 
+                modelString.Contains("Glide");
 
             var fieldNote = new FieldNote
             {
+                NoteType = noteType,
                 HitTime = time,
                 Lane = lane,
                 AerialFlag = aerialFlag,
-                ModelType = model
+                ModelType = model,
+                Unk3 = unk3
             };
-
+            
             if (animationStart != -1 || animationEnd != -1)
             {
                 fieldNote.Animations = new List<FieldAnimation> {
@@ -623,35 +685,23 @@ namespace MoMTool.Logic
                     fieldNote.Animations[0].AnimationStartTime = 0;
             }
 
-
-            //foreach (var note in this.FieldCharts[this.CurrentDifficultyTab].Notes.Where(x => x.Note.HitTime >= time))
-            //{
-            //    if (note.Note.PreviousEnemyNote != -1 && this.FieldCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.PreviousEnemyNote).Note.HitTime >= time)
-            //        this.FieldCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.FieldCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.PreviousEnemyNote += 1;
-
-           //    if (note.Note.NextEnemyNote != -1 && this.FieldCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.NextEnemyNote).Note.HitTime >= time)
-           //         this.FieldCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.FieldCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.NextEnemyNote += 1;
-           //}
-
             return fieldNote;
         }
 
-        public FieldAsset CreateFieldAsset(int time, FieldLane lane, string modelString = "", int animationStart = -1, int animationEnd = -1)
+        public FieldAsset CreateFieldAsset(int time, FieldLane lane, FieldAssetType model, int animationStart = -1, int animationEnd = -1)
         {
-            var model = FieldAssetType.None;
-            if (!string.IsNullOrEmpty(modelString))
-            {
-                if (Enum.TryParse(typeof(FieldAssetType), modelString.Replace(" ", ""), out var modelObj))
-                {
-                    model = (FieldAssetType)modelObj;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-
             var jumpFlag = !(model == FieldAssetType.CrystalRightLeft || model == FieldAssetType.CrystalCenter);
+
+            if (model == FieldAssetType.CrystalRightLeft)
+            {
+                animationStart = time - 2400;
+                animationEnd = time;
+            }
+            else if (model == FieldAssetType.CrystalCenter)
+            {
+                animationStart = time - 2400;
+                animationEnd = time;
+            }
 
             var fieldAsset = new FieldAsset
             {

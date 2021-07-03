@@ -158,9 +158,10 @@ namespace MoMTool.Logic
                     0;
             note.HitTime = int.Parse(this.fieldNoteComponent.timeValue.Text);
             note.Lane = (FieldLane)Enum.Parse(typeof(FieldLane), this.fieldNoteComponent.laneDropdown.SelectedItem.ToString());
-            note.AerialFlag = (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString().Contains("Aerial") && this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() != "HittableAerialUncommonEnemy") ||
-                        (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() == "GlideNote" && this.fieldNoteComponent.previousNoteDropdown.SelectedItem == null) || this.fieldNoteComponent.modelDropdown.SelectedItem.ToString().Contains("Aerial") ||
-                        this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() == "Projectile"; //|| (note.modelDropdown.SelectedItem.ToString() == "ProjectileEnemy" && note.aerialFlag.Checked))
+            note.AerialFlag = (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString().Contains("Aerial") && 
+                (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() != "HittableAerialUncommonEnemy") && 
+                    this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() != "AerialEnemyShooterProjectile") ||
+                (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() == "GlideNote" && this.fieldNoteComponent.previousNoteDropdown.SelectedItem == null);
             note.ProjectileOriginNote = (FieldNote)this.fieldNoteComponent.shooterDropdown.SelectedItem;
             note.NextEnemyNote = (FieldNote)this.fieldNoteComponent.nextNoteDropdown.SelectedItem;
             note.PreviousEnemyNote = (FieldNote)this.fieldNoteComponent.previousNoteDropdown.SelectedItem;
@@ -168,6 +169,15 @@ namespace MoMTool.Logic
             note.StarFlag = this.fieldNoteComponent.starFlag.Checked;
             note.PartyFlag = this.fieldNoteComponent.partyFlag.Checked;
             //note.AlternateFlag Unk3 = note.alternateModel.Checked // TODO Unk3 is the alternate model flag it seems
+
+            if (note.ModelType == FieldModelType.MultiHitGroundEnemy || note.ModelType == FieldModelType.MultiHitAerialEnemy)
+            {
+                if (note.PreviousEnemyNote != null)
+                {
+                    note.Animations[0].AnimationStartTime = note.HitTime;
+                    note.Animations[0].AnimationEndTime = note.HitTime;
+                }
+            }
 
             ParentChartComponent.Notes[noteIndex].Note = note;
             momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10
