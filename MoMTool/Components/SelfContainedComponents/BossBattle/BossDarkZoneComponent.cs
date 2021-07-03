@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -30,15 +31,15 @@ namespace MoMTool.Logic
             this.Visible = false;
 
             var noteIndex = int.Parse(this.darkZoneGroup.Text.Split(' ')[^1]);
+            var momButton = this.ParentChartComponent.DarkZones.FirstOrDefault(x => x.Id == noteIndex);
 
-            var momButton = ParentChartComponent.DarkZones[noteIndex];
             var darkZone = momButton.Note;
 
             darkZone.HitTime = int.Parse(this.startTimeValue.Text);
             darkZone.EndTime = int.Parse(this.endTimeValue.Text);
             darkZone.EndAttackTime = int.Parse(this.endAttackTimeValue.Text);
 
-            ParentChartComponent.DarkZones[noteIndex].Note = darkZone;
+            ParentChartComponent.DarkZones.FirstOrDefault(x => x.Id == noteIndex).Note = darkZone;
             momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10
 
             this.ParentChartComponent.AddToLane(darkZone.Lane, momButton.Button);
@@ -52,12 +53,13 @@ namespace MoMTool.Logic
             this.Visible = false;
 
             var noteIndex = int.Parse(this.darkZoneGroup.Text.Split(' ')[^1]);
+            var note = this.ParentChartComponent.DarkZones.FirstOrDefault(x => x.Id == noteIndex);
 
-            this.ParentChartComponent.RemoveFromLane(this.ParentChartComponent.DarkZones[noteIndex].Note.Lane, this.ParentChartComponent.DarkZones[noteIndex].Button);
+            this.ParentChartComponent.RemoveFromLane(note.Note.Lane, note.Button);
 
-            this.ParentChartComponent.DarkZones[noteIndex].Button.Visible = false;
-            this.ParentChartComponent.DarkZones[noteIndex].Button = null;
-            this.ParentChartComponent.DarkZones.RemoveAt(noteIndex);
+            note.Button.Visible = false;
+            note.Button = null;
+            this.ParentChartComponent.DarkZones.Remove(note);
         }
     }
 }

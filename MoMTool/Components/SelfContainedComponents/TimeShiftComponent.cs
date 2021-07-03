@@ -30,14 +30,21 @@ namespace MoMTool.Logic
             this.Visible = false;
 
             var noteIndex = int.Parse(this.timeShiftGroup.Text.Split(' ')[^1]);
+            dynamic momButton = null;
+            foreach (var time in this.ParentChartComponent.Times)
+            {
+                if (time.Id == noteIndex)
+                {
+                    momButton = time;
+                    break;
+                }
+            }
 
-            var momButton = ParentChartComponent.Times[noteIndex];
             var timeShift = momButton.Note;
 
             timeShift.HitTime = int.Parse(this.timeValue.Text);
             timeShift.Speed = int.Parse(this.speedValue.Text);
 
-            ParentChartComponent.Times[noteIndex].Note = timeShift;
             momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10
 
             this.ParentChartComponent.AddToLane(timeShift.Lane, momButton.Button);
@@ -51,12 +58,21 @@ namespace MoMTool.Logic
             this.Visible = false;
 
             var noteIndex = int.Parse(this.timeShiftGroup.Text.Split(' ')[^1]);
+            dynamic momButton = null;
+            foreach (var time in this.ParentChartComponent.Times)
+            {
+                if (time.Id == noteIndex)
+                {
+                    momButton = time;
+                    break;
+                }
+            }
 
-            this.ParentChartComponent.RemoveFromLane(this.ParentChartComponent.Times[noteIndex].Note.Lane, this.ParentChartComponent.Times[noteIndex].Button);
+            this.ParentChartComponent.RemoveFromLane(momButton.Note.Lane, momButton.Button);
 
-            this.ParentChartComponent.Times[noteIndex].Button.Visible = false;
-            this.ParentChartComponent.Times[noteIndex].Button = null;
-            this.ParentChartComponent.Times.RemoveAt(noteIndex);
+            momButton.Button.Visible = false;
+            momButton.Button = null;
+            this.ParentChartComponent.Times.Remove(momButton);
         }
     }
 }

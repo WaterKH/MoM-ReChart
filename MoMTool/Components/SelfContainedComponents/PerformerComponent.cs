@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace MoMTool.Logic
 {
@@ -31,8 +32,16 @@ namespace MoMTool.Logic
             this.Visible = false;
 
             var noteIndex = int.Parse(this.performerGroup.Text.Split(' ')[^1]);
-
-            var momButton = ParentChartComponent.Performers[noteIndex];
+            dynamic momButton = null;
+            foreach (var perf in this.ParentChartComponent.Performers)
+            {
+                if (perf.Id == noteIndex)
+                {
+                    momButton = perf;
+                    break;
+                }
+            }
+            
             var performer = momButton.Note;
 
             performer.HitTime = int.Parse(this.timeValue.Text);
@@ -51,7 +60,6 @@ namespace MoMTool.Logic
             performer.PerformerType = (PerformerType)Enum.Parse(typeof(PerformerType), this.typeDropdown.SelectedItem.ToString());
             performer.DuplicateType = performer.PerformerType;
 
-            ParentChartComponent.Performers[noteIndex].Note = performer;
             momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10
 
             this.ParentChartComponent.AddToLane(performer.Lane, momButton.Button);
@@ -65,12 +73,21 @@ namespace MoMTool.Logic
             this.Visible = false;
 
             var noteIndex = int.Parse(this.performerGroup.Text.Split(' ')[^1]);
+            dynamic momButton = null;
+            foreach (var perf in this.ParentChartComponent.Performers)
+            {
+                if (perf.Id == noteIndex)
+                {
+                    momButton = perf;
+                    break;
+                }
+            }
 
-            this.ParentChartComponent.RemoveFromLane(this.ParentChartComponent.Performers[noteIndex].Note.Lane, this.ParentChartComponent.Performers[noteIndex].Button);
+            this.ParentChartComponent.RemoveFromLane(momButton.Note.Lane, momButton.Button);
 
-            this.ParentChartComponent.Performers[noteIndex].Button.Visible = false;
-            this.ParentChartComponent.Performers[noteIndex].Button = null;
-            this.ParentChartComponent.Performers.RemoveAt(noteIndex);
+            momButton.Button.Visible = false;
+            momButton.Button = null;
+            this.ParentChartComponent.Performers.Remove(momButton);
         }
 
         public void UpdateLane(Type laneType)
