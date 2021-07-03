@@ -112,7 +112,11 @@ namespace MoMTool.Logic
             asset.HitTime = int.Parse(this.fieldAssetComponent.timeValue.Text);
             asset.Lane = (FieldLane)Enum.Parse(typeof(FieldLane), this.fieldAssetComponent.laneDropdown.SelectedItem.ToString());
             asset.Unk1 = this.fieldAssetComponent.modelDropdown.SelectedItem.ToString() == "CrystalRightLeft" ? 1 : 0;
-            asset.ModelType = (FieldAssetType)Enum.Parse(typeof(FieldAssetType), this.fieldAssetComponent.modelDropdown.SelectedItem.ToString());
+
+            if (this.fieldAssetComponent.modelDropdown.SelectedItem.ToString() == "AerialShooterArrow")
+                asset.ModelType = FieldAssetType.AerialShooterArrow;
+            else 
+                asset.ModelType = (FieldAssetType)Enum.Parse(typeof(FieldAssetType), this.fieldAssetComponent.modelDropdown.SelectedItem.ToString());
 
             ParentChartComponent.Assets[assetIndex].Note = asset;
             momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10
