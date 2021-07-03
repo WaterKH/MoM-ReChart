@@ -30,9 +30,9 @@ namespace MoMTool
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Default Types", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Pre-Configured Notes", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Pre-Configured Assets", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup10 = new System.Windows.Forms.ListViewGroup("Default Types", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup11 = new System.Windows.Forms.ListViewGroup("Pre-Configured Notes", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup12 = new System.Windows.Forms.ListViewGroup("Pre-Configured Assets", System.Windows.Forms.HorizontalAlignment.Left);
             this.fileName = new System.Windows.Forms.TextBox();
             this.openFileExplorer = new System.Windows.Forms.Button();
             this.recompileFieldButton = new System.Windows.Forms.Button();
@@ -63,6 +63,7 @@ namespace MoMTool
             this.fileName.PlaceholderText = "File Path";
             this.fileName.Size = new System.Drawing.Size(272, 27);
             this.fileName.TabIndex = 1;
+            this.fileName.TabStop = false;
             // 
             // openFileExplorer
             // 
@@ -71,6 +72,7 @@ namespace MoMTool
             this.openFileExplorer.Name = "openFileExplorer";
             this.openFileExplorer.Size = new System.Drawing.Size(103, 29);
             this.openFileExplorer.TabIndex = 2;
+            this.openFileExplorer.TabStop = false;
             this.openFileExplorer.Text = "Decompile...";
             this.openFileExplorer.UseVisualStyleBackColor = true;
             this.openFileExplorer.Click += new System.EventHandler(this.openFileExplorer_Click);
@@ -82,6 +84,7 @@ namespace MoMTool
             this.recompileFieldButton.Name = "recompileFieldButton";
             this.recompileFieldButton.Size = new System.Drawing.Size(168, 29);
             this.recompileFieldButton.TabIndex = 4;
+            this.recompileFieldButton.TabStop = false;
             this.recompileFieldButton.Text = "Recompile Field Song";
             this.recompileFieldButton.UseVisualStyleBackColor = true;
             this.recompileFieldButton.Click += new System.EventHandler(this.recompileFieldSongButton_Click);
@@ -132,6 +135,7 @@ namespace MoMTool
             this.difficultyControl.SelectedIndex = 0;
             this.difficultyControl.Size = new System.Drawing.Size(812, 547);
             this.difficultyControl.TabIndex = 0;
+            this.difficultyControl.TabStop = false;
             // 
             // panel1
             // 
@@ -162,6 +166,7 @@ namespace MoMTool
             this.zoomInButton.Name = "zoomInButton";
             this.zoomInButton.Size = new System.Drawing.Size(39, 28);
             this.zoomInButton.TabIndex = 1;
+            this.zoomInButton.TabStop = false;
             this.zoomInButton.Text = "+";
             this.zoomInButton.UseVisualStyleBackColor = true;
             this.zoomInButton.Click += new System.EventHandler(this.zoomInButton_Click);
@@ -174,6 +179,7 @@ namespace MoMTool
             this.zoomOutButton.Name = "zoomOutButton";
             this.zoomOutButton.Size = new System.Drawing.Size(32, 28);
             this.zoomOutButton.TabIndex = 0;
+            this.zoomOutButton.TabStop = false;
             this.zoomOutButton.Text = "-";
             this.zoomOutButton.UseVisualStyleBackColor = true;
             this.zoomOutButton.Click += new System.EventHandler(this.zoomOutButton_Click);
@@ -197,6 +203,7 @@ namespace MoMTool
             this.debugCheckbox.Name = "debugCheckbox";
             this.debugCheckbox.Size = new System.Drawing.Size(76, 24);
             this.debugCheckbox.TabIndex = 8;
+            this.debugCheckbox.TabStop = false;
             this.debugCheckbox.Text = "Debug";
             this.debugCheckbox.UseVisualStyleBackColor = true;
             // 
@@ -207,6 +214,7 @@ namespace MoMTool
             this.clearChartButton.Name = "clearChartButton";
             this.clearChartButton.Size = new System.Drawing.Size(103, 29);
             this.clearChartButton.TabIndex = 9;
+            this.clearChartButton.TabStop = false;
             this.clearChartButton.Text = "Clear Chart";
             this.clearChartButton.UseVisualStyleBackColor = true;
             this.clearChartButton.Click += new System.EventHandler(this.clearChartButton_Click);
@@ -219,6 +227,7 @@ namespace MoMTool
             this.deleteChartButton.Name = "deleteChartButton";
             this.deleteChartButton.Size = new System.Drawing.Size(92, 29);
             this.deleteChartButton.TabIndex = 10;
+            this.deleteChartButton.TabStop = false;
             this.deleteChartButton.Text = "Delete Chart";
             this.deleteChartButton.UseVisualStyleBackColor = false;
             this.deleteChartButton.Click += new System.EventHandler(this.deleteChartButton_Click);
@@ -226,32 +235,34 @@ namespace MoMTool
             // noteListView
             // 
             this.noteListView.AutoArrange = false;
-            listViewGroup4.Header = "Default Types";
-            listViewGroup4.Name = "groupDefaultTypes";
-            listViewGroup5.Header = "Pre-Configured Notes";
-            listViewGroup5.Name = "groupPreConfiguredNotes";
-            listViewGroup6.Header = "Pre-Configured Assets";
-            listViewGroup6.Name = "groupPreConfiguredAssets";
+            listViewGroup10.Header = "Default Types";
+            listViewGroup10.Name = "groupDefaultTypes";
+            listViewGroup11.Header = "Pre-Configured Notes";
+            listViewGroup11.Name = "groupPreConfiguredNotes";
+            listViewGroup12.Header = "Pre-Configured Assets";
+            listViewGroup12.Name = "groupPreConfiguredAssets";
             this.noteListView.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup4,
-            listViewGroup5,
-            listViewGroup6});
+            listViewGroup10,
+            listViewGroup11,
+            listViewGroup12});
             this.noteListView.HideSelection = false;
             this.noteListView.Location = new System.Drawing.Point(824, 105);
             this.noteListView.Margin = new System.Windows.Forms.Padding(2);
             this.noteListView.Name = "noteListView";
             this.noteListView.Size = new System.Drawing.Size(208, 513);
             this.noteListView.TabIndex = 11;
+            this.noteListView.TabStop = false;
             this.noteListView.UseCompatibleStateImageBehavior = false;
             this.noteListView.View = System.Windows.Forms.View.Tile;
             // 
             // recompileMemoryButton
             // 
-            this.recompileMemoryButton.Location = new System.Drawing.Point(505, 9);
+            this.recompileMemoryButton.Location = new System.Drawing.Point(505, 10);
             this.recompileMemoryButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.recompileMemoryButton.Name = "recompileMemoryButton";
             this.recompileMemoryButton.Size = new System.Drawing.Size(200, 29);
             this.recompileMemoryButton.TabIndex = 12;
+            this.recompileMemoryButton.TabStop = false;
             this.recompileMemoryButton.Text = "Recompile Memory Song";
             this.recompileMemoryButton.UseVisualStyleBackColor = true;
             this.recompileMemoryButton.Visible = false;
@@ -259,11 +270,12 @@ namespace MoMTool
             // 
             // recompileBossButton
             // 
-            this.recompileBossButton.Location = new System.Drawing.Point(505, 9);
+            this.recompileBossButton.Location = new System.Drawing.Point(505, 10);
             this.recompileBossButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.recompileBossButton.Name = "recompileBossButton";
             this.recompileBossButton.Size = new System.Drawing.Size(168, 29);
             this.recompileBossButton.TabIndex = 13;
+            this.recompileBossButton.TabStop = false;
             this.recompileBossButton.Text = "Recompile Boss Song";
             this.recompileBossButton.UseVisualStyleBackColor = true;
             this.recompileBossButton.Visible = false;
