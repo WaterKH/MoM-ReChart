@@ -215,7 +215,7 @@ namespace MoMTool.Logic
                 else
                     modelString = note.ModelType.ToString();
                 
-                var aerialFlag = modelString.Contains("Aerial") && (modelString != "HittableAerialUncommonEnemy" && modelString != "AerialEnemyShooterProjectile") || 
+                var aerialFlag = (modelString.Contains("Aerial") && (modelString != "AerialEnemyShooterProjectile" || modelString != "HittableAerialUncommonEnemy")) ||
                     (modelString == "GlideNote" && note.PreviousEnemyNote == null);
 
                 if (aerialFlag || (note.ModelType == FieldModelType.CrystalEnemyCenter || note.ModelType == FieldModelType.CrystalEnemyLeftRight))
