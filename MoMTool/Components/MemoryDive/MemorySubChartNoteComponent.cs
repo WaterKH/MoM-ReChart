@@ -65,7 +65,7 @@ namespace MoMTool.Logic
 
             var noteIndex = int.Parse(this.memoryNoteComponent.memoryNoteGroup.Text.Split(' ')[^1]);
 
-            var momButton = ParentChartComponent.Notes[noteIndex];
+            var momButton = ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex);
             var note = momButton.Note;
 
             note.NoteType = 0; // TODO Is this needed?
@@ -75,7 +75,7 @@ namespace MoMTool.Logic
             note.EndHoldNote = (MemoryNote)this.memoryNoteComponent.nextNoteDropdown.SelectedItem;
             note.MemoryNoteType = (MemoryNoteType)Enum.Parse(typeof(MemoryNoteType), this.memoryNoteComponent.modelDropdown.SelectedItem.ToString());
 
-            ParentChartComponent.Notes[noteIndex].Note = note;
+            ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note = note;
             momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10
 
             this.ParentChartComponent.AddToLane(note.Lane, momButton.Button);
@@ -89,12 +89,13 @@ namespace MoMTool.Logic
             this.Visible = false;
 
             var noteIndex = int.Parse(this.memoryNoteComponent.memoryNoteGroup.Text.Split(' ')[^1]);
+            var note = this.ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex);
 
-            this.ParentChartComponent.RemoveFromLane(this.ParentChartComponent.Notes[noteIndex].Note.Lane, this.ParentChartComponent.Notes[noteIndex].Button);
+            this.ParentChartComponent.RemoveFromLane(note.Note.Lane, note.Button);
 
-            this.ParentChartComponent.Notes[noteIndex].Button.Visible = false;
-            this.ParentChartComponent.Notes[noteIndex].Button = null;
-            this.ParentChartComponent.Notes.RemoveAt(noteIndex);
+            note.Button.Visible = false;
+            note.Button = null;
+            this.ParentChartComponent.Notes.Remove(note);
         }
     }
 }

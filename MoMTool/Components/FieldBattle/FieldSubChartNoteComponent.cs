@@ -106,7 +106,7 @@ namespace MoMTool.Logic
             var animIndex = int.Parse(this.fieldAnimationComponent.fieldEnemyAnimationGroup.Text.Split(' ')[^1]);
             var noteIndex = int.Parse(this.fieldNoteComponent.fieldNoteGroup.Text.Split(' ')[^1]);
 
-            var anim = this.ParentChartComponent.Notes[noteIndex].Note.Animations[animIndex];
+            var anim = this.ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note.Animations.FirstOrDefault(x => x.Id == animIndex);
 
             anim.AnimationStartTime = int.Parse(this.fieldAnimationComponent.startTimeValue.Text);
             anim.AnimationEndTime = int.Parse(this.fieldAnimationComponent.endTimeValue.Text);
@@ -115,13 +115,12 @@ namespace MoMTool.Logic
             anim.Previous = int.Parse(this.fieldAnimationComponent.startNoteValue.Text);
             anim.Next = int.Parse(this.fieldAnimationComponent.endNoteValue.Text);
 
-            this.ParentChartComponent.Notes[noteIndex].Note.Animations[animIndex] = anim;
-            this.Animations[animIndex].Button.Location = new Point((Animations[animIndex].Note.AnimationEndTime - this.ChartOffset) / 10, 0); // TODO Add back the this.zoomVariable in place of 10
+            this.Animations.FirstOrDefault(x => x.Id == animIndex).Button.Location = new Point((this.Animations.FirstOrDefault(x => x.Id == animIndex).Note.AnimationEndTime - this.ChartOffset) / 10, 0); // TODO Add back the this.zoomVariable in place of 10
 
             this.CalculateAnimationChartLength();
             this.SetAnimationPositions();
 
-            this.AddToLane(this.Animations[animIndex].Note.Lane, this.Animations[animIndex].Button);
+            this.AddToLane(this.Animations.FirstOrDefault(x => x.Id == animIndex).Note.Lane, this.Animations.FirstOrDefault(x => x.Id == animIndex).Button);
         }
 
         private void deleteAnimation_Click(object sender, EventArgs e)
@@ -130,15 +129,14 @@ namespace MoMTool.Logic
 
             var animIndex = int.Parse(this.fieldAnimationComponent.fieldEnemyAnimationGroup.Text.Split(' ')[^1]);
             var noteIndex = int.Parse(this.fieldNoteComponent.fieldNoteGroup.Text.Split(' ')[^1]);
+            var anim = this.Animations.FirstOrDefault(x => x.Id == animIndex);
 
-            // TODO Check for if it's a note or other
+            this.RemoveFromLane(anim.Note.Lane, anim.Button);
 
-            this.RemoveFromLane(this.Animations[animIndex].Note.Lane, this.Animations[animIndex].Button);
-
-            this.Animations[animIndex].Button.Visible = false;
-            this.Animations[animIndex].Button = null;
-            this.ParentChartComponent.Notes[noteIndex].Note.Animations.RemoveAt(animIndex);
-            this.Animations.RemoveAt(animIndex);
+            anim.Button.Visible = false;
+            anim.Button = null;
+            this.ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note.Animations.Remove(anim.Note);
+            this.Animations.Remove(anim);
         }
 
         private void saveNote_Click(object sender, EventArgs e)
@@ -147,7 +145,7 @@ namespace MoMTool.Logic
 
             var noteIndex = int.Parse(this.fieldNoteComponent.fieldNoteGroup.Text.Split(' ')[^1]);
 
-            var momButton = ParentChartComponent.Notes[noteIndex];
+            var momButton = ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex);
             var note = momButton.Note;
 
             note.NoteType = this.fieldNoteComponent.modelDropdown.SelectedItem.ToString().Contains("Crystal") ? 1 :
@@ -179,7 +177,7 @@ namespace MoMTool.Logic
                 }
             }
 
-            ParentChartComponent.Notes[noteIndex].Note = note;
+            ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note = note;
             momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10
 
             this.ParentChartComponent.AddToLane(note.Lane, momButton.Button);
@@ -193,18 +191,19 @@ namespace MoMTool.Logic
             this.Visible = false;
 
             var noteIndex = int.Parse(this.fieldNoteComponent.fieldNoteGroup.Text.Split(' ')[^1]);
+            var note = this.ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex);
 
-            this.ParentChartComponent.RemoveFromLane(this.ParentChartComponent.Notes[noteIndex].Note.Lane, this.ParentChartComponent.Notes[noteIndex].Button);
+            this.ParentChartComponent.RemoveFromLane(note.Note.Lane, note.Button);
 
-            this.ParentChartComponent.Notes[noteIndex].Button.Visible = false;
-            this.ParentChartComponent.Notes[noteIndex].Button = null;
-            this.ParentChartComponent.Notes.RemoveAt(noteIndex);
+            note.Button.Visible = false;
+            note.Button = null;
+            this.ParentChartComponent.Notes.Remove(note);
         }
 
         private void addAnimationButton_Click(object sender, EventArgs e)
         {
             var noteIndex = int.Parse(this.fieldNoteComponent.fieldNoteGroup.Text.Split(' ')[^1]);
-            var animIndex = this.ParentChartComponent.Notes[noteIndex].Note.Animations.Count;
+            var animIndex = this.ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note.Animations.Count;
             
             var toolTip = new ToolTip();
 
@@ -237,7 +236,7 @@ namespace MoMTool.Logic
                 this.fieldAnimationComponent.LoadAnimationComponent(momButton);
             };
             this.Animations.Add(momButton);
-            this.ParentChartComponent.Notes[noteIndex].Note.Animations.Add(momButton.Note);
+            this.ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note.Animations.Add(momButton.Note);
 
             toolTip.SetToolTip(momButton.Button, momButton.Note.AnimationEndTime.ToString());
 

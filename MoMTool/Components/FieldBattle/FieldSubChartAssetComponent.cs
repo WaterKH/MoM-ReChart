@@ -64,7 +64,8 @@ namespace MoMTool.Logic
             var animIndex = int.Parse(this.fieldAnimationComponent.fieldEnemyAnimationGroup.Text.Split(' ')[^1]);
             var assetIndex = int.Parse(this.fieldAssetComponent.fieldAssetGroup.Text.Split(' ')[^1]);
 
-            var anim = this.ParentChartComponent.Assets[assetIndex].Note.Animations[animIndex];
+            var anim = this.ParentChartComponent.Assets.FirstOrDefault(x => x.Id == assetIndex).Note.Animations.FirstOrDefault(x => x.Id == animIndex);
+
 
             anim.AnimationStartTime = int.Parse(this.fieldAnimationComponent.startTimeValue.Text);
             anim.AnimationEndTime = int.Parse(this.fieldAnimationComponent.endTimeValue.Text);
@@ -73,13 +74,12 @@ namespace MoMTool.Logic
             anim.Previous = int.Parse(this.fieldAnimationComponent.startNoteValue.Text);
             anim.Next = int.Parse(this.fieldAnimationComponent.endNoteValue.Text);
 
-            this.ParentChartComponent.Assets[assetIndex].Note.Animations[animIndex] = anim;
-            this.Animations[animIndex].Button.Location = new Point((Animations[animIndex].Note.AnimationEndTime - this.ChartOffset) / 10, 0); // TODO Add back the this.zoomVariable in place of 10
+            this.Animations.FirstOrDefault(x =>  x.Id == animIndex).Button.Location = new Point((this.Animations.FirstOrDefault(x => x.Id == animIndex).Note.AnimationEndTime - this.ChartOffset) / 10, 0); // TODO Add back the this.zoomVariable in place of 10
 
             this.CalculateAnimationChartLength();
             this.SetAnimationPositions();
 
-            this.AddToLane(this.Animations[animIndex].Note.Lane, this.Animations[animIndex].Button);
+            this.AddToLane(this.Animations.FirstOrDefault(x => x.Id == animIndex).Note.Lane, this.Animations.FirstOrDefault(x => x.Id == animIndex).Button);
         }
 
         private void deleteAnimation_Click(object sender, EventArgs e)
@@ -88,15 +88,14 @@ namespace MoMTool.Logic
 
             var animIndex = int.Parse(this.fieldAnimationComponent.fieldEnemyAnimationGroup.Text.Split(' ')[^1]);
             var assetIndex = int.Parse(this.fieldAssetComponent.fieldAssetGroup.Text.Split(' ')[^1]);
+            var anim = this.Animations.FirstOrDefault(x => x.Id == animIndex);
 
-            // TODO Check for if it's a note or other
+            this.RemoveFromLane(anim.Note.Lane, anim.Button);
 
-            this.RemoveFromLane(this.Animations[animIndex].Note.Lane, this.Animations[animIndex].Button);
-
-            this.Animations[animIndex].Button.Visible = false;
-            this.Animations[animIndex].Button = null;
-            this.ParentChartComponent.Assets[assetIndex].Note.Animations.RemoveAt(animIndex);
-            this.Animations.RemoveAt(animIndex);
+            anim.Button.Visible = false;
+            anim.Button = null;
+            this.ParentChartComponent.Assets.FirstOrDefault(x => x.Id == assetIndex).Note.Animations.Remove(anim.Note);
+            this.Animations.Remove(anim);
         }
 
         private void saveAsset_Click(object sender, EventArgs e)
@@ -105,7 +104,7 @@ namespace MoMTool.Logic
 
             var assetIndex = int.Parse(this.fieldAssetComponent.fieldAssetGroup.Text.Split(' ')[^1]);
 
-            var momButton = ParentChartComponent.Assets[assetIndex];
+            var momButton = ParentChartComponent.Assets.FirstOrDefault(x => x.Id == assetIndex);
             var asset = momButton.Note;
 
             asset.JumpFlag = this.fieldAssetComponent.modelDropdown.SelectedItem.ToString().Contains("Arrow") ? true : false;
@@ -118,7 +117,7 @@ namespace MoMTool.Logic
             else 
                 asset.ModelType = (FieldAssetType)Enum.Parse(typeof(FieldAssetType), this.fieldAssetComponent.modelDropdown.SelectedItem.ToString());
 
-            ParentChartComponent.Assets[assetIndex].Note = asset;
+            ParentChartComponent.Assets.FirstOrDefault(x => x.Id == assetIndex).Note = asset;
             momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10
 
             this.ParentChartComponent.AddToLane(asset.Lane, momButton.Button);
@@ -132,19 +131,20 @@ namespace MoMTool.Logic
             this.Visible = false;
 
             var assetIndex = int.Parse(this.fieldAssetComponent.fieldAssetGroup.Text.Split(' ')[^1]);
+            var asset = this.ParentChartComponent.Assets.FirstOrDefault(x => x.Id == assetIndex);
 
-            this.ParentChartComponent.RemoveFromLane(this.ParentChartComponent.Assets[assetIndex].Note.Lane, this.ParentChartComponent.Assets[assetIndex].Button);
+            this.ParentChartComponent.RemoveFromLane(asset.Note.Lane, asset.Button);
 
-            this.ParentChartComponent.Assets[assetIndex].Button.Visible = false;
-            this.ParentChartComponent.Assets[assetIndex].Button = null;
-            this.ParentChartComponent.Assets.RemoveAt(assetIndex);
+            asset.Button.Visible = false;
+            asset.Button = null;
+            this.ParentChartComponent.Assets.Remove(asset);
         }
 
         private void addAnimationButton_Click(object sender, EventArgs e)
         {
             var assetIndex = int.Parse(this.fieldAssetComponent.fieldAssetGroup.Text.Split(' ')[^1]);
-            var animIndex = this.ParentChartComponent.Assets[assetIndex].Note.Animations.Count;
-            
+            var animIndex = this.ParentChartComponent.Assets.FirstOrDefault(x => x.Id == assetIndex).Note.Animations.Count;
+
             var toolTip = new ToolTip();
 
             var momButton = new MoMButton<FieldAnimation>
@@ -176,7 +176,7 @@ namespace MoMTool.Logic
                 this.fieldAnimationComponent.LoadAnimationComponent(momButton);
             };
             this.Animations.Add(momButton);
-            this.ParentChartComponent.Assets[assetIndex].Note.Animations.Add(momButton.Note);
+            this.ParentChartComponent.Assets.FirstOrDefault(x => x.Id == assetIndex).Note.Animations.Add(momButton.Note);
 
             toolTip.SetToolTip(momButton.Button, momButton.Note.AnimationEndTime.ToString());
 
