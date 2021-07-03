@@ -307,18 +307,24 @@ namespace MoMTool.Logic
                 this.MemoryCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
                 this.MemoryCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.MemoryCharts[difficulty].AddToLane(lane, this.MemoryCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+
+                this.MemoryCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button.Focus();
             }
             else if (buttonType == "performer")
             {
                 this.MemoryCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
                 this.MemoryCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.MemoryCharts[difficulty].AddToLane(lane, this.MemoryCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+
+                this.MemoryCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button.Focus();
             }
             else if (buttonType == "time")
             {
                 this.MemoryCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
                 this.MemoryCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.MemoryCharts[difficulty].AddToLane(lane, this.MemoryCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+
+                this.MemoryCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button.Focus();
             }
         }
 

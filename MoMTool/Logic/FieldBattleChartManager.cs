@@ -429,6 +429,8 @@ namespace MoMTool.Logic
                         x.AnimationStartTime = 0;
                     }
                 });
+
+                this.FieldCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button.Focus();
             }
             else if (buttonType == "asset")
             {
@@ -448,18 +450,24 @@ namespace MoMTool.Logic
                         x.AnimationStartTime = 0;
                     }
                 });
+
+                this.FieldCharts[difficulty].Assets.FirstOrDefault(x => x.Button.Name == buttonName).Button.Focus();
             }
             else if (buttonType == "performer")
             {
                 this.FieldCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
                 this.FieldCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.FieldCharts[difficulty].AddToLane(lane, this.FieldCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+
+                this.FieldCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button.Focus();
             }
             else if (buttonType == "time")
             {
                 this.FieldCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
                 this.FieldCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.FieldCharts[difficulty].AddToLane(lane, this.FieldCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+
+                this.FieldCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button.Focus();
             }
         }
 

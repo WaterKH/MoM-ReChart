@@ -309,24 +309,32 @@ namespace MoMTool.Logic
                 this.BossCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
                 this.BossCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.BossCharts[difficulty].AddToLane(lane, this.BossCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+
+                this.BossCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button.Focus();
             }
             else if (buttonType == "performer")
             {
                 this.BossCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
                 this.BossCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.BossCharts[difficulty].AddToLane(lane, this.BossCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+
+                this.BossCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button.Focus();
             }
             else if (buttonType == "time")
             {
                 this.BossCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
                 this.BossCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.BossCharts[difficulty].AddToLane(lane, this.BossCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+
+                this.BossCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button.Focus();
             }
             else if (buttonType == "darkzone")
             {
                 this.BossCharts[difficulty].DarkZones.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
                 this.BossCharts[difficulty].DarkZones.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.BossCharts[difficulty].AddToLane(lane, this.BossCharts[difficulty].DarkZones.FirstOrDefault(x => x.Button.Name == buttonName).Button);
+
+                this.BossCharts[difficulty].DarkZones.FirstOrDefault(x => x.Button.Name == buttonName).Button.Focus();
             }
         }
 
