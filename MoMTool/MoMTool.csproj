@@ -4,6 +4,9 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
+    <Version>0.0.2</Version>
+    <Description>0.0.2 - Updated Debug to work for MD and BB
+0.0.1 - Initial alpha release</Description>
   </PropertyGroup>
 
   <ItemGroup>
