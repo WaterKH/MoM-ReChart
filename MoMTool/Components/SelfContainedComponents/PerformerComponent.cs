@@ -88,6 +88,9 @@ namespace MoMTool.Logic
             momButton.Button.Visible = false;
             momButton.Button = null;
             this.ParentChartComponent.Performers.Remove(momButton);
+
+            for (int i = 0; i < this.ParentChartComponent.Performers.Count; ++i)
+                this.ParentChartComponent.Performers[i].Id = i;
         }
 
         public void UpdateLane(Type laneType)

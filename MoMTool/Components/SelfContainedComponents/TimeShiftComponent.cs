@@ -73,6 +73,9 @@ namespace MoMTool.Logic
             momButton.Button.Visible = false;
             momButton.Button = null;
             this.ParentChartComponent.Times.Remove(momButton);
+
+            for (int i = 0; i < this.ParentChartComponent.Times.Count; ++i)
+                this.ParentChartComponent.Times[i].Id = i;
         }
     }
 }

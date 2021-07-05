@@ -96,6 +96,9 @@ namespace MoMTool.Logic
             anim.Button = null;
             this.ParentChartComponent.Assets.FirstOrDefault(x => x.Id == assetIndex).Note.Animations.Remove(anim.Note);
             this.Animations.Remove(anim);
+
+            for (int i = 0; i < this.ParentChartComponent.Assets.FirstOrDefault(x => x.Id == assetIndex).Note.Animations.Count; ++i)
+                this.ParentChartComponent.Assets.FirstOrDefault(x => x.Id == assetIndex).Note.Animations[i].Id = i;
         }
 
         private void saveAsset_Click(object sender, EventArgs e)
@@ -138,6 +141,9 @@ namespace MoMTool.Logic
             asset.Button.Visible = false;
             asset.Button = null;
             this.ParentChartComponent.Assets.Remove(asset);
+
+            for (int i = 0; i < this.ParentChartComponent.Assets.Count; ++i)
+                this.ParentChartComponent.Assets[i].Id = i;
         }
 
         private void addAnimationButton_Click(object sender, EventArgs e)

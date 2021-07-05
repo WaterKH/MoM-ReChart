@@ -109,6 +109,9 @@ namespace MoMTool.Logic
             note.Button.Visible = false;
             note.Button = null;
             this.ParentChartComponent.Notes.Remove(note);
+
+            for (int i = 0; i < this.ParentChartComponent.Notes.Count; ++i)
+                this.ParentChartComponent.Notes[i].Id = i;
         }
     }
 }
