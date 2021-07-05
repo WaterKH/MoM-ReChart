@@ -71,9 +71,22 @@ namespace MoMTool.Logic
             note.NoteType = 0; // TODO Is this needed?
             note.HitTime = int.Parse(this.bossNoteComponent.timeValue.Text);
             note.Lane = (BossLane)Enum.Parse(typeof(BossLane), this.bossNoteComponent.laneDropdown.SelectedItem.ToString());
-            note.StartHoldNote = (BossNote)this.bossNoteComponent.previousNoteDropdown.SelectedItem;
-            note.EndHoldNote = (BossNote)this.bossNoteComponent.nextNoteDropdown.SelectedItem;
             note.BossNoteType = (BossNoteType)Enum.Parse(typeof(BossNoteType), this.bossNoteComponent.modelDropdown.SelectedItem.ToString());
+
+            if (note.BossNoteType == BossNoteType.HoldEnd)
+                note.StartHoldNote = (BossNote)this.bossNoteComponent.previousNoteDropdown.SelectedItem;
+            else
+                note.StartHoldNoteIndex = -1;
+
+            if (note.BossNoteType == BossNoteType.HoldStart)
+                note.EndHoldNote = (BossNote)this.bossNoteComponent.nextNoteDropdown.SelectedItem;
+            else
+                note.EndHoldNoteIndex = -1;
+
+            if (note.BossNoteType == BossNoteType.Swipe)
+                note.SwipeDirection = (SwipeType)Enum.Parse(typeof(SwipeType), this.bossNoteComponent.swipeDropdown.SelectedItem.ToString());
+            else
+                note.SwipeDirection = SwipeType.Up;
 
             ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note = note;
             momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10

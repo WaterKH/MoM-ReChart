@@ -70,10 +70,23 @@ namespace MoMTool.Logic
 
             note.NoteType = 0; // TODO Is this needed?
             note.HitTime = int.Parse(this.memoryNoteComponent.timeValue.Text);
-            note.Lane = (MemoryLane)Enum.Parse(typeof(MemoryLane), this.memoryNoteComponent.laneDropdown.SelectedItem.ToString());
-            note.StartHoldNote = (MemoryNote)this.memoryNoteComponent.previousNoteDropdown.SelectedItem;
-            note.EndHoldNote = (MemoryNote)this.memoryNoteComponent.nextNoteDropdown.SelectedItem;
+            note.Lane = (MemoryLane)Enum.Parse(typeof(MemoryLane), this.memoryNoteComponent.laneDropdown.SelectedItem.ToString()); 
             note.MemoryNoteType = (MemoryNoteType)Enum.Parse(typeof(MemoryNoteType), this.memoryNoteComponent.modelDropdown.SelectedItem.ToString());
+
+            if (note.MemoryNoteType == MemoryNoteType.HoldEnd)
+                note.StartHoldNote = (MemoryNote)this.memoryNoteComponent.previousNoteDropdown.SelectedItem;
+            else
+                note.StartHoldNoteIndex = -1;
+
+            if (note.MemoryNoteType == MemoryNoteType.HoldStart)
+                note.EndHoldNote = (MemoryNote)this.memoryNoteComponent.nextNoteDropdown.SelectedItem;
+            else
+                note.EndHoldNoteIndex = -1;
+
+            if (note.MemoryNoteType == MemoryNoteType.Swipe)
+                note.SwipeDirection = (SwipeType)Enum.Parse(typeof(SwipeType), this.memoryNoteComponent.swipeDropdown.SelectedItem.ToString());
+            else
+                note.SwipeDirection = SwipeType.Up;
 
             ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note = note;
             momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10

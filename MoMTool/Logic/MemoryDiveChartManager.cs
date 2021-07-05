@@ -185,11 +185,18 @@ namespace MoMTool.Logic
 
             foreach (MemoryNote note in chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime))
             {
-                if (note.StartHoldNote != null)
+                if (note.StartHoldNote != null && note.MemoryNoteType == MemoryNoteType.HoldEnd)
                     note.StartHoldNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.StartHoldNote);
+                else
+                    note.StartHoldNoteIndex = -1;
 
-                if (note.EndHoldNote != null)
+                if (note.EndHoldNote != null && note.MemoryNoteType == MemoryNoteType.HoldStart)
                     note.EndHoldNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.EndHoldNote);
+                else
+                    note.EndHoldNoteIndex = -1;
+
+                if (note.MemoryNoteType != MemoryNoteType.Swipe)
+                    note.SwipeDirection = SwipeType.Up;
 
                 newSong.Notes.Add(note);
             }
