@@ -185,18 +185,11 @@ namespace MoMTool.Logic
 
             foreach (BossNote note in chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime))
             {
-                if (note.StartHoldNote != null && note.BossNoteType == BossNoteType.HoldEnd)
+                if (note.StartHoldNote != null)
                     note.StartHoldNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.StartHoldNote);
-                else
-                    note.StartHoldNoteIndex = -1;
 
-                if (note.EndHoldNote != null && note.BossNoteType == BossNoteType.HoldStart)
+                if (note.EndHoldNote != null)
                     note.EndHoldNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.EndHoldNote);
-                else
-                    note.EndHoldNoteIndex = -1;
-
-                if (note.BossNoteType != BossNoteType.Swipe)
-                    note.SwipeDirection = SwipeType.Up;
 
                 newSong.Notes.Add(note);
             }
@@ -227,6 +220,10 @@ namespace MoMTool.Logic
             {
                 BossBattleChartManager = this
             };
+
+            bossChart.songTypeDropdown.SelectedItem = "Boss Battle";
+            if (bossBattleSong.NoteCount == 0)
+                return bossChart;
 
             var songLength = (bossBattleSong.Notes.OrderByDescending(x => x.HitTime).FirstOrDefault().HitTime);
 

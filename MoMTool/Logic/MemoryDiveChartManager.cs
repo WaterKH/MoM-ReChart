@@ -185,18 +185,11 @@ namespace MoMTool.Logic
 
             foreach (MemoryNote note in chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime))
             {
-                if (note.StartHoldNote != null && note.MemoryNoteType == MemoryNoteType.HoldEnd)
+                if (note.StartHoldNote != null)
                     note.StartHoldNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.StartHoldNote);
-                else
-                    note.StartHoldNoteIndex = -1;
 
-                if (note.EndHoldNote != null && note.MemoryNoteType == MemoryNoteType.HoldStart)
+                if (note.EndHoldNote != null)
                     note.EndHoldNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.EndHoldNote);
-                else
-                    note.EndHoldNoteIndex = -1;
-
-                if (note.MemoryNoteType != MemoryNoteType.Swipe)
-                    note.SwipeDirection = SwipeType.Up;
 
                 newSong.Notes.Add(note);
             }
@@ -227,9 +220,12 @@ namespace MoMTool.Logic
                 MemoryDiveChartManager = this
             };
 
+            memoryChart.songTypeDropdown.SelectedItem = "Memory Dive";
+            if (memoryDiveSong.NoteCount == 0)
+                return memoryChart;
+
             var songLength = (memoryDiveSong.Notes.OrderByDescending(x => x.HitTime).FirstOrDefault().HitTime);
 
-            memoryChart.songTypeDropdown.SelectedItem = "Memory Dive";
             memoryChart.notesCheckbox.Checked = true;
             memoryChart.performerCheckbox.Checked = true;
             memoryChart.chartTimeValue.Text = songLength.ToString();

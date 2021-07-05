@@ -219,33 +219,18 @@ namespace MoMTool.Logic
                     (modelString == "GlideNote" && note.PreviousEnemyNote == null);
 
                 if (aerialFlag || (note.ModelType == FieldModelType.CrystalEnemyCenter || note.ModelType == FieldModelType.CrystalEnemyLeftRight))
-                    note.AerialAndCrystalCounter = aerialCrystalCount++;
-                else
-                    note.AerialAndCrystalCounter = -1;
-
-                if (!(note.ModelType == FieldModelType.MultiHitAerialEnemy || note.ModelType == FieldModelType.MultiHitGroundEnemy || note.ModelType == FieldModelType.GlideNote))
                 {
-                    note.PreviousEnemyNote = null;
-                    note.NextEnemyNote = null;
+                    note.AerialAndCrystalCounter = aerialCrystalCount++;
                 }
-
-                if (!(note.ModelType == FieldModelType.AerialEnemyShooterProjectile || note.ModelType == FieldModelType.EnemyShooterProjectile))
-                    note.ProjectileOriginNote = null;
 
                 if (note.PreviousEnemyNote != null)
                     note.PreviousEnemyNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.PreviousEnemyNote);
-                else
-                    note.PreviousEnemyNoteIndex = -1;
-                
+
                 if (note.NextEnemyNote != null)
                     note.NextEnemyNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.NextEnemyNote);
-                else
-                    note.NextEnemyNoteIndex = -1;
 
                 if (note.ProjectileOriginNote != null)
                     note.ProjectileOriginNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.ProjectileOriginNote);
-                else
-                    note.ProjectileOriginNoteIndex = -1;
 
                 for (int i = 0; i < note.Animations.Count; ++i)
                 {
@@ -339,9 +324,12 @@ namespace MoMTool.Logic
                 FieldBattleChartManager = this
             };
 
+            fieldChart.songTypeDropdown.SelectedItem = "Field Battle";
+            if (fieldBattleSong.NoteCount == 0)
+                return fieldChart;
+
             var songLength = (fieldBattleSong.Notes.OrderByDescending(x => x.HitTime).FirstOrDefault().HitTime);
 
-            fieldChart.songTypeDropdown.SelectedItem = "Field Battle";
             fieldChart.notesCheckbox.Checked = true;
             fieldChart.assetsCheckbox.Checked = true;
             fieldChart.performerCheckbox.Checked = true;
