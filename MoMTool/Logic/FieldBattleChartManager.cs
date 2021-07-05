@@ -325,9 +325,12 @@ namespace MoMTool.Logic
                 FieldBattleChartManager = this
             };
 
+            fieldChart.songTypeDropdown.SelectedItem = "Field Battle";
+            if (fieldBattleSong.NoteCount == 0)
+                return fieldChart;
+
             var songLength = (fieldBattleSong.Notes.OrderByDescending(x => x.HitTime).FirstOrDefault().HitTime);
 
-            fieldChart.songTypeDropdown.SelectedItem = "Field Battle";
             fieldChart.notesCheckbox.Checked = true;
             fieldChart.assetsCheckbox.Checked = true;
             fieldChart.performerCheckbox.Checked = true;

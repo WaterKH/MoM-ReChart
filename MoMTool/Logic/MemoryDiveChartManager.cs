@@ -221,9 +221,12 @@ namespace MoMTool.Logic
                 MemoryDiveChartManager = this
             };
 
+            memoryChart.songTypeDropdown.SelectedItem = "Memory Dive";
+            if (memoryDiveSong.NoteCount == 0)
+                return memoryChart;
+
             var songLength = (memoryDiveSong.Notes.OrderByDescending(x => x.HitTime).FirstOrDefault().HitTime);
 
-            memoryChart.songTypeDropdown.SelectedItem = "Memory Dive";
             memoryChart.notesCheckbox.Checked = true;
             memoryChart.performerCheckbox.Checked = true;
             memoryChart.chartTimeValue.Text = songLength.ToString();

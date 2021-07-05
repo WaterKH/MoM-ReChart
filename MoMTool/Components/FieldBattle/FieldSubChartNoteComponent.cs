@@ -137,6 +137,9 @@ namespace MoMTool.Logic
             anim.Button = null;
             this.ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note.Animations.Remove(anim.Note);
             this.Animations.Remove(anim);
+
+            for (int i = 0; i < this.ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note.Animations.Count; ++i)
+                this.ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note.Animations[i].Id = i;
         }
 
         private void saveNote_Click(object sender, EventArgs e)
@@ -156,28 +159,51 @@ namespace MoMTool.Logic
                     0;
             note.HitTime = int.Parse(this.fieldNoteComponent.timeValue.Text);
             note.Lane = (FieldLane)Enum.Parse(typeof(FieldLane), this.fieldNoteComponent.laneDropdown.SelectedItem.ToString());
+            note.ModelType = (FieldModelType)Enum.Parse(typeof(FieldModelType), this.fieldNoteComponent.modelDropdown.SelectedItem.ToString());
+
             note.AerialFlag = (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString().Contains("Aerial") && 
                 (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() != "HittableAerialUncommonEnemy") && 
                     this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() != "AerialEnemyShooterProjectile") ||
                 (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() == "GlideNote" && this.fieldNoteComponent.previousNoteDropdown.SelectedItem == null);
-            note.ProjectileOriginNote = (FieldNote)this.fieldNoteComponent.shooterDropdown.SelectedItem;
-            note.NextEnemyNote = (FieldNote)this.fieldNoteComponent.nextNoteDropdown.SelectedItem;
-            note.PreviousEnemyNote = (FieldNote)this.fieldNoteComponent.previousNoteDropdown.SelectedItem;
-            note.ModelType = (FieldModelType)Enum.Parse(typeof(FieldModelType), this.fieldNoteComponent.modelDropdown.SelectedItem.ToString());
             note.StarFlag = this.fieldNoteComponent.starFlag.Checked;
             note.PartyFlag = this.fieldNoteComponent.partyFlag.Checked;
             note.Unk3 = note.ModelType == FieldModelType.Crate ? 1 : 0;
 
-            if (note.ModelType == FieldModelType.MultiHitGroundEnemy || note.ModelType == FieldModelType.MultiHitAerialEnemy)
+            if (!note.AerialFlag)
+                note.AerialAndCrystalCounter = -1;
+
+            if (note.ModelType == FieldModelType.EnemyShooterProjectile || note.ModelType == FieldModelType.AerialEnemyShooterProjectile)
+                note.ProjectileOriginNote = (FieldNote)this.fieldNoteComponent.shooterDropdown.SelectedItem;
+            else
             {
-                if (note.PreviousEnemyNote != null)
+                note.ProjectileOriginNote = null;
+                note.ProjectileOriginNoteIndex = -1;
+            }
+
+            if (note.ModelType == FieldModelType.MultiHitAerialEnemy || note.ModelType == FieldModelType.MultiHitGroundEnemy || note.ModelType == FieldModelType.GlideNote)
+            {
+                note.NextEnemyNote = (FieldNote)this.fieldNoteComponent.nextNoteDropdown.SelectedItem;
+                note.PreviousEnemyNote = (FieldNote)this.fieldNoteComponent.previousNoteDropdown.SelectedItem;
+
+                if (note.ModelType != FieldModelType.GlideNote && note.PreviousEnemyNote != null)
                 {
                     note.Animations[0].AnimationStartTime = note.HitTime;
                     note.Animations[0].AnimationEndTime = note.HitTime;
                 }
             }
+            else
+            {
+                note.NextEnemyNote = null;
+                note.PreviousEnemyNote = null;
+                note.NextEnemyNoteIndex = -1;
+                note.PreviousEnemyNoteIndex = -1;
+            }
 
-            ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note = note;
+            note.StarFlag = this.fieldNoteComponent.starFlag.Checked;
+            note.PartyFlag = this.fieldNoteComponent.partyFlag.Checked;
+            //note.AlternateFlag Unk3 = note.alternateModel.Checked // TODO Unk3 is the alternate model flag it seems
+
+            this.ParentChartComponent.Notes.FirstOrDefault(x => x.Id == noteIndex).Note = note;
             momButton.Button.Location = new Point(momButton.Note.HitTime / 10, 0); // TODO Add back the this.zoomVariable in place of 10
 
             this.ParentChartComponent.AddToLane(note.Lane, momButton.Button);
@@ -200,6 +226,9 @@ namespace MoMTool.Logic
             note.Button.Visible = false;
             note.Button = null;
             this.ParentChartComponent.Notes.Remove(note);
+
+            for (int i = 0; i < this.ParentChartComponent.Notes.Count; ++i)
+                this.ParentChartComponent.Notes[i].Id = i;
         }
 
         private void addAnimationButton_Click(object sender, EventArgs e)

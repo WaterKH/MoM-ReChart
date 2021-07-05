@@ -222,6 +222,10 @@ namespace MoMTool.Logic
                 BossBattleChartManager = this
             };
 
+            bossChart.songTypeDropdown.SelectedItem = "Boss Battle";
+            if (bossBattleSong.NoteCount == 0)
+                return bossChart;
+
             var songLength = (bossBattleSong.Notes.OrderByDescending(x => x.HitTime).FirstOrDefault().HitTime);
 
             bossChart.songTypeDropdown.SelectedItem = "Boss Battle";

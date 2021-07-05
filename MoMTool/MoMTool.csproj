@@ -10,6 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Resources\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="Resources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Components\SelfContainedComponents\MemoryDive\MemoryNoteComponent.cs~RFbb98095.TMP" />
     <None Remove="Components\SelfContainedComponents\TimeShiftComponent.cs~RF222e87b.TMP" />
     <None Remove="Components\SelfContainedComponents\TimeShiftComponent.cs~RF22d297b.TMP" />
