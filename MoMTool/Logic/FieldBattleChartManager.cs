@@ -1,4 +1,5 @@
 ﻿using MoMMusicAnalysis;
+using MoMTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -338,16 +339,23 @@ namespace MoMTool.Logic
             fieldChart.Performers = this.CreateChartButtons(ref fieldChart, fieldBattleSong.PerformerCount, fieldBattleSong.PerformerNotes, "Performer", Color.Purple);
             fieldChart.Times = this.CreateChartButtons(ref fieldChart, fieldBattleSong.TimeShiftCount, fieldBattleSong.TimeShifts, "Time", Color.Yellow);
 
-            foreach (var fieldNote in fieldChart.Notes.Select(x => x.Note))
+            foreach (var fieldNote in fieldChart.Notes)
             {
-                if (fieldNote.PreviousEnemyNoteIndex != -1)
-                    fieldNote.PreviousEnemyNote = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.PreviousEnemyNoteIndex).Note;
+                if (fieldNote.Note.PreviousEnemyNoteIndex != -1)
+                    fieldNote.Note.PreviousEnemyNote = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.Note.PreviousEnemyNoteIndex).Note;
 
-                if (fieldNote.NextEnemyNoteIndex != -1)
-                    fieldNote.NextEnemyNote = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.NextEnemyNoteIndex).Note;
+                if (fieldNote.Note.NextEnemyNoteIndex != -1)
+                    fieldNote.Note.NextEnemyNote = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.Note.NextEnemyNoteIndex).Note;
 
-                if (fieldNote.ProjectileOriginNoteIndex != -1)
-                    fieldNote.ProjectileOriginNote = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.ProjectileOriginNoteIndex).Note;
+                if (fieldNote.Note.ProjectileOriginNoteIndex != -1)
+                    fieldNote.Note.ProjectileOriginNote = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.Note.ProjectileOriginNoteIndex).Note;
+
+                fieldNote.Button.Image = this.GetImageForModelType(fieldNote.Note.ModelType, fieldNote.Note.NoteType, fieldNote.Note.Unk3);
+            }
+
+            foreach (var performer in fieldChart.Performers)
+            {
+                performer.Button.Image = this.GetImageForModelType(performer.Note.PerformerType);
             }
 
             return fieldChart;
@@ -375,14 +383,16 @@ namespace MoMTool.Logic
                 Button = new Button
                 {
                     Text = "",
-                    //Image = Image.FromFile("Resources/note_shadow.png"),
                     BackColor = color,
                     Height = 19,
                     Width = 19,
                     Name = $"{type.ToLower()}-{id}",
-                    TabStop = false
+                    TabStop = false,
+                    FlatStyle = FlatStyle.Flat,
                 },
             };
+
+            momButton.Button.FlatAppearance.BorderSize = 0;
 
             momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
             momButton.Button.Click += (object sender, EventArgs e) => { FieldBattleSubChartManager.LoadSubChartComponent(momButton.Id, momButton.Note); };
@@ -736,6 +746,74 @@ namespace MoMTool.Logic
             }
 
             return fieldAsset;
+        }
+
+        public Image GetImageForModelType(FieldModelType type, int noteType, int altModel)
+        {
+            if (type == FieldModelType.CommonEnemy)
+                return Resources.Shadow;
+            if (type == FieldModelType.AerialCommonEnemy)
+                return Resources.RedNocturne;
+            else if (type == FieldModelType.UncommonEnemy)
+                return Resources.Soldier;
+            else if (type == FieldModelType.AerialUncommonEnemy)
+                return Resources.AirSoldier;
+            else if (type == FieldModelType.MultiHitGroundEnemy)
+                return Resources.Large;
+            else if (type == FieldModelType.MultiHitAerialEnemy)
+                return Resources.DarkBall;
+            else if (type == FieldModelType.EnemyShooterProjectile && noteType == 2)
+                return Resources.Projectile;
+            else if (type == FieldModelType.EnemyShooter && noteType == 0)
+                return Resources.CreeperPlant;
+            else if (type == FieldModelType.AerialEnemyShooterProjectile && noteType == 2)
+                return Resources.Projectile;
+            else if (type == FieldModelType.AerialEnemyShooter && noteType == 0)
+                return Resources.RedNocturne;
+            else if (type == FieldModelType.JumpingGroundEnemy)
+                return Resources.Crescendo;
+            else if (type == FieldModelType.JumpingAerialEnemy)
+                return Resources.Crescendo;
+            else if (type == FieldModelType.HiddenEnemy)
+                return Resources.HiddenShadow;
+            else if (type == FieldModelType.HittableAerialUncommonEnemy)
+                return Resources.AirSoldier;
+            else if (type == FieldModelType.CrystalEnemyLeftRight)
+                return Resources.Crystal_Base;
+            else if (type == FieldModelType.CrystalEnemyCenter)
+                return Resources.Crystal_Base;
+            else if (type == FieldModelType.GlideNote)
+                return Resources.Note;
+            else if (type == FieldModelType.Barrel && altModel == 0)
+                return Resources.Barrel;
+            else if (type == FieldModelType.Crate && altModel == 1)
+                return Resources.Bokusu;
+            else
+                return null;
+        }
+
+        public Image GetImageForModelType(PerformerType type)
+        {
+            if (type == PerformerType.L2)
+                return Resources.L2;
+            else if (type == PerformerType.R2)
+                return Resources.R2;
+            else if (type == PerformerType.Up)
+                return Resources.Up;
+            else if (type == PerformerType.Down)
+                return Resources.Down;
+            else if (type == PerformerType.Left)
+                return Resources.Left;
+            else if (type == PerformerType.Right)
+                return Resources.Right;
+            else if (type == PerformerType.Ability)
+                return Resources.Ability;
+            else if (type == PerformerType.Jump)
+                return Resources.Jump;
+            else if (type == PerformerType.Action)
+                return Resources.Action;
+            else
+                return null;
         }
 
         #endregion Helper Methods
