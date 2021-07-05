@@ -60,6 +60,9 @@ namespace MoMTool.Logic
             note.Button.Visible = false;
             note.Button = null;
             this.ParentChartComponent.DarkZones.Remove(note);
+
+            for (int i = 0; i < this.ParentChartComponent.DarkZones.Count; ++i)
+                this.ParentChartComponent.DarkZones[i].Id = i;
         }
     }
 }
