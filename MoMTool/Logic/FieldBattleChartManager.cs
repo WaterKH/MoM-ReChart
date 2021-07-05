@@ -353,10 +353,14 @@ namespace MoMTool.Logic
                 fieldNote.Button.Image = this.GetImageForModelType(fieldNote.Note.ModelType, fieldNote.Note.NoteType, fieldNote.Note.Unk3);
             }
 
+            foreach (var asset in fieldChart.Assets)
+                asset.Button.Image = this.GetImageForModelType(asset.Note.ModelType);
+
             foreach (var performer in fieldChart.Performers)
-            {
                 performer.Button.Image = this.GetImageForModelType(performer.Note.PerformerType);
-            }
+
+            foreach (var time in fieldChart.Times)
+                time.Button.Image = Resources.FieldTime;
 
             return fieldChart;
         }
@@ -373,7 +377,7 @@ namespace MoMTool.Logic
             return fieldChartButtons;
         }
 
-        private MoMButton<TNoteType> CreateChartButton<TNoteType>(ref FieldChartComponent fieldChart, int id, TNoteType component, string type, Color color) where TNoteType : Note<FieldLane>
+        private MoMButton<TNoteType> CreateChartButton<TNoteType>(ref FieldChartComponent fieldChart, int id, TNoteType component, string type, Color color, Image image = null) where TNoteType : Note<FieldLane>
         {
             var momButton = new MoMButton<TNoteType>
             {
@@ -389,6 +393,7 @@ namespace MoMTool.Logic
                     Name = $"{type.ToLower()}-{id}",
                     TabStop = false,
                     FlatStyle = FlatStyle.Flat,
+                    Image = image
                 },
             };
 
@@ -507,7 +512,7 @@ namespace MoMTool.Logic
             {
                 var fieldNote = this.CreateFieldNote(hitTime, lane);
 
-                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red, Resources.Shadow));
             }
             //else if (noteType.Equals("Field Asset"))
             //{
@@ -520,10 +525,12 @@ namespace MoMTool.Logic
                 var performer = new PerformerNote<FieldLane>
                 {
                     HitTime = controlRelatedCoords.X * this.ZoomVariable,
-                    Lane = lane
+                    Lane = lane,
+                    PerformerType = PerformerType.L2,
+                    DuplicateType = PerformerType.L2
                 };
 
-                this.FieldCharts[difficulty].Performers.Add(this.CreateChartButton(ref fieldChart, fieldChart.Performers.Count, performer, "Performer", Color.Purple));
+                this.FieldCharts[difficulty].Performers.Add(this.CreateChartButton(ref fieldChart, fieldChart.Performers.Count, performer, "Performer", Color.Purple, Resources.L2));
             }
             else if (noteType.Equals("Time Shift"))
             {
@@ -533,13 +540,13 @@ namespace MoMTool.Logic
                     Lane = FieldLane.OutOfMapLeft
                 };
 
-                this.FieldCharts[difficulty].Times.Add(this.CreateChartButton(ref fieldChart, fieldChart.Times.Count, time, "Time", Color.Yellow));
+                this.FieldCharts[difficulty].Times.Add(this.CreateChartButton(ref fieldChart, fieldChart.Times.Count, time, "Time", Color.Yellow, Resources.FieldTime));
             }
             else
             {
                 if (this.CreateFieldNote(hitTime, lane, noteType, hitTime - 3000, hitTime) is var fieldNote && fieldNote != null)
                 {
-                    this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red));
+                    this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red, this.GetImageForModelType(fieldNote.ModelType, fieldNote.NoteType, fieldNote.Unk3)));
 
                     var assetType = FieldAssetType.None;
                     var assetTime = 0;
@@ -599,7 +606,7 @@ namespace MoMTool.Logic
 
                         if (this.CreateFieldAsset(assetTime, lane, assetType, assetTime - 3000, assetTime) is var fieldAsset && fieldAsset != null)
                         {
-                            this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Assets.Count, fieldAsset, "Asset", Color.Blue));
+                            this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Assets.Count, fieldAsset, "Asset", Color.Blue, this.GetImageForModelType(fieldAsset.ModelType)));
                         }
                     }
                 }
@@ -783,11 +790,28 @@ namespace MoMTool.Logic
             else if (type == FieldModelType.CrystalEnemyCenter)
                 return Resources.Crystal_Base;
             else if (type == FieldModelType.GlideNote)
-                return Resources.Note;
+                return Resources.GlideNoteAlt;
             else if (type == FieldModelType.Barrel && altModel == 0)
                 return Resources.Barrel;
             else if (type == FieldModelType.Crate && altModel == 1)
                 return Resources.Bokusu;
+            else
+                return null;
+        }
+
+        public Image GetImageForModelType(FieldAssetType type)
+        {
+            if (type == FieldAssetType.AerialCommonArrow || type == FieldAssetType.AerialUncommonArrow || type == FieldAssetType.MultiHitAerialArrow || 
+                type == FieldAssetType.AerialShooterArrow || type == FieldAssetType.JumpingAerialArrow)
+                return Resources.AssetJumpAttack;
+            else if (type == FieldAssetType.ShooterProjectileArrow || type == FieldAssetType.AerialShooterProjectileArrow)
+                return Resources.AssetJumpEvade;
+            else if (type == FieldAssetType.GlideArrow)
+                return Resources.AssetJumpGlideAlt;
+            else if (type == FieldAssetType.CrystalRightLeft)
+                return Resources.DarkBall;
+            else if (type == FieldAssetType.CrystalCenter)
+                return Resources.Neoshadow;
             else
                 return null;
         }

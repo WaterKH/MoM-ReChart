@@ -93,6 +93,46 @@ namespace MoMTool.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap AssetJumpAttack {
+            get {
+                object obj = ResourceManager.GetObject("AssetJumpAttack", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AssetJumpEvade {
+            get {
+                object obj = ResourceManager.GetObject("AssetJumpEvade", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AssetJumpGlide {
+            get {
+                object obj = ResourceManager.GetObject("AssetJumpGlide", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap AssetJumpGlideAlt {
+            get {
+                object obj = ResourceManager.GetObject("AssetJumpGlideAlt", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Barrel {
             get {
                 object obj = ResourceManager.GetObject("Barrel", resourceCulture);
@@ -106,6 +146,16 @@ namespace MoMTool.Properties {
         internal static System.Drawing.Bitmap Bokusu {
             get {
                 object obj = ResourceManager.GetObject("Bokusu", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap BossTime {
+            get {
+                object obj = ResourceManager.GetObject("BossTime", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -163,6 +213,16 @@ namespace MoMTool.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DarkZone {
+            get {
+                object obj = ResourceManager.GetObject("DarkZone", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Down {
             get {
                 object obj = ResourceManager.GetObject("Down", resourceCulture);
@@ -173,9 +233,39 @@ namespace MoMTool.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap FieldTime {
+            get {
+                object obj = ResourceManager.GetObject("FieldTime", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap GlideNoteAlt {
+            get {
+                object obj = ResourceManager.GetObject("GlideNoteAlt", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap HiddenShadow {
             get {
                 object obj = ResourceManager.GetObject("HiddenShadow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap HoldNote {
+            get {
+                object obj = ResourceManager.GetObject("HoldNote", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -216,6 +306,36 @@ namespace MoMTool.Properties {
         internal static System.Drawing.Bitmap Left {
             get {
                 object obj = ResourceManager.GetObject("Left", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap MemoryTime {
+            get {
+                object obj = ResourceManager.GetObject("MemoryTime", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Neoshadow {
+            get {
+                object obj = ResourceManager.GetObject("Neoshadow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap NormalNote {
+            get {
+                object obj = ResourceManager.GetObject("NormalNote", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -296,6 +416,16 @@ namespace MoMTool.Properties {
         internal static System.Drawing.Bitmap Sprite_Rip_Credits {
             get {
                 object obj = ResourceManager.GetObject("Sprite Rip Credits", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SwipeNote {
+            get {
+                object obj = ResourceManager.GetObject("SwipeNote", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

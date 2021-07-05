@@ -66,6 +66,8 @@ namespace MoMTool.Logic
 
             var toolTip = new ToolTip();
             toolTip.SetToolTip(momButton.Button, performer.HitTime.ToString());
+
+            momButton.Button.Image = this.SubChartManager.ParentChartManager.GetImageForModelType(performer.PerformerType);
         }
 
         private void deletePerformerNote_Click(object sender, EventArgs e)

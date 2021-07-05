@@ -1,4 +1,5 @@
 ﻿using MoMMusicAnalysis;
+using MoMTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,7 +41,7 @@ namespace MoMTool.Logic
             }
         }
 
-        #region Recompile Boss BattleF
+        #region Recompile Boss Battle
 
         public void RecompileBossBattleSongs()
         {
@@ -234,14 +235,25 @@ namespace MoMTool.Logic
             bossChart.Times = this.CreateChartButtons(ref bossChart, bossBattleSong.TimeShiftCount, bossBattleSong.TimeShifts, "Time", Color.Yellow);
             bossChart.DarkZones = this.CreateChartButtons(ref bossChart, bossBattleSong.DarkZoneCount, bossBattleSong.DarkZones, "DarkZone", Color.Black);
 
-            foreach (var bossNote in bossChart.Notes.Select(x => x.Note))
+            foreach (var bossNote in bossChart.Notes)
             {
-                if (bossNote.StartHoldNoteIndex != -1)
-                    bossNote.StartHoldNote = bossChart.Notes.ElementAt(bossNote.StartHoldNoteIndex).Note;
+                if (bossNote.Note.StartHoldNoteIndex != -1)
+                    bossNote.Note.StartHoldNote = bossChart.Notes.ElementAt(bossNote.Note.StartHoldNoteIndex).Note;
 
-                if (bossNote.EndHoldNoteIndex != -1)
-                    bossNote.EndHoldNote = bossChart.Notes.ElementAt(bossNote.EndHoldNoteIndex).Note;
+                if (bossNote.Note.EndHoldNoteIndex != -1)
+                    bossNote.Note.EndHoldNote = bossChart.Notes.ElementAt(bossNote.Note.EndHoldNoteIndex).Note;
+
+                bossNote.Button.Image = this.GetImageForModelType(bossNote.Note.BossNoteType);
             }
+
+            foreach (var performer in bossChart.Performers)
+                performer.Button.Image = this.GetImageForModelType(performer.Note.PerformerType);
+
+            foreach (var time in bossChart.Times)
+                time.Button.Image = Resources.BossTime;
+
+            foreach (var time in bossChart.DarkZones)
+                time.Button.Image = Resources.DarkZone;
 
             return bossChart;
         }
@@ -258,7 +270,7 @@ namespace MoMTool.Logic
             return bossChartButtons;
         }
 
-        private MoMButton<TNoteType> CreateChartButton<TNoteType>(ref BossChartComponent bossChart, int id, TNoteType component, string type, Color color) where TNoteType : Note<BossLane>
+        private MoMButton<TNoteType> CreateChartButton<TNoteType>(ref BossChartComponent bossChart, int id, TNoteType component, string type, Color color, Image image = null) where TNoteType : Note<BossLane>
         {
             var momButton = new MoMButton<TNoteType>
             {
@@ -268,14 +280,17 @@ namespace MoMTool.Logic
                 Button = new Button
                 {
                     Text = "",
-                    //Image = Image.FromFile("Resources/note_shadow.png"),
                     BackColor = color,
                     Height = 19,
                     Width = 19,
                     Name = $"{type.ToLower()}-{id}",
-                    TabStop = false
+                    TabStop = false,
+                    FlatStyle = FlatStyle.Flat,
+                    Image = image
                 },
             };
+
+            momButton.Button.FlatAppearance.BorderSize = 0;
 
             momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
             momButton.Button.Click += (object sender, EventArgs e) => { BossBattleSubChartManager.LoadSubChartComponent(momButton.Id, momButton.Note); };
@@ -367,17 +382,19 @@ namespace MoMTool.Logic
                     Lane = lane
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.NormalNote));
             }
             else if (noteType.Equals("Performer Note"))
             {
                 var performer = new PerformerNote<BossLane>
                 {
                     HitTime = controlRelatedCoords.X * this.ZoomVariable,
-                    Lane = lane
+                    Lane = lane,
+                    PerformerType = PerformerType.L2,
+                    DuplicateType = PerformerType.L2
                 };
 
-                this.BossCharts[difficulty].Performers.Add(this.CreateChartButton(ref bossChart, bossChart.Performers.Count, performer, "Performer", Color.Purple));
+                this.BossCharts[difficulty].Performers.Add(this.CreateChartButton(ref bossChart, bossChart.Performers.Count, performer, "Performer", Color.Purple, Resources.L2));
             }
             else if (noteType.Equals("Time Shift"))
             {
@@ -387,7 +404,7 @@ namespace MoMTool.Logic
                     Lane = BossLane.PlayerTop
                 };
 
-                this.BossCharts[difficulty].Times.Add(this.CreateChartButton(ref bossChart, bossChart.Times.Count, time, "Time", Color.Yellow));
+                this.BossCharts[difficulty].Times.Add(this.CreateChartButton(ref bossChart, bossChart.Times.Count, time, "Time", Color.Yellow, Resources.BossTime));
             }
             else if (noteType.Equals("Dark Zone"))
             {
@@ -399,7 +416,7 @@ namespace MoMTool.Logic
                     EndAttackTime = (controlRelatedCoords.X * this.ZoomVariable) + 12000,
                 };
 
-                this.BossCharts[difficulty].DarkZones.Add(this.CreateChartButton(ref bossChart, bossChart.DarkZones.Count, darkZone, "DarkZone", Color.Black));
+                this.BossCharts[difficulty].DarkZones.Add(this.CreateChartButton(ref bossChart, bossChart.DarkZones.Count, darkZone, "DarkZone", Color.Black, Resources.DarkZone));
             }
             // Specific Types
             else if (noteType.Equals("Normal Note"))
@@ -411,7 +428,7 @@ namespace MoMTool.Logic
                     BossNoteType = BossNoteType.Normal
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.NormalNote));
             }
             else if (noteType.Equals("Swipe Up Note"))
             {
@@ -423,7 +440,7 @@ namespace MoMTool.Logic
                     SwipeDirection = SwipeType.Up
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.SwipeNote));
             }
             else if (noteType.Equals("Swipe Right Note"))
             {
@@ -435,7 +452,7 @@ namespace MoMTool.Logic
                     SwipeDirection = SwipeType.Right
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.SwipeNote));
             }
             else if (noteType.Equals("Swipe Down Note"))
             {
@@ -447,7 +464,7 @@ namespace MoMTool.Logic
                     SwipeDirection = SwipeType.Down
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.SwipeNote));
             }
             else if (noteType.Equals("Swipe Left Note"))
             {
@@ -459,7 +476,7 @@ namespace MoMTool.Logic
                     SwipeDirection = SwipeType.Left
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.SwipeNote));
             }
             else if (noteType.Equals("Hold Start Note"))
             {
@@ -470,7 +487,7 @@ namespace MoMTool.Logic
                     BossNoteType = BossNoteType.HoldStart
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.HoldNote));
             }
             else if (noteType.Equals("Hold End Note"))
             {
@@ -481,18 +498,57 @@ namespace MoMTool.Logic
                     BossNoteType = BossNoteType.HoldEnd
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red));
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.HoldNote));
             }
+            else if (noteType.Equals("Crystal Note"))
+            {
+                var BossNote = new BossNote
+                {
+                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    Lane = lane,
+                    BossNoteType = BossNoteType.Crystal
+                };
 
+                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.Crystal_Base));
+            }
+        }
 
-            //foreach (var note in this.BossCharts[this.CurrentDifficultyTab].Notes.Where(x => x.Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable))
-            //{
-            //    if (note.Note.StartHoldNote != -1 && this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.StartHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
-            //        this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.BossCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.StartHoldNote += 1;
+        public Image GetImageForModelType(BossNoteType type)
+        {
+            if (type == BossNoteType.Normal)
+                return Resources.NormalNote;
+            else if (type == BossNoteType.HoldEnd || type == BossNoteType.HoldStart)
+                return Resources.HoldNote;
+            else if (type == BossNoteType.Swipe)
+                return Resources.SwipeNote;
+            else if (type == BossNoteType.Crystal)
+                return Resources.Crystal_Base;
+            else
+                return null;
+        }
 
-            //    if (note.Note.EndHoldNote != -1 && this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.EndHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
-            //        this.BossCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.BossCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.EndHoldNote += 1;
-            //}
+        public Image GetImageForModelType(PerformerType type)
+        {
+            if (type == PerformerType.L2)
+                return Resources.L2;
+            else if (type == PerformerType.R2)
+                return Resources.R2;
+            else if (type == PerformerType.Up)
+                return Resources.Up;
+            else if (type == PerformerType.Down)
+                return Resources.Down;
+            else if (type == PerformerType.Left)
+                return Resources.Left;
+            else if (type == PerformerType.Right)
+                return Resources.Right;
+            else if (type == PerformerType.Ability)
+                return Resources.Ability;
+            else if (type == PerformerType.Jump)
+                return Resources.Jump;
+            else if (type == PerformerType.Action)
+                return Resources.Action;
+            else
+                return null;
         }
 
         #endregion Helper Methods
