@@ -1,5 +1,6 @@
-﻿using Microsoft.VisualBasic.PowerPacks;
-using MoMMusicAnalysis;
+﻿using MoMMusicAnalysis;
+using MoMTool.Components.SelfContainedComponents;
+using MoMTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -347,16 +348,33 @@ namespace MoMTool.Logic
                     var prevMoMButton = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.Note.PreviousEnemyNoteIndex);
                     fieldNote.Note.PreviousEnemyNote = prevMoMButton.Note;
 
-                    fieldChart.Origin = fieldNote.Button;
-                    fieldChart.Destination = prevMoMButton.Button;
-                    var origin = fieldNote.Button.PointToScreen(Point.Empty);
-                    var destination = prevMoMButton.Button.PointToScreen(Point.Empty);
+                    Point fieldNoteLoc = fieldChart.panelTransparent.PointToClient(fieldNote.Button.Location);
+                    Point origin = new Point(fieldNoteLoc.X - fieldChart.panelTransparent.Location.X, fieldNoteLoc.Y - fieldChart.panelTransparent.Location.Y);
+                    var screenCoordinates = fieldNote.Button.Parent.Parent.PointToScreen(fieldNote.Button.Parent.Location);
+                    //var formCoordinates = fieldChart.chartNotePanel.PointToClient(screenCoordinates);
 
-                    var line = new LineShape(origin.X, origin.Y, destination.X, destination.Y)
+                    Point prevNoteLoc = fieldChart.panelTransparent.PointToClient(prevMoMButton.Button.Location); 
+                    Point destination = new Point(prevNoteLoc.X - fieldChart.panelTransparent.Location.X, prevNoteLoc.Y - fieldChart.panelTransparent.Location.Y);
+                    var screenCoordinates2 = prevMoMButton.Button.Parent.Parent.PointToScreen(prevMoMButton.Button.Parent.Location);
+                    //var formCoordinates2 = fieldChart.chartNotePanel.PointToClient(screenCoordinates2);
+
+                    //var origin = fieldChart.chartNotePanel.FindForm()
+                    //    .PointToClient(fieldChart.chartNotePanel.Parent.PointToScreen(fieldChart.chartNotePanel.Location));
+                    //var destination = prevMoMButton.Button.PointToScreen(Point.Empty);
+
+                    var location = new Point(origin.X + Math.Abs(origin.X - destination.X), Math.Abs(screenCoordinates.Y - screenCoordinates2.Y));
+                    var size = new Size(Math.Abs(origin.X - destination.X), Math.Abs(origin.X - destination.X));
+                    if (size.Height == 0)
+                        size.Height = 19;
+
+                    var line = new Line
                     {
-                        BorderColor = Color.Black,
-                        Parent = fieldChart.ShapeContainer
+                        Direction = origin.Y > destination.Y ? "Down" : origin.Y < destination.Y ? "Up" : "",
+                        Location = location,
+                        Size = size
                     };
+
+                    fieldChart.panelTransparent.Controls.Add(line);
 
                     fieldChart.Refresh();
                 }
@@ -366,9 +384,6 @@ namespace MoMTool.Logic
                     var nextMoMButton = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.Note.NextEnemyNoteIndex);
                     fieldNote.Note.NextEnemyNote = nextMoMButton.Note;
 
-                    fieldChart.Origin = fieldNote.Button;
-                    fieldChart.Destination = nextMoMButton.Button;
-
                     fieldChart.Refresh();
                 }
 
@@ -376,9 +391,6 @@ namespace MoMTool.Logic
                 {
                     var projectileMoMButton = fieldChart.Notes.OrderBy(x => x.Note.HitTime).ElementAt(fieldNote.Note.ProjectileOriginNoteIndex);
                     fieldNote.Note.ProjectileOriginNote = projectileMoMButton.Note;
-
-                    fieldChart.Origin = fieldNote.Button;
-                    fieldChart.Destination = projectileMoMButton.Button;
 
                     fieldChart.Refresh();
                 }
@@ -409,7 +421,6 @@ namespace MoMTool.Logic
                 Button = new Button
                 {
                     Text = "",
-                    //Image = Image.FromFile("Resources/note_shadow.png"),
                     BackColor = color,
                     Height = 19,
                     Width = 19,

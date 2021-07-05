@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic.PowerPacks;
-using MoMMusicAnalysis;
+﻿using MoMMusicAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,9 +21,8 @@ namespace MoMTool.Logic
         public ObservableCollection<MoMButton<PerformerNote<FieldLane>>> Performers = new ObservableCollection<MoMButton<PerformerNote<FieldLane>>>();
         public ObservableCollection<MoMButton<TimeShift<FieldLane>>> Times = new ObservableCollection<MoMButton<TimeShift<FieldLane>>>();
 
-        public Button Origin { get; set; }
-        public Button Destination { get; set; }
-        public ShapeContainer ShapeContainer { get; set; } = new ShapeContainer();
+        //public Button Origin { get; set; }
+        //public Button Destination { get; set; }
 
         // TODO Remove MoMButton from UI after deleting (That's why ObservableCollection?)
         // TODO Draw lines between Multi hit/ Glide Notes
@@ -33,10 +31,13 @@ namespace MoMTool.Logic
         {
             InitializeComponent();
 
-            foreach (Panel lane in this.chartNotePanel.Controls)
+            foreach (var lane in this.chartNotePanel.Controls)
             {
-                lane.DragEnter += this.chartLane_DragEnter;
-                lane.DragDrop += this.chartLane_DragDrop;
+                if (lane.GetType() != typeof(Panel))
+                    continue;
+
+                ((Panel)lane).DragEnter += this.chartLane_DragEnter;
+                ((Panel)lane).DragDrop += this.chartLane_DragDrop;
                 //lane.Paint += this.PaintPanelOrButton;
             }
 
@@ -44,9 +45,6 @@ namespace MoMTool.Logic
             //this.ShapeContainer.Location = this.chartNotePanel.Location;
             //this.ShapeContainer.Height = this.chartNotePanel.Height;
             //this.ShapeContainer.BringToFront();
-            this.ShapeContainer.Parent = this.panelPlayerCenter;
-
-            this.Controls.Add(this.ShapeContainer);
         }
 
         private void chartTimeValue_TextChanged(object sender, EventArgs e)
@@ -70,8 +68,8 @@ namespace MoMTool.Logic
             this.panelSomewhereRight.Width = value;
             this.panelOutOfMapRight.Width = value;
 
-            this.ShapeContainer.BringToFront();
-            this.ShapeContainer.Size = new Size(this.chartNotePanel.Height, value);
+            this.panelTransparent.BringToFront();
+            this.panelTransparent.Size = new Size(value, this.chartNotePanel.Height);
         }
 
         private void notesCheckbox_CheckedChanged(object sender, EventArgs e)
