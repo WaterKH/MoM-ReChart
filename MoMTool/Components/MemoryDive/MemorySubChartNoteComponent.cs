@@ -95,6 +95,8 @@ namespace MoMTool.Logic
             
             var toolTip = new ToolTip();
             toolTip.SetToolTip(momButton.Button, note.HitTime.ToString());
+
+            momButton.Button.Image = this.MemoryDiveSubChartManager.ParentChartManager.GetImageForModelType(note.MemoryNoteType);
         }
 
         private void deleteNote_Click(object sender, EventArgs e)

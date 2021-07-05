@@ -165,6 +165,9 @@ namespace MoMTool.Logic
                 (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() != "HittableAerialUncommonEnemy") && 
                     this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() != "AerialEnemyShooterProjectile") ||
                 (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() == "GlideNote" && this.fieldNoteComponent.previousNoteDropdown.SelectedItem == null);
+            note.StarFlag = this.fieldNoteComponent.starFlag.Checked;
+            note.PartyFlag = this.fieldNoteComponent.partyFlag.Checked;
+            note.Unk3 = note.ModelType == FieldModelType.Crate ? 1 : 0;
 
             if (!note.AerialFlag)
                 note.AerialAndCrystalCounter = -1;
@@ -207,6 +210,8 @@ namespace MoMTool.Logic
             
             var toolTip = new ToolTip();
             toolTip.SetToolTip(momButton.Button, note.HitTime.ToString());
+
+            momButton.Button.Image = this.FieldBattleSubChartManager.ParentChartManager.GetImageForModelType(note.ModelType, note.NoteType, note.Unk3);
         }
 
         private void deleteNote_Click(object sender, EventArgs e)
@@ -245,7 +250,6 @@ namespace MoMTool.Logic
                 Button = new Button
                 {
                     Text = "",
-                    //Image = Image.FromFile("Resources/note_shadow.png"),
                     BackColor = Color.AliceBlue,
                     Height = 19,
                     Width = 19,

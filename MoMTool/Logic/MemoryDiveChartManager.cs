@@ -1,4 +1,5 @@
 ﻿using MoMMusicAnalysis;
+using MoMTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -235,14 +236,22 @@ namespace MoMTool.Logic
             memoryChart.Performers = this.CreateChartButtons(ref memoryChart, memoryDiveSong.PerformerCount, memoryDiveSong.PerformerNotes, "Performer", Color.Purple);
             memoryChart.Times = this.CreateChartButtons(ref memoryChart, memoryDiveSong.TimeShiftCount, memoryDiveSong.TimeShifts, "Time", Color.Yellow);
 
-            foreach (var memoryNote in memoryChart.Notes.Select(x => x.Note))
+            foreach (var memoryNote in memoryChart.Notes)
             {
-                if (memoryNote.StartHoldNoteIndex != -1)
-                    memoryNote.StartHoldNote = memoryChart.Notes.ElementAt(memoryNote.StartHoldNoteIndex).Note;
+                if (memoryNote.Note.StartHoldNoteIndex != -1)
+                    memoryNote.Note.StartHoldNote = memoryChart.Notes.ElementAt(memoryNote.Note.StartHoldNoteIndex).Note;
 
-                if (memoryNote.EndHoldNoteIndex != -1)
-                    memoryNote.EndHoldNote = memoryChart.Notes.ElementAt(memoryNote.EndHoldNoteIndex).Note;
+                if (memoryNote.Note.EndHoldNoteIndex != -1)
+                    memoryNote.Note.EndHoldNote = memoryChart.Notes.ElementAt(memoryNote.Note.EndHoldNoteIndex).Note;
+
+                memoryNote.Button.Image = this.GetImageForModelType(memoryNote.Note.MemoryNoteType);
             }
+
+            foreach (var performer in memoryChart.Performers)
+                performer.Button.Image = this.GetImageForModelType(performer.Note.PerformerType);
+
+            foreach (var time in memoryChart.Times)
+                time.Button.Image = Resources.MemoryTime;
 
             return memoryChart;
         }
@@ -259,7 +268,7 @@ namespace MoMTool.Logic
             return fieldChartButtons;
         }
 
-        private MoMButton<TNoteType> CreateChartButton<TNoteType>(ref MemoryChartComponent memoryChart, int id, TNoteType component, string type, Color color) where TNoteType : Note<MemoryLane>
+        private MoMButton<TNoteType> CreateChartButton<TNoteType>(ref MemoryChartComponent memoryChart, int id, TNoteType component, string type, Color color, Image image = null) where TNoteType : Note<MemoryLane>
         {
             var momButton = new MoMButton<TNoteType>
             {
@@ -269,14 +278,17 @@ namespace MoMTool.Logic
                 Button = new Button
                 {
                     Text = "",
-                    //Image = Image.FromFile("Resources/note_shadow.png"),
                     BackColor = color,
                     Height = 19,
                     Width = 19,
                     Name = $"{type.ToLower()}-{id}",
-                    TabStop = false
+                    TabStop = false,
+                    FlatStyle = FlatStyle.Flat,
+                    Image = image
                 },
             };
+
+            momButton.Button.FlatAppearance.BorderSize = 0;
 
             momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
             momButton.Button.Click += (object sender, EventArgs e) => { MemoryDiveSubChartManager.LoadSubChartComponent(momButton.Id, momButton.Note); };
@@ -360,17 +372,19 @@ namespace MoMTool.Logic
                     Lane = lane
                 };
 
-                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red, Resources.NormalNote));
             }
             else if (noteType.Equals("Performer Note"))
             {
                 var performer = new PerformerNote<MemoryLane>
                 {
                     HitTime = controlRelatedCoords.X * this.ZoomVariable,
-                    Lane = lane
+                    Lane = lane,
+                    PerformerType = PerformerType.L2,
+                    DuplicateType = PerformerType.L2
                 };
 
-                this.MemoryCharts[difficulty].Performers.Add(this.CreateChartButton(ref memoryChart, memoryChart.Performers.Count, performer, "Performer", Color.Purple));
+                this.MemoryCharts[difficulty].Performers.Add(this.CreateChartButton(ref memoryChart, memoryChart.Performers.Count, performer, "Performer", Color.Purple, Resources.L2));
             }
             else if (noteType.Equals("Time Shift"))
             {
@@ -380,7 +394,7 @@ namespace MoMTool.Logic
                     Lane = MemoryLane.PlayerLeft
                 };
 
-                this.MemoryCharts[difficulty].Times.Add(this.CreateChartButton(ref memoryChart, memoryChart.Times.Count, time, "Time", Color.Yellow));
+                this.MemoryCharts[difficulty].Times.Add(this.CreateChartButton(ref memoryChart, memoryChart.Times.Count, time, "Time", Color.Yellow, Resources.MemoryTime));
             }
             else if (noteType.Equals("Normal Note"))
             {
@@ -391,7 +405,7 @@ namespace MoMTool.Logic
                     MemoryNoteType = MemoryNoteType.Normal
                 };
 
-                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red, Resources.NormalNote));
             }
             else if (noteType.Equals("Swipe Up Note"))
             {
@@ -403,7 +417,7 @@ namespace MoMTool.Logic
                     SwipeDirection = SwipeType.Up
                 };
 
-                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red, Resources.SwipeNote));
             }
             else if (noteType.Equals("Swipe Right Note"))
             {
@@ -415,7 +429,7 @@ namespace MoMTool.Logic
                     SwipeDirection = SwipeType.Right
                 };
 
-                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red, Resources.SwipeNote));
             }
             else if (noteType.Equals("Swipe Down Note"))
             {
@@ -427,7 +441,7 @@ namespace MoMTool.Logic
                     SwipeDirection = SwipeType.Down
                 };
 
-                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red, Resources.SwipeNote));
             }
             else if (noteType.Equals("Swipe Left Note"))
             {
@@ -439,7 +453,7 @@ namespace MoMTool.Logic
                     SwipeDirection = SwipeType.Left
                 };
 
-                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red, Resources.SwipeNote));
             }
             else if (noteType.Equals("Hold Start Note"))
             {
@@ -450,7 +464,7 @@ namespace MoMTool.Logic
                     MemoryNoteType = MemoryNoteType.HoldStart
                 };
 
-                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red, Resources.HoldNote));
             }
             else if (noteType.Equals("Hold End Note"))
             {
@@ -461,18 +475,44 @@ namespace MoMTool.Logic
                     MemoryNoteType = MemoryNoteType.HoldEnd
                 };
 
-                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red));
+                this.MemoryCharts[difficulty].Notes.Add(this.CreateChartButton(ref memoryChart, memoryChart.Notes.Count, memoryNote, "Note", Color.Red, Resources.HoldNote));
             }
+        }
 
+        public Image GetImageForModelType(MemoryNoteType type)
+        {
+            if (type == MemoryNoteType.Normal)
+                return Resources.NormalNote;
+            else if (type == MemoryNoteType.HoldEnd || type == MemoryNoteType.HoldStart)
+                return Resources.HoldNote;
+            else if (type == MemoryNoteType.Swipe)
+                return Resources.SwipeNote;
+            else
+                return null;
+        }
 
-            //foreach (var note in this.MemoryCharts[this.CurrentDifficultyTab].Notes.Where(x => x.Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable))
-            //{
-            //    if (note.Note.StartHoldNote != -1 && this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.StartHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
-            //        this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.MemoryCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.StartHoldNote += 1;
-
-            //    if (note.Note.EndHoldNote != -1 && this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(note.Note.EndHoldNote).Note.HitTime >= controlRelatedCoords.X * this.ZoomVariable)
-            //        this.MemoryCharts[this.CurrentDifficultyTab].Notes.ElementAt(this.MemoryCharts[this.CurrentDifficultyTab].Notes.IndexOf(note)).Note.EndHoldNote += 1;
-            //}
+        public Image GetImageForModelType(PerformerType type)
+        {
+            if (type == PerformerType.L2)
+                return Resources.L2;
+            else if (type == PerformerType.R2)
+                return Resources.R2;
+            else if (type == PerformerType.Up)
+                return Resources.Up;
+            else if (type == PerformerType.Down)
+                return Resources.Down;
+            else if (type == PerformerType.Left)
+                return Resources.Left;
+            else if (type == PerformerType.Right)
+                return Resources.Right;
+            else if (type == PerformerType.Ability)
+                return Resources.Ability;
+            else if (type == PerformerType.Jump)
+                return Resources.Jump;
+            else if (type == PerformerType.Action)
+                return Resources.Action;
+            else
+                return null;
         }
 
         #endregion Helper Methods

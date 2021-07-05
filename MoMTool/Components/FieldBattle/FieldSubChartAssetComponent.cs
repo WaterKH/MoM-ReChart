@@ -127,6 +127,8 @@ namespace MoMTool.Logic
             
             var toolTip = new ToolTip();
             toolTip.SetToolTip(momButton.Button, asset.HitTime.ToString());
+
+            momButton.Button.Image = this.FieldBattleSubChartManager.ParentChartManager.GetImageForModelType(asset.ModelType);
         }
 
         private void deleteAsset_Click(object sender, EventArgs e)

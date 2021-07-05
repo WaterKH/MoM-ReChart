@@ -219,8 +219,8 @@ namespace MoMTool
         {
             return new ListViewItem[]
             {
-                new ListViewItem { Text = "Field Note", Group = this.noteListView.Groups[0] },
-                new ListViewItem { Text = "Field Asset", Group = this.noteListView.Groups[0] },
+                //new ListViewItem { Text = "Field Note", Group = this.noteListView.Groups[0] },
+                //new ListViewItem { Text = "Field Asset", Group = this.noteListView.Groups[0] },
                 new ListViewItem { Text = "Performer Note", Group = this.noteListView.Groups[0] },
                 new ListViewItem { Text = "Time Shift", Group = this.noteListView.Groups[0] },
 
@@ -264,7 +264,7 @@ namespace MoMTool
         {
             return new ListViewItem[]
             {
-                new ListViewItem { Text = "Memory Note", Group = this.noteListView.Groups[0] },
+                //new ListViewItem { Text = "Memory Note", Group = this.noteListView.Groups[0] },
                 new ListViewItem { Text = "Performer Note", Group = this.noteListView.Groups[0] },
                 new ListViewItem { Text = "Time Shift", Group = this.noteListView.Groups[0] },
 
@@ -282,7 +282,7 @@ namespace MoMTool
         {
             return new ListViewItem[]
             {
-                new ListViewItem { Text = "Boss Note", Group = this.noteListView.Groups[0] },
+                //new ListViewItem { Text = "Boss Note", Group = this.noteListView.Groups[0] },
                 new ListViewItem { Text = "Performer Note", Group = this.noteListView.Groups[0] },
                 new ListViewItem { Text = "Time Shift", Group = this.noteListView.Groups[0] },
                 new ListViewItem { Text = "Dark Zone", Group = this.noteListView.Groups[0] },
