@@ -179,6 +179,7 @@ namespace MoMTool.Logic
             newSong.NoteCount = chart.Notes.Count;
             newSong.PerformerCount = chart.Performers.Count;
             newSong.TimeShiftCount = chart.Times.Count;
+            newSong.DarkZoneCount = chart.DarkZones.Count;
 
             newSong.Unk1 = 1;
 
@@ -204,6 +205,11 @@ namespace MoMTool.Logic
             foreach (TimeShift<BossLane> time in chart.Times.Select(x => x.Note).OrderBy(x => x.HitTime))
             {
                 newSong.TimeShifts.Add(time);
+            }
+
+            foreach (BossDarkZone darkZone in chart.DarkZones.Select(x => x.Note).OrderBy(x => x.HitTime))
+            {
+                newSong.DarkZones.Add(darkZone);
             }
 
             // Add Note + Header Lengths
