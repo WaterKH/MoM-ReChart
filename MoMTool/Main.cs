@@ -91,8 +91,8 @@ namespace MoMTool
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.InitialDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-                openFileDialog.Filter = "All files (*.*)|*.*";
-                openFileDialog.FilterIndex = 2;
+                openFileDialog.Filter = "Music Files (*.decomp)|*.decomp|All Files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -136,11 +136,21 @@ namespace MoMTool
         {
             if (string.IsNullOrEmpty(this.fileName.Text))
             {
-                MessageBox.Show("Please specify a file name to decompile");
+                MessageBox.Show("Please specify a file name to decompile.", "Invalid File Name");
                 return;
             }
 
-            var musicFile = new SongProcessor().ProcessSong(this.fileName.Text, this.debugCheckbox.Checked);
+            MusicFile musicFile = null;
+            try
+            {
+                musicFile = new SongProcessor().ProcessSong(this.fileName.Text, this.debugCheckbox.Checked);
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Please use the decompressed file that generates when using the Unity Asset Bundle Extractor (UABE).", "Invalid File Type");
+                return;
+            }
+
             var songType = musicFile.SongPositions.FirstOrDefault().Value.SongType;
 
             if (songType == SongType.FieldBattle)
