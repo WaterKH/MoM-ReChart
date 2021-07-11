@@ -22,6 +22,7 @@ namespace MoMTool.Logic
         public Dictionary<Difficulty, FieldChartComponent> FieldCharts { get; set; }
 
         private readonly ToolTip ToolTip = null;
+        private int chartLength = 500;
 
         public FieldBattleChartManager(MusicFile musicFile)
         {
@@ -37,6 +38,12 @@ namespace MoMTool.Logic
             foreach (FieldBattleSong song in this.MusicFile.SongPositions.Values)
             {
                 this.FieldCharts.Add(song.Difficulty, this.CreateChart(song));
+            }
+
+            foreach (var (difficulty, chart) in this.FieldCharts)
+            {
+                if (chart.chartTimeValue.Text == "")
+                    chart.chartTimeValue.Text = this.chartLength.ToString();
             }
         }
 
@@ -336,6 +343,7 @@ namespace MoMTool.Logic
             fieldChart.performerCheckbox.Checked = true;
             fieldChart.chartTimeValue.Text = songLength.ToString();
 
+            this.chartLength = songLength;
 
             fieldChart.Notes = this.CreateChartButtons(ref fieldChart, fieldBattleSong.NoteCount, fieldBattleSong.Notes, "Note", Color.Red);
             fieldChart.Assets = this.CreateChartButtons(ref fieldChart, fieldBattleSong.AssetCount, fieldBattleSong.FieldAssets, "Asset", Color.Blue);
@@ -645,7 +653,7 @@ namespace MoMTool.Logic
                 noteType = 4;
                 unk3 = 1;
             }
-            if (modelString == "Barrel")
+            else if (modelString == "Barrel")
             {
                 model = FieldModelType.Barrel;
                 noteType = 4;
