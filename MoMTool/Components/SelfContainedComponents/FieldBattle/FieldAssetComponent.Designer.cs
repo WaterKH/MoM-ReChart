@@ -83,6 +83,7 @@ namespace MoMTool.Logic
             // 
             // laneDropdown
             // 
+            this.laneDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.laneDropdown.FormattingEnabled = true;
             this.laneDropdown.Items.AddRange(new object[] {
             "OutOfMapLeft",
@@ -106,6 +107,7 @@ namespace MoMTool.Logic
             // 
             // modelDropdown
             // 
+            this.modelDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.modelDropdown.DropDownWidth = 250;
             this.modelDropdown.FormattingEnabled = true;
             this.modelDropdown.Items.AddRange(new object[] {
