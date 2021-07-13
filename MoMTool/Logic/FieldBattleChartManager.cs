@@ -97,6 +97,7 @@ namespace MoMTool.Logic
 
             if (musicFile.Header.FileSizeCount == 1)
             {
+                musicFile.Header.NextSize1 = musicFile.Header.NextSize2 = 0x5B;
                 musicFile.Header.FileSizes = new List<FileSize> {
                     new FileSize { MainFileSize1 = fileSize, MainFileSize2 = fileSize }
                 };
@@ -108,6 +109,7 @@ namespace MoMTool.Logic
                 var fileSize1 = BitConverter.ToInt32(new byte[4] { 0x0, 0x0, fileSizes[2], 0x0 });
                 var fileSize2 = BitConverter.ToInt32(new byte[4] { fileSizes[0], fileSizes[1], 0x0, 0x0 });
 
+                musicFile.Header.NextSize1 = musicFile.Header.NextSize2 = 0x65;
                 musicFile.Header.FileSizes = new List<FileSize> {
                     new FileSize { MainFileSize1 = fileSize1, MainFileSize2 = fileSize1 },
                     new FileSize { MainFileSize1 = fileSize2, MainFileSize2 = fileSize2 },
@@ -223,22 +225,29 @@ namespace MoMTool.Logic
                 else
                     modelString = note.ModelType.ToString();
                 
-                var aerialFlag = (modelString.Contains("Aerial") && (modelString != "AerialEnemyShooterProjectile" || modelString != "HittableAerialUncommonEnemy")) ||
-                    (modelString == "GlideNote" && note.PreviousEnemyNote == null);
+                var aerialFlag = (modelString.Contains("Aerial") && !(modelString == "AerialEnemyShooterProjectile" || modelString == "HittableAerialUncommonEnemy")) ||
+                    (modelString == "GlideNote" && note.PreviousEnemyNote == null) ||
+                    (note.ModelType == FieldModelType.EnemyShooter && note.NoteType == 2);
 
                 if (aerialFlag || (note.ModelType == FieldModelType.CrystalEnemyCenter || note.ModelType == FieldModelType.CrystalEnemyLeftRight))
-                {
                     note.AerialAndCrystalCounter = aerialCrystalCount++;
-                }
+                else
+                    note.AerialAndCrystalCounter = -1;
 
                 if (note.PreviousEnemyNote != null)
                     note.PreviousEnemyNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.PreviousEnemyNote);
+                else
+                    note.PreviousEnemyNoteIndex = -1;
 
                 if (note.NextEnemyNote != null)
                     note.NextEnemyNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.NextEnemyNote);
+                else
+                    note.NextEnemyNoteIndex = -1;
 
                 if (note.ProjectileOriginNote != null)
                     note.ProjectileOriginNoteIndex = chart.Notes.Select(x => x.Note).OrderBy(x => x.HitTime).ToList().IndexOf(note.ProjectileOriginNote);
+                else
+                    note.ProjectileOriginNoteIndex = -1;
 
                 for (int i = 0; i < note.Animations.Count; ++i)
                 {
