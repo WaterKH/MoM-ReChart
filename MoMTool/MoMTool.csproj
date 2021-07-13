@@ -9,12 +9,28 @@
 0.0.3 - Updated with critical bug fixes / Added icons
 0.0.2 - Updated Debug to work for MD and BB
 0.0.1 - Initial alpha release</Description>
+    <PackageIcon>Mom_icon.png</PackageIcon>
+    <PackageIconUrl />
+    <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
+    <Win32Resource />
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Resources\**" />
-    <EmbeddedResource Remove="Resources\**" />
-    <None Remove="Resources\**" />
+    <Compile Remove="Resources\Assets\**" />
+    <Compile Remove="Resources\Icons\**" />
+    <Compile Remove="Resources\Notes\**" />
+    <Compile Remove="Resources\Performer\**" />
+    <Compile Remove="Resources\Times\**" />
+    <EmbeddedResource Remove="Resources\Assets\**" />
+    <EmbeddedResource Remove="Resources\Icons\**" />
+    <EmbeddedResource Remove="Resources\Notes\**" />
+    <EmbeddedResource Remove="Resources\Performer\**" />
+    <EmbeddedResource Remove="Resources\Times\**" />
+    <None Remove="Resources\Assets\**" />
+    <None Remove="Resources\Icons\**" />
+    <None Remove="Resources\Notes\**" />
+    <None Remove="Resources\Performer\**" />
+    <None Remove="Resources\Times\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +39,7 @@
     <None Remove="Components\SelfContainedComponents\TimeShiftComponent.cs~RF222e87b.TMP" />
     <None Remove="Components\SelfContainedComponents\TimeShiftComponent.cs~RF22d297b.TMP" />
     <None Remove="Logic\ChartComponent.cs~RFd3cd21.TMP" />
+    <None Remove="Resources\DarkZone.png" />
   </ItemGroup>
 
   <ItemGroup>

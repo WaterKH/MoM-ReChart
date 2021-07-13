@@ -30,9 +30,10 @@ namespace MoMTool
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup10 = new System.Windows.Forms.ListViewGroup("Default Types", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup11 = new System.Windows.Forms.ListViewGroup("Pre-Configured Notes", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup12 = new System.Windows.Forms.ListViewGroup("Pre-Configured Assets", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Default Types", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Pre-Configured Notes", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Pre-Configured Assets", System.Windows.Forms.HorizontalAlignment.Left);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.fileName = new System.Windows.Forms.TextBox();
             this.openFileExplorer = new System.Windows.Forms.Button();
             this.recompileFieldButton = new System.Windows.Forms.Button();
@@ -235,16 +236,16 @@ namespace MoMTool
             // noteListView
             // 
             this.noteListView.AutoArrange = false;
-            listViewGroup10.Header = "Default Types";
-            listViewGroup10.Name = "groupDefaultTypes";
-            listViewGroup11.Header = "Pre-Configured Notes";
-            listViewGroup11.Name = "groupPreConfiguredNotes";
-            listViewGroup12.Header = "Pre-Configured Assets";
-            listViewGroup12.Name = "groupPreConfiguredAssets";
+            listViewGroup1.Header = "Default Types";
+            listViewGroup1.Name = "groupDefaultTypes";
+            listViewGroup2.Header = "Pre-Configured Notes";
+            listViewGroup2.Name = "groupPreConfiguredNotes";
+            listViewGroup3.Header = "Pre-Configured Assets";
+            listViewGroup3.Name = "groupPreConfiguredAssets";
             this.noteListView.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup10,
-            listViewGroup11,
-            listViewGroup12});
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3});
             this.noteListView.HideSelection = false;
             this.noteListView.Location = new System.Drawing.Point(824, 105);
             this.noteListView.Margin = new System.Windows.Forms.Padding(2);
@@ -298,6 +299,7 @@ namespace MoMTool
             this.Controls.Add(this.openFileExplorer);
             this.Controls.Add(this.fileName);
             this.Controls.Add(this.difficultyControl);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.Name = "Main";
             this.Text = "Melody of Memory Music Tool";
