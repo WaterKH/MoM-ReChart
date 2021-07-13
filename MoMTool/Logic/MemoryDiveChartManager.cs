@@ -90,6 +90,7 @@ namespace MoMTool.Logic
 
             if (musicFile.Header.FileSizeCount == 1)
             {
+                musicFile.Header.NextSize1 = musicFile.Header.NextSize2 = 0x5B;
                 musicFile.Header.FileSizes = new List<FileSize> {
                     new FileSize { MainFileSize1 = fileSize, MainFileSize2 = fileSize }
                 };
@@ -101,6 +102,7 @@ namespace MoMTool.Logic
                 var fileSize1 = BitConverter.ToInt32(new byte[4] { 0x0, 0x0, 0x0, fileSizes[2] });
                 var fileSize2 = BitConverter.ToInt32(new byte[4] { 0x0, fileSizes[0], fileSizes[1], 0x0 });
 
+                musicFile.Header.NextSize1 = musicFile.Header.NextSize2 = 0x65;
                 musicFile.Header.FileSizes = new List<FileSize> {
                     new FileSize { MainFileSize1 = fileSize1, MainFileSize2 = fileSize1 },
                     new FileSize { MainFileSize1 = fileSize2, MainFileSize2 = fileSize2 },
