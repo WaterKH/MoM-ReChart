@@ -76,6 +76,7 @@ namespace MoMTool.Logic
             // 
             // typeDropdown
             // 
+            this.typeDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.typeDropdown.FormattingEnabled = true;
             this.typeDropdown.Items.AddRange(new object[] {
             "L2",
@@ -95,8 +96,8 @@ namespace MoMTool.Logic
             // 
             // laneDropdown
             // 
+            this.laneDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.laneDropdown.FormattingEnabled = true;
-            //this.laneDropdown.Items.AddRange(new object[] {});
             this.laneDropdown.Location = new System.Drawing.Point(60, 79);
             this.laneDropdown.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.laneDropdown.Name = "laneDropdown";
@@ -146,7 +147,7 @@ namespace MoMTool.Logic
             this.closePerformerNote.BackColor = System.Drawing.Color.Crimson;
             this.closePerformerNote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.closePerformerNote.Location = new System.Drawing.Point(292, 0);
-            this.closePerformerNote.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.closePerformerNote.Margin = new System.Windows.Forms.Padding(4);
             this.closePerformerNote.Name = "closePerformerNote";
             this.closePerformerNote.Size = new System.Drawing.Size(31, 31);
             this.closePerformerNote.TabIndex = 7;
@@ -158,7 +159,7 @@ namespace MoMTool.Logic
             // 
             this.deletePerformerNote.BackColor = System.Drawing.Color.Red;
             this.deletePerformerNote.Location = new System.Drawing.Point(140, 420);
-            this.deletePerformerNote.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.deletePerformerNote.Margin = new System.Windows.Forms.Padding(4);
             this.deletePerformerNote.Name = "deletePerformerNote";
             this.deletePerformerNote.Size = new System.Drawing.Size(121, 33);
             this.deletePerformerNote.TabIndex = 11;
@@ -170,7 +171,7 @@ namespace MoMTool.Logic
             // 
             this.savePerformerNote.BackColor = System.Drawing.Color.LimeGreen;
             this.savePerformerNote.Location = new System.Drawing.Point(12, 420);
-            this.savePerformerNote.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.savePerformerNote.Margin = new System.Windows.Forms.Padding(4);
             this.savePerformerNote.Name = "savePerformerNote";
             this.savePerformerNote.Size = new System.Drawing.Size(121, 33);
             this.savePerformerNote.TabIndex = 10;

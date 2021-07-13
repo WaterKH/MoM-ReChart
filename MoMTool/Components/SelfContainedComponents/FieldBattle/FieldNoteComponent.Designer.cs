@@ -79,6 +79,7 @@ namespace MoMTool.Logic
             // 
             // shooterDropdown
             // 
+            this.shooterDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.shooterDropdown.DropDownWidth = 300;
             this.shooterDropdown.FormattingEnabled = true;
             this.shooterDropdown.Items.AddRange(new object[] {
@@ -91,6 +92,7 @@ namespace MoMTool.Logic
             // 
             // nextNoteDropdown
             // 
+            this.nextNoteDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.nextNoteDropdown.DropDownWidth = 300;
             this.nextNoteDropdown.FormattingEnabled = true;
             this.nextNoteDropdown.Items.AddRange(new object[] {
@@ -103,6 +105,7 @@ namespace MoMTool.Logic
             // 
             // previousNoteDropdown
             // 
+            this.previousNoteDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.previousNoteDropdown.DropDownWidth = 300;
             this.previousNoteDropdown.FormattingEnabled = true;
             this.previousNoteDropdown.Items.AddRange(new object[] {
@@ -178,6 +181,7 @@ namespace MoMTool.Logic
             // 
             // modelDropdown
             // 
+            this.modelDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.modelDropdown.DropDownWidth = 250;
             this.modelDropdown.FormattingEnabled = true;
             this.modelDropdown.Items.AddRange(new object[] {
@@ -208,6 +212,7 @@ namespace MoMTool.Logic
             // 
             // laneDropdown
             // 
+            this.laneDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.laneDropdown.FormattingEnabled = true;
             this.laneDropdown.Items.AddRange(new object[] {
             "OutOfMapLeft",

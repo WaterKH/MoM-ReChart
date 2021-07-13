@@ -21,6 +21,19 @@ namespace MoMTool.Logic
             InitializeComponent();
 
             this.bossNoteComponent.modelDropdown.SelectedIndexChanged += this.modelDropdown_SelectedIndexChanged;
+
+            this.bossNoteComponent.nextNoteDropdown.DropDown += SelectClosestTime_DropDown;
+            this.bossNoteComponent.previousNoteDropdown.DropDown += SelectClosestTime_DropDown;
+        }
+
+        private void SelectClosestTime_DropDown(object sender, EventArgs e)
+        {
+            if (this.bossNoteComponent.timeValue.Text != "" && ((ComboBox)sender).Items.Count > 1)
+            {
+                ((ComboBox)sender).Items.RemoveAt(0);
+                ((ComboBox)sender).SelectedItem = ((ComboBox)sender).Items.Cast<BossNote>().Min(x => Math.Abs(int.Parse(this.bossNoteComponent.timeValue.Text) - x.HitTime));
+                ((ComboBox)sender).Items.Insert(0, "");
+            }
         }
 
         private void noteClose_Click(object sender, EventArgs e)
@@ -40,7 +53,7 @@ namespace MoMTool.Logic
 
             if (visible)
             {
-                var nextItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.BossNoteType.ToString() == "HoldEnd" && x.HitTime > time);
+                var nextItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.BossNoteType.ToString() == "HoldEnd" && x.HitTime > time).OrderBy(x => x.HitTime);
                 this.bossNoteComponent.nextNoteDropdown.Items.AddRange(nextItems.ToArray());
             }
 
@@ -51,7 +64,7 @@ namespace MoMTool.Logic
 
             if (visible)
             {
-                var prevItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.BossNoteType.ToString() == "HoldStart" && x.HitTime < time);
+                var prevItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.BossNoteType.ToString() == "HoldStart" && x.HitTime < time).OrderBy(x => x.HitTime);
                 this.bossNoteComponent.previousNoteDropdown.Items.AddRange(prevItems.ToArray());
             }
 
@@ -74,12 +87,22 @@ namespace MoMTool.Logic
             note.BossNoteType = (BossNoteType)Enum.Parse(typeof(BossNoteType), this.bossNoteComponent.modelDropdown.SelectedItem.ToString());
 
             if (note.BossNoteType == BossNoteType.HoldEnd)
-                note.StartHoldNote = (BossNote)this.bossNoteComponent.previousNoteDropdown.SelectedItem;
+            {
+                note.StartHoldNote = this.bossNoteComponent.previousNoteDropdown.SelectedItem == "" ? null : (BossNote)this.bossNoteComponent.previousNoteDropdown.SelectedItem;
+
+                if (note.StartHoldNote != null)
+                    note.StartHoldNote.EndHoldNote = note;
+            }
             else
                 note.StartHoldNoteIndex = -1;
 
             if (note.BossNoteType == BossNoteType.HoldStart)
-                note.EndHoldNote = (BossNote)this.bossNoteComponent.nextNoteDropdown.SelectedItem;
+            {
+                note.EndHoldNote = note.StartHoldNote = this.bossNoteComponent.nextNoteDropdown.SelectedItem == "" ? null : (BossNote)this.bossNoteComponent.nextNoteDropdown.SelectedItem;
+
+                if (note.EndHoldNote != null)
+                    note.EndHoldNote.StartHoldNote = note;   
+            }
             else
                 note.EndHoldNoteIndex = -1;
 

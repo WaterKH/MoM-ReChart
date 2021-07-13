@@ -21,6 +21,19 @@ namespace MoMTool.Logic
             InitializeComponent();
 
             this.memoryNoteComponent.modelDropdown.SelectedIndexChanged += this.modelDropdown_SelectedIndexChanged;
+
+            this.memoryNoteComponent.nextNoteDropdown.DropDown += SelectClosestTime_DropDown;
+            this.memoryNoteComponent.previousNoteDropdown.DropDown += SelectClosestTime_DropDown;
+        }
+
+        private void SelectClosestTime_DropDown(object sender, EventArgs e)
+        {
+            if (this.memoryNoteComponent.timeValue.Text != "" && ((ComboBox)sender).Items.Count > 1)
+            {
+                ((ComboBox)sender).Items.RemoveAt(0);
+                ((ComboBox)sender).SelectedItem = ((ComboBox)sender).Items.Cast<MemoryNote>().Min(x => Math.Abs(int.Parse(this.memoryNoteComponent.timeValue.Text) - x.HitTime));
+                ((ComboBox)sender).Items.Insert(0, "");
+            }
         }
 
         private void noteClose_Click(object sender, EventArgs e)
@@ -40,7 +53,7 @@ namespace MoMTool.Logic
 
             if (visible)
             {
-                var nextItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.MemoryNoteType.ToString() == "HoldEnd" && x.HitTime > time);
+                var nextItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.MemoryNoteType.ToString() == "HoldEnd" && x.HitTime > time).OrderBy(x => x.HitTime);
                 this.memoryNoteComponent.nextNoteDropdown.Items.AddRange(nextItems.ToArray());
             }
 
@@ -51,7 +64,7 @@ namespace MoMTool.Logic
 
             if (visible)
             {
-                var prevItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.MemoryNoteType.ToString() == "HoldStart" && x.HitTime < time);
+                var prevItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.MemoryNoteType.ToString() == "HoldStart" && x.HitTime < time).OrderBy(x => x.HitTime);
                 this.memoryNoteComponent.previousNoteDropdown.Items.AddRange(prevItems.ToArray());
             }
 
@@ -74,12 +87,22 @@ namespace MoMTool.Logic
             note.MemoryNoteType = (MemoryNoteType)Enum.Parse(typeof(MemoryNoteType), this.memoryNoteComponent.modelDropdown.SelectedItem.ToString());
 
             if (note.MemoryNoteType == MemoryNoteType.HoldEnd)
-                note.StartHoldNote = (MemoryNote)this.memoryNoteComponent.previousNoteDropdown.SelectedItem;
+            {
+                note.StartHoldNote = this.memoryNoteComponent.previousNoteDropdown.SelectedItem == "" ? null : (MemoryNote)this.memoryNoteComponent.previousNoteDropdown.SelectedItem;
+
+                if (note.StartHoldNote != null)
+                    note.StartHoldNote.EndHoldNote = note;
+            }
             else
                 note.StartHoldNoteIndex = -1;
 
             if (note.MemoryNoteType == MemoryNoteType.HoldStart)
-                note.EndHoldNote = (MemoryNote)this.memoryNoteComponent.nextNoteDropdown.SelectedItem;
+            {
+                note.EndHoldNote = this.memoryNoteComponent.nextNoteDropdown.SelectedItem == "" ? null : (MemoryNote)this.memoryNoteComponent.nextNoteDropdown.SelectedItem;
+
+                if (note.EndHoldNote != null)
+                    note.EndHoldNote.StartHoldNote = note;
+            }
             else
                 note.EndHoldNoteIndex = -1;
 

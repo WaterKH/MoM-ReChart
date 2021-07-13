@@ -4,8 +4,10 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <Version>0.0.2</Version>
-    <Description>0.0.2 - Updated Debug to work for MD and BB
+    <Version>0.0.4</Version>
+    <Description>0.0.4 - Fixed soft-locks with file size / fixed other breaking bugs
+0.0.3 - Updated with critical bug fixes / Added icons
+0.0.2 - Updated Debug to work for MD and BB
 0.0.1 - Initial alpha release</Description>
   </PropertyGroup>
 
@@ -16,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Components\SelfContainedComponents\FieldBattle\FieldNoteComponent.cs~RF3b4228ba.TMP" />
     <None Remove="Components\SelfContainedComponents\MemoryDive\MemoryNoteComponent.cs~RFbb98095.TMP" />
     <None Remove="Components\SelfContainedComponents\TimeShiftComponent.cs~RF222e87b.TMP" />
     <None Remove="Components\SelfContainedComponents\TimeShiftComponent.cs~RF22d297b.TMP" />

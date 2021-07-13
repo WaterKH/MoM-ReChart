@@ -25,6 +25,20 @@ namespace MoMTool.Logic
             InitializeComponent();
 
             this.fieldNoteComponent.modelDropdown.SelectedIndexChanged += this.modelDropdown_SelectedIndexChanged;
+
+            this.fieldNoteComponent.nextNoteDropdown.DropDown += SelectClosestTime_DropDown;
+            this.fieldNoteComponent.previousNoteDropdown.DropDown += SelectClosestTime_DropDown;
+            this.fieldNoteComponent.shooterDropdown.DropDown += SelectClosestTime_DropDown;
+        }
+
+        private void SelectClosestTime_DropDown(object sender, EventArgs e)
+        {
+            if (this.fieldNoteComponent.timeValue.Text != "" && ((ComboBox)sender).Items.Count > 1)
+            {
+                ((ComboBox)sender).Items.RemoveAt(0);
+                ((ComboBox)sender).SelectedItem = ((ComboBox)sender).Items.Cast<FieldNote>().Min(x => Math.Abs(int.Parse(this.fieldNoteComponent.timeValue.Text) - x.HitTime));
+                ((ComboBox)sender).Items.Insert(0, "");
+            }
         }
 
         private void noteClose_Click(object sender, EventArgs e)
@@ -74,10 +88,10 @@ namespace MoMTool.Logic
             if (visible)
             {
                 // TODO Look into this and make sure the Enum is being parsed correctly (Issue with multiple Enums with same number)
-                var nextItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.ModelType.ToString() == item && x.HitTime > time);
+                var nextItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.ModelType.ToString() == item && x.HitTime > time).OrderBy(x => x.HitTime);
                 this.fieldNoteComponent.nextNoteDropdown.Items.AddRange(nextItems.ToArray());
 
-                var prevItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.ModelType.ToString() == item && x.HitTime < time);
+                var prevItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.ModelType.ToString() == item && x.HitTime < time).OrderBy(x => x.HitTime);
                 this.fieldNoteComponent.previousNoteDropdown.Items.AddRange(prevItems.ToArray());
             }
 
@@ -91,9 +105,9 @@ namespace MoMTool.Logic
                 IEnumerable<FieldNote> shooterItems = null;
 
                 if (item == "EnemyShooterProjectile")
-                    shooterItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.ModelType.ToString() == "EnemyShooterProjectile" && x.NoteType == 0 && x.HitTime > time);
+                    shooterItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.ModelType.ToString() == "EnemyShooterProjectile" && x.NoteType == 0 && x.HitTime > time).OrderBy(x => x.HitTime);
                 else if (item == "AerialEnemyShooterProjectile")
-                    shooterItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.ModelType.ToString() == "AerialEnemyShooterProjectile" && x.NoteType == 0 && x.HitTime > time);
+                    shooterItems = this.ParentChartComponent.Notes.Select(x => x.Note).Where(x => x.ModelType.ToString() == "AerialEnemyShooterProjectile" && x.NoteType == 0 && x.HitTime > time).OrderBy(x => x.HitTime);
 
                 this.fieldNoteComponent.shooterDropdown.Items.AddRange(shooterItems.ToArray());
             }
@@ -164,7 +178,7 @@ namespace MoMTool.Logic
             note.AerialFlag = (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString().Contains("Aerial") && 
                 (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() != "HittableAerialUncommonEnemy") && 
                     this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() != "AerialEnemyShooterProjectile") ||
-                (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() == "GlideNote" && this.fieldNoteComponent.previousNoteDropdown.SelectedItem == null);
+                (this.fieldNoteComponent.modelDropdown.SelectedItem.ToString() == "GlideNote" && this.fieldNoteComponent.previousNoteDropdown.SelectedItem == null); // Is SelectedItem ever null?
             note.StarFlag = this.fieldNoteComponent.starFlag.Checked;
             note.PartyFlag = this.fieldNoteComponent.partyFlag.Checked;
             note.Unk3 = note.ModelType == FieldModelType.Crate ? 1 : 0;
@@ -173,7 +187,9 @@ namespace MoMTool.Logic
                 note.AerialAndCrystalCounter = -1;
 
             if (note.ModelType == FieldModelType.EnemyShooterProjectile || note.ModelType == FieldModelType.AerialEnemyShooterProjectile)
-                note.ProjectileOriginNote = (FieldNote)this.fieldNoteComponent.shooterDropdown.SelectedItem;
+            {
+                note.ProjectileOriginNote = this.fieldNoteComponent.shooterDropdown.SelectedItem == "" ? null : (FieldNote)this.fieldNoteComponent.shooterDropdown.SelectedItem;
+            }
             else
             {
                 note.ProjectileOriginNote = null;
@@ -182,13 +198,37 @@ namespace MoMTool.Logic
 
             if (note.ModelType == FieldModelType.MultiHitAerialEnemy || note.ModelType == FieldModelType.MultiHitGroundEnemy || note.ModelType == FieldModelType.GlideNote)
             {
-                note.NextEnemyNote = (FieldNote)this.fieldNoteComponent.nextNoteDropdown.SelectedItem;
-                note.PreviousEnemyNote = (FieldNote)this.fieldNoteComponent.previousNoteDropdown.SelectedItem;
+                note.NextEnemyNote = this.fieldNoteComponent.nextNoteDropdown.SelectedItem == "" ? null : (FieldNote)this.fieldNoteComponent.nextNoteDropdown.SelectedItem;
+                note.PreviousEnemyNote = this.fieldNoteComponent.previousNoteDropdown.SelectedItem == "" ? null : (FieldNote)this.fieldNoteComponent.previousNoteDropdown.SelectedItem;
+                
 
                 if (note.ModelType != FieldModelType.GlideNote && note.PreviousEnemyNote != null)
                 {
                     note.Animations[0].AnimationStartTime = note.HitTime;
                     note.Animations[0].AnimationEndTime = note.HitTime;
+                }
+
+                // Update to the Next/ Previous Note
+                if (note.NextEnemyNote != null)
+                {
+                    note.NextEnemyNote.PreviousEnemyNote = note;
+
+                    if (note.NextEnemyNote.ModelType != FieldModelType.GlideNote)
+                    {
+                        note.NextEnemyNote.Animations[0].AnimationStartTime = note.NextEnemyNote.HitTime;
+                        note.NextEnemyNote.Animations[0].AnimationEndTime = note.NextEnemyNote.HitTime;
+                    }
+                }
+
+                if (note.PreviousEnemyNote != null)
+                {
+                    note.PreviousEnemyNote.NextEnemyNote = note;
+
+                    if (note.PreviousEnemyNote.ModelType != FieldModelType.GlideNote && note.PreviousEnemyNote.PreviousEnemyNote != null)
+                    {
+                        note.PreviousEnemyNote.Animations[0].AnimationStartTime = note.PreviousEnemyNote.HitTime;
+                        note.PreviousEnemyNote.Animations[0].AnimationEndTime = note.PreviousEnemyNote.HitTime;
+                    }
                 }
             }
             else
