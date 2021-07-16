@@ -22,9 +22,6 @@ namespace MoMTool.Logic
 
         public int ZoomVariable = 10;
 
-        // TODO Add ability to drag and drop notes ALREADY on the lanes
-        // TODO Remove MoMButton from UI after deleting (That's why ObservableCollection?)
-        // TODO Add default animations to different note types
         // TODO Draw lines between Multi hit/ Glide Notes
         // TODO Account for overlapping lines
         public MemoryChartComponent()
@@ -36,6 +33,8 @@ namespace MoMTool.Logic
                 lane.DragEnter += this.chartLane_DragEnter;
                 lane.DragDrop += this.chartLane_DragDrop;
             }
+
+            this.Dock = DockStyle.Fill;
         }
 
         private void chartTimeValue_TextChanged(object sender, EventArgs e)

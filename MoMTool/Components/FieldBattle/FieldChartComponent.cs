@@ -20,10 +20,7 @@ namespace MoMTool.Logic
         public ObservableCollection<MoMButton<FieldAsset>> Assets = new ObservableCollection<MoMButton<FieldAsset>>();
         public ObservableCollection<MoMButton<PerformerNote<FieldLane>>> Performers = new ObservableCollection<MoMButton<PerformerNote<FieldLane>>>();
         public ObservableCollection<MoMButton<TimeShift<FieldLane>>> Times = new ObservableCollection<MoMButton<TimeShift<FieldLane>>>();
-
-        // TODO Add ability to drag and drop notes ALREADY on the lanes
-        // TODO Remove MoMButton from UI after deleting (That's why ObservableCollection?)
-        // TODO Add default animations to different note types
+        
         // TODO Draw lines between Multi hit/ Glide Notes
         // TODO Account for overlapping lines
         public FieldChartComponent()
@@ -35,6 +32,8 @@ namespace MoMTool.Logic
                 lane.DragEnter += this.chartLane_DragEnter;
                 lane.DragDrop += this.chartLane_DragDrop;
             }
+
+            this.Dock = DockStyle.Fill;
         }
 
         private void chartTimeValue_TextChanged(object sender, EventArgs e)
