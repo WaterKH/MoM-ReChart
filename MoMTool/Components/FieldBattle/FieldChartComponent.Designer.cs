@@ -54,7 +54,22 @@ namespace MoMTool.Logic
             this.songTypeText = new System.Windows.Forms.Label();
             this.chartLengthText = new System.Windows.Forms.Label();
             this.chartTimeValue = new System.Windows.Forms.TextBox();
+            this.holderPanel = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.panel11 = new System.Windows.Forms.Panel();
+            this.panel12 = new System.Windows.Forms.Panel();
+            this.panel13 = new System.Windows.Forms.Panel();
+            this.panel14 = new System.Windows.Forms.Panel();
             this.chartNotePanel.SuspendLayout();
+            this.holderPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // chartNotePanel
@@ -74,10 +89,11 @@ namespace MoMTool.Logic
             this.chartNotePanel.Controls.Add(this.panelPartyMember1Left);
             this.chartNotePanel.Controls.Add(this.panelPartyMember1Right);
             this.chartNotePanel.Controls.Add(this.panelOutOfMapLeft);
-            this.chartNotePanel.Location = new System.Drawing.Point(0, 47);
+            this.chartNotePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chartNotePanel.Location = new System.Drawing.Point(0, 0);
             this.chartNotePanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chartNotePanel.Name = "chartNotePanel";
-            this.chartNotePanel.Size = new System.Drawing.Size(807, 464);
+            this.chartNotePanel.Size = new System.Drawing.Size(807, 468);
             this.chartNotePanel.TabIndex = 0;
             // 
             // panelOutOfMapRight
@@ -278,7 +294,7 @@ namespace MoMTool.Logic
             // songTypeText
             // 
             this.songTypeText.AutoSize = true;
-            this.songTypeText.Location = new System.Drawing.Point(15, 12);
+            this.songTypeText.Location = new System.Drawing.Point(8, 12);
             this.songTypeText.Name = "songTypeText";
             this.songTypeText.Size = new System.Drawing.Size(81, 20);
             this.songTypeText.TabIndex = 7;
@@ -302,6 +318,163 @@ namespace MoMTool.Logic
             this.chartTimeValue.TabIndex = 9;
             this.chartTimeValue.TextChanged += new System.EventHandler(this.chartTimeValue_TextChanged);
             // 
+            // holderPanel
+            // 
+            this.holderPanel.AllowDrop = true;
+            this.holderPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.holderPanel.AutoSize = true;
+            this.holderPanel.Controls.Add(this.panel2);
+            this.holderPanel.Controls.Add(this.panel3);
+            this.holderPanel.Controls.Add(this.panel4);
+            this.holderPanel.Controls.Add(this.panel5);
+            this.holderPanel.Controls.Add(this.panel6);
+            this.holderPanel.Controls.Add(this.panel7);
+            this.holderPanel.Controls.Add(this.panel8);
+            this.holderPanel.Controls.Add(this.panel9);
+            this.holderPanel.Controls.Add(this.panel10);
+            this.holderPanel.Controls.Add(this.chartNotePanel);
+            this.holderPanel.Controls.Add(this.panel11);
+            this.holderPanel.Controls.Add(this.panel12);
+            this.holderPanel.Controls.Add(this.panel13);
+            this.holderPanel.Controls.Add(this.panel14);
+            this.holderPanel.Location = new System.Drawing.Point(0, 44);
+            this.holderPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.holderPanel.Name = "holderPanel";
+            this.holderPanel.Size = new System.Drawing.Size(807, 468);
+            this.holderPanel.TabIndex = 10;
+            // 
+            // panel2
+            // 
+            this.panel2.AllowDrop = true;
+            this.panel2.BackColor = System.Drawing.SystemColors.Window;
+            this.panel2.Location = new System.Drawing.Point(0, 400);
+            this.panel2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(0, 25);
+            this.panel2.TabIndex = 12;
+            // 
+            // panel3
+            // 
+            this.panel3.AllowDrop = true;
+            this.panel3.BackColor = System.Drawing.SystemColors.Window;
+            this.panel3.Location = new System.Drawing.Point(0, 367);
+            this.panel3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(0, 25);
+            this.panel3.TabIndex = 11;
+            // 
+            // panel4
+            // 
+            this.panel4.AllowDrop = true;
+            this.panel4.BackColor = System.Drawing.Color.Pink;
+            this.panel4.Location = new System.Drawing.Point(0, 233);
+            this.panel4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(0, 25);
+            this.panel4.TabIndex = 7;
+            // 
+            // panel5
+            // 
+            this.panel5.AllowDrop = true;
+            this.panel5.BackColor = System.Drawing.Color.PaleGreen;
+            this.panel5.Location = new System.Drawing.Point(0, 300);
+            this.panel5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(0, 25);
+            this.panel5.TabIndex = 9;
+            // 
+            // panel6
+            // 
+            this.panel6.AllowDrop = true;
+            this.panel6.BackColor = System.Drawing.Color.PowderBlue;
+            this.panel6.Location = new System.Drawing.Point(0, 100);
+            this.panel6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(0, 25);
+            this.panel6.TabIndex = 3;
+            // 
+            // panel7
+            // 
+            this.panel7.AllowDrop = true;
+            this.panel7.BackColor = System.Drawing.Color.PaleGreen;
+            this.panel7.Location = new System.Drawing.Point(0, 333);
+            this.panel7.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(0, 25);
+            this.panel7.TabIndex = 10;
+            // 
+            // panel8
+            // 
+            this.panel8.AllowDrop = true;
+            this.panel8.BackColor = System.Drawing.Color.Pink;
+            this.panel8.Location = new System.Drawing.Point(0, 167);
+            this.panel8.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(0, 25);
+            this.panel8.TabIndex = 5;
+            // 
+            // panel9
+            // 
+            this.panel9.AllowDrop = true;
+            this.panel9.BackColor = System.Drawing.Color.PaleGreen;
+            this.panel9.Location = new System.Drawing.Point(0, 267);
+            this.panel9.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(0, 25);
+            this.panel9.TabIndex = 8;
+            // 
+            // panel10
+            // 
+            this.panel10.AllowDrop = true;
+            this.panel10.BackColor = System.Drawing.SystemColors.Window;
+            this.panel10.Location = new System.Drawing.Point(0, 33);
+            this.panel10.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(0, 25);
+            this.panel10.TabIndex = 1;
+            // 
+            // panel11
+            // 
+            this.panel11.AllowDrop = true;
+            this.panel11.BackColor = System.Drawing.Color.Pink;
+            this.panel11.Location = new System.Drawing.Point(0, 200);
+            this.panel11.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(0, 25);
+            this.panel11.TabIndex = 6;
+            // 
+            // panel12
+            // 
+            this.panel12.AllowDrop = true;
+            this.panel12.BackColor = System.Drawing.Color.PowderBlue;
+            this.panel12.Location = new System.Drawing.Point(0, 67);
+            this.panel12.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel12.Name = "panel12";
+            this.panel12.Size = new System.Drawing.Size(0, 25);
+            this.panel12.TabIndex = 2;
+            // 
+            // panel13
+            // 
+            this.panel13.AllowDrop = true;
+            this.panel13.BackColor = System.Drawing.Color.PowderBlue;
+            this.panel13.Location = new System.Drawing.Point(0, 133);
+            this.panel13.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel13.Name = "panel13";
+            this.panel13.Size = new System.Drawing.Size(0, 25);
+            this.panel13.TabIndex = 4;
+            // 
+            // panel14
+            // 
+            this.panel14.AllowDrop = true;
+            this.panel14.BackColor = System.Drawing.SystemColors.Window;
+            this.panel14.Location = new System.Drawing.Point(0, 0);
+            this.panel14.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.panel14.Name = "panel14";
+            this.panel14.Size = new System.Drawing.Size(0, 25);
+            this.panel14.TabIndex = 0;
+            // 
             // FieldChartComponent
             // 
             this.AllowDrop = true;
@@ -309,6 +482,7 @@ namespace MoMTool.Logic
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.CausesValidation = false;
+            this.Controls.Add(this.holderPanel);
             this.Controls.Add(this.chartTimeValue);
             this.Controls.Add(this.chartLengthText);
             this.Controls.Add(this.songTypeText);
@@ -317,11 +491,12 @@ namespace MoMTool.Logic
             this.Controls.Add(this.assetsCheckbox);
             this.Controls.Add(this.notesCheckbox);
             this.Controls.Add(this.displayText);
-            this.Controls.Add(this.chartNotePanel);
+            this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.Name = "FieldChartComponent";
             this.Size = new System.Drawing.Size(807, 512);
             this.chartNotePanel.ResumeLayout(false);
+            this.holderPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -352,5 +527,19 @@ namespace MoMTool.Logic
         public Panel panelPartyMember1Right;
         public Panel panelOutOfMapLeft;
         public FieldSubChartNoteComponent subChartComponent;
+        private Panel holderPanel;
+        public Panel panel2;
+        public Panel panel3;
+        public Panel panel4;
+        public Panel panel5;
+        public Panel panel6;
+        public Panel panel7;
+        public Panel panel8;
+        public Panel panel9;
+        public Panel panel10;
+        public Panel panel11;
+        public Panel panel12;
+        public Panel panel13;
+        public Panel panel14;
     }
 }
