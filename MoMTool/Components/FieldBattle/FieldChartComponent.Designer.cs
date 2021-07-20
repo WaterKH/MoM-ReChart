@@ -33,6 +33,7 @@ namespace MoMTool.Logic
         private void InitializeComponent()
         {
             this.chartNotePanel = new System.Windows.Forms.Panel();
+            this.panelBeat = new MoMTool.Components.SelfContainedComponents.TransparentPanel();
             this.panelOutOfMapRight = new System.Windows.Forms.Panel();
             this.panelSomewhereRight = new System.Windows.Forms.Panel();
             this.panelPlayerRight = new System.Windows.Forms.Panel();
@@ -76,6 +77,7 @@ namespace MoMTool.Logic
             // 
             this.chartNotePanel.AllowDrop = true;
             this.chartNotePanel.AutoScroll = true;
+            this.chartNotePanel.Controls.Add(this.panelBeat);
             this.chartNotePanel.Controls.Add(this.panelOutOfMapRight);
             this.chartNotePanel.Controls.Add(this.panelSomewhereRight);
             this.chartNotePanel.Controls.Add(this.panelPlayerRight);
@@ -95,6 +97,15 @@ namespace MoMTool.Logic
             this.chartNotePanel.Name = "chartNotePanel";
             this.chartNotePanel.Size = new System.Drawing.Size(807, 468);
             this.chartNotePanel.TabIndex = 0;
+            // 
+            // panelBeat
+            // 
+            this.panelBeat.BackColor = System.Drawing.Color.Transparent;
+            this.panelBeat.ForeColor = System.Drawing.Color.Transparent;
+            this.panelBeat.Location = new System.Drawing.Point(4, 4);
+            this.panelBeat.Name = "panelBeat";
+            this.panelBeat.Size = new System.Drawing.Size(68, 393);
+            this.panelBeat.TabIndex = 13;
             // 
             // panelOutOfMapRight
             // 
@@ -541,5 +552,6 @@ namespace MoMTool.Logic
         public Panel panel12;
         public Panel panel13;
         public Panel panel14;
+        private Components.SelfContainedComponents.TransparentPanel panelBeat;
     }
 }

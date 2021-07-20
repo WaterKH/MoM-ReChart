@@ -523,7 +523,7 @@ namespace MoMTool.Logic
             Point controlRelatedCoords = panel.PointToClient(point);
 
             var lane = (FieldLane)Enum.Parse(typeof(FieldLane), panel.Name[5..]);
-            var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
+            var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Parent.Name[3..]); // Can't we just replace this with this.CurrentDifficultyTab?
             var hitTime = controlRelatedCoords.X * this.ZoomVariable;
 
             var fieldChart = this.FieldCharts[difficulty];
