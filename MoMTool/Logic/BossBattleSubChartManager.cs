@@ -11,6 +11,7 @@ namespace MoMTool.Logic
     public class BossBattleSubChartManager
     {
         public BossBattleChartManager ParentChartManager { get; set; }
+        public bool DisplayingSubChart { get; set; } = false;
 
         public dynamic BossSubChartComponent { get; set; }
         //public PerformerComponent PerformerComponent { get; set; }
@@ -43,6 +44,8 @@ namespace MoMTool.Logic
 
             this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.Add(this.BossSubChartComponent);
             this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab].Controls[^1].BringToFront();
+
+            this.DisplayingSubChart = true;
         }
 
         public void LoadSubChartComponent(int id, BossNote note)
@@ -96,11 +99,32 @@ namespace MoMTool.Logic
             this.BossSubChartComponent.endAttackTimeValue.Text = darkZone.EndAttackTime.ToString();
         }
 
+        public void LoadSubChartOffsetComponent()
+        {
+            if (this.BossSubChartComponent != null)
+            {
+                this.Close();
+            }
+
+            this.BossSubChartComponent = new OffsetComponent { Visible = true };
+            this.BossSubChartComponent.SubChartManager = this;
+            this.BossSubChartComponent.ParentChartComponent = this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab];
+
+            this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.Add(this.BossSubChartComponent);
+            this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab].Controls[^1].BringToFront();
+
+            this.BossSubChartComponent.valueOffset.Text = ((this.ParentChartManager.BeatManager.Offset * Settings.ZoomVariable) + this.ParentChartManager.BeatManager.OffsetRemainder).ToString();
+
+            this.DisplayingSubChart = true;
+        }
+
         public void Close()
         {
             this.ParentChartManager.BossCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.RemoveByKey(this.BossSubChartComponent.Name);
             this.BossSubChartComponent.Visible = false;
             this.BossSubChartComponent = null;
+
+            this.DisplayingSubChart = false;
         }
     }
 }

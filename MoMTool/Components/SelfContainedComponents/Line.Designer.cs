@@ -1,7 +1,7 @@
 ﻿
 namespace MoMTool.Components.SelfContainedComponents
 {
-    partial class TransparentPanel
+    partial class Line
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,16 +29,8 @@ namespace MoMTool.Components.SelfContainedComponents
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
-            // 
-            // TransparentPanel
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Enabled = false;
-            this.Name = "TransparentPanel";
-            this.ResumeLayout(false);
-
         }
 
         #endregion

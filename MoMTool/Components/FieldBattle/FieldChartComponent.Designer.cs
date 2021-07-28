@@ -101,11 +101,13 @@ namespace MoMTool.Logic
             // panelBeat
             // 
             this.panelBeat.BackColor = System.Drawing.Color.Transparent;
+            this.panelBeat.Enabled = false;
             this.panelBeat.ForeColor = System.Drawing.Color.Transparent;
             this.panelBeat.Location = new System.Drawing.Point(4, 4);
             this.panelBeat.Name = "panelBeat";
-            this.panelBeat.Size = new System.Drawing.Size(68, 393);
+            this.panelBeat.Size = new System.Drawing.Size(68, 461);
             this.panelBeat.TabIndex = 13;
+            this.panelBeat.Visible = false;
             // 
             // panelOutOfMapRight
             // 

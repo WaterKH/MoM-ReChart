@@ -11,6 +11,7 @@ namespace MoMTool.Logic
     public class FieldBattleSubChartManager
     {
         public FieldBattleChartManager ParentChartManager { get; set; }
+        public bool DisplayingSubChart { get; set; } = false;
 
         public dynamic FieldSubChartComponent { get; set; }
         //public FieldSubChartAssetComponent FieldSubChartAssetComponent { get; set; }
@@ -44,6 +45,8 @@ namespace MoMTool.Logic
 
             this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.Add(this.FieldSubChartComponent);
             this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Controls[^1].BringToFront();
+
+            this.DisplayingSubChart = true;
         }
 
         public void LoadSubChartComponent(int id, FieldNote note)
@@ -161,11 +164,32 @@ namespace MoMTool.Logic
             this.FieldSubChartComponent.SetAnimationPositions();
         }
 
+        public void LoadSubChartOffsetComponent()
+        {
+            if (this.FieldSubChartComponent != null)
+            {
+                this.Close();
+            }
+
+            this.FieldSubChartComponent = new OffsetComponent { Visible = true };
+            this.FieldSubChartComponent.SubChartManager = this;
+            this.FieldSubChartComponent.ParentChartComponent = this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab];
+
+            this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.Add(this.FieldSubChartComponent);
+            this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Controls[^1].BringToFront();
+
+            this.FieldSubChartComponent.valueOffset.Text = ((this.ParentChartManager.BeatManager.Offset * Settings.ZoomVariable) + this.ParentChartManager.BeatManager.OffsetRemainder).ToString();
+
+            this.DisplayingSubChart = true;
+        }
+
         public void Close()
         {
             this.ParentChartManager.FieldCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.RemoveByKey(this.FieldSubChartComponent.Name);
             this.FieldSubChartComponent.Visible = false;
             this.FieldSubChartComponent = null;
+
+            this.DisplayingSubChart = false;
         }
     }
 }

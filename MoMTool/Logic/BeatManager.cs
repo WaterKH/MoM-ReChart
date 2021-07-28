@@ -1,6 +1,8 @@
 ﻿using MoMMusicAnalysis;
+using MoMTool.Components.SelfContainedComponents;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -8,22 +10,67 @@ using System.Windows.Forms;
 
 namespace MoMTool.Logic
 {
-    public class BeatManager
+    public class BeatManager<TLane>
     {
         public int ZoomVariable { get; set; } = 10;
-        public TimeShift<FieldLane> CurrentTempo { get; set; }
+        public TimeShift<TLane> CurrentTempo { get; set; }
         public int CurrentTime { get; set; }
+        public int Offset { get; set; }
+        public int OffsetRemainder { get; set; }
 
-        public List<Panel> WholeBeats { get; set; } = new List<Panel> { null };
-        public List<Panel> HalfBeats { get; set; } = new List<Panel> { null, null };
-        public List<Panel> QuarterBeats { get; set; } = new List<Panel> { null, null, null, null };
-        public List<Panel> EighthBeats { get; set; } = new List<Panel> { null, null, null, null, null, null, null, null };
-        public List<Panel> SixteenthBeats { get; set; } = new List<Panel> { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null };
-        public List<Panel> ThirtySecondBeats { get; set; } = new List<Panel> { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null };
+        public List<Line> WholeBeats { get; set; } = new List<Line> { null };
+        public List<Line> HalfBeats { get; set; } = new List<Line> { null, null };
+        public List<Line> QuarterBeats { get; set; } = new List<Line> { null, null, null, null };
+        public List<Line> EighthBeats { get; set; } = new List<Line> { null, null, null, null, null, null, null, null };
+        public List<Line> SixteenthBeats { get; set; } = new List<Line> { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null };
+        public List<Line> ThirtySecondBeats { get; set; } = new List<Line> { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null };
 
-        public void DisplayChartBeats(List<MoMButton<TimeShift<FieldLane>>> times, Point position, int panelHeight)
+        //public void CalculateOffset(FieldChartComponent chart)
+        //{
+        //    this.Offset = chart.Notes.FirstOrDefault().Note.HitTime % chart.Times.FirstOrDefault().Note.Speed;
+
+        //    this.OffsetRemainder = this.Offset % Settings.ZoomVariable;
+        //    this.Offset /= Settings.ZoomVariable;
+
+            //chart.Times.FirstOrDefault().Button.Location = new Point(this.Offset, 0);
+        //}
+
+        public Line SnapToBeat(int positionX)
         {
-            TimeShift<FieldLane> currTempo = null;
+            Line closestTime = null;
+
+            switch (Settings.CurrentBeat)
+            {
+                case Beat.None:
+                    break;
+                case Beat.Whole:
+                    closestTime = this.WholeBeats.FirstOrDefault();
+                    break;
+                case Beat.Half:
+                    closestTime = this.FindClosestBeat(this.HalfBeats, positionX);
+                    break;
+                case Beat.Quarter:
+                    closestTime = this.FindClosestBeat(this.QuarterBeats, positionX);
+                    break;
+                case Beat.Eighth:
+                    closestTime = this.FindClosestBeat(this.EighthBeats, positionX);
+                    break;
+                case Beat.Sixteenth:
+                    closestTime = this.FindClosestBeat(this.SixteenthBeats, positionX);
+                    break;
+                case Beat.ThirtySecond:
+                    closestTime = this.FindClosestBeat(this.ThirtySecondBeats, positionX);
+                    break;
+                default:
+                    break;
+            }
+
+            return closestTime;
+        }
+
+        public bool DisplayChartBeats(List<MoMButton<TimeShift<TLane>>> times, TransparentPanel chart, int positionX)
+        {
+            TimeShift<TLane> currTempo = null;
 
             if (times.Count == 1)
             {
@@ -39,7 +86,7 @@ namespace MoMTool.Logic
                     {
                         var nextTime = times[i + 1].Note;
 
-                        if ((position.X * this.ZoomVariable) >= time.HitTime && (position.X * this.ZoomVariable) < nextTime.HitTime)
+                        if (positionX > (time.HitTime + this.Offset) / this.ZoomVariable && positionX <= (nextTime.HitTime + this.Offset) / this.ZoomVariable)
                         {
                             currTempo = time;
 
@@ -53,43 +100,113 @@ namespace MoMTool.Logic
                 }
             }
 
-            var closestTime = ((int)(position.X / currTempo.Speed)) * currTempo.Speed;
+            var tempoWhole = (currTempo.Speed * 4) / Settings.ZoomVariable;
 
-            if (closestTime != this.CurrentTime)
+            var currentTime = (positionX / tempoWhole) * tempoWhole;
+            
+            if (currentTime != this.CurrentTime)
             {
-                this.CurrentTempo = currTempo;
-                this.CurrentTime = closestTime;
+                this.ClearChartBeats(chart);
 
-                this.CreateChartBeats(panelHeight);
+                this.CurrentTempo = currTempo;
+                this.CurrentTime = currentTime;
+
+                this.CreateChartBeats(chart.Height);
+
+                chart.Visible = true;
+
+                return true;
             }
+
+            return false;
         }
 
         private void CreateChartBeats(int panelHeight)
         {
             var wholeNote = (this.CurrentTempo.Speed * 4) / this.ZoomVariable;
-            var halfNote = wholeNote / 2;
-            var quarterNote = wholeNote / 4;
-            var eighthNote = wholeNote / 8;
-            var sixteenthNote = wholeNote / 16;
-            var thirtySecondNote = wholeNote / 32;
+            //var offset = this.CurrentTime % Settings.ZoomVariable;
+            for (int i = 0; i < 1; ++i)
+                this.WholeBeats[i] = new Line { Direction = "Vertical", Offset = this.Offset, OffsetRemainder = this.OffsetRemainder, BackColor = Color.Purple, ForeColor = Color.Purple, Location = new Point((wholeNote * i) + this.CurrentTime + this.Offset, 0), Size = new Size(1, panelHeight), Visible = Settings.CurrentBeat == Beat.Whole };
 
-            for (int i = 1; i <= 1; ++i)
-                this.WholeBeats[i - 1] = new Panel { Width = 1, Height = panelHeight, Location = new Point((wholeNote * i) + this.CurrentTime, 0), Visible = Settings.CurrentBeat == Beat.Whole };
+            var halfNote = (this.CurrentTempo.Speed * 2) / this.ZoomVariable;
+            //var halfNoteOffset = (this.CurrentTime / 2) % Settings.ZoomVariable;
+            for (int i = 0; i < 2; ++i)
+                this.HalfBeats[i] = new Line { Direction = "Vertical", Offset = this.Offset, OffsetRemainder = this.OffsetRemainder, BackColor = Color.MediumPurple, ForeColor = Color.MediumPurple, Location = new Point((halfNote * i) + this.CurrentTime + this.Offset, 0), Size = new Size(1, panelHeight), Visible = Settings.CurrentBeat == Beat.Half };
 
-            for (int i = 1; i <= 2; ++i)
-                this.HalfBeats[i - 1] = new Panel { Width = 1, Height = panelHeight, Location = new Point((halfNote * i) + this.CurrentTime, 0), Visible = Settings.CurrentBeat == Beat.Half };
-            
-            for (int i = 1; i <= 4; ++i)
-                this.QuarterBeats[i - 1] = new Panel { Width = 1, Height = panelHeight, Location = new Point((quarterNote * i) + this.CurrentTime, 0), Visible = Settings.CurrentBeat == Beat.Quarter };
+            var quarterNote = (this.CurrentTempo.Speed) / this.ZoomVariable;
+            //var quarterNoteOffset = (this.CurrentTime / 4) % Settings.ZoomVariable;
+            for (int i = 0; i < 4; ++i)
+                this.QuarterBeats[i] = new Line { Direction = "Vertical", Offset = this.Offset, OffsetRemainder = this.OffsetRemainder, BackColor = Color.MediumPurple, ForeColor = Color.MediumPurple, Location = new Point((quarterNote * i) + this.CurrentTime + this.Offset, 0), Size = new Size(1, panelHeight), Visible = Settings.CurrentBeat == Beat.Quarter };
 
-            for (int i = 1; i <= 8; ++i)
-                this.EighthBeats[i - 1] = new Panel { Width = 1, Height = panelHeight, Location = new Point((eighthNote * i) + this.CurrentTime, 0), Visible = Settings.CurrentBeat == Beat.Eighth };
+            var eighthNote = (this.CurrentTempo.Speed / 2) / this.ZoomVariable;
+            //var eighthNoteOffset = (this.CurrentTime / 8) % Settings.ZoomVariable;
+            for (int i = 0; i < 8; ++i)
+                this.EighthBeats[i] = new Line { Direction = "Vertical", Offset = this.Offset, OffsetRemainder = this.OffsetRemainder, BackColor = Color.MediumPurple, ForeColor = Color.MediumPurple, Location = new Point((eighthNote * i) + this.CurrentTime + this.Offset, 0), Size = new Size(1, panelHeight), Visible = Settings.CurrentBeat == Beat.Eighth };
 
-            for (int i = 1; i <= 16; ++i)
-                this.SixteenthBeats[i - 1] = new Panel { Width = 1, Height = panelHeight, Location = new Point((sixteenthNote * i) + this.CurrentTime, 0), Visible = Settings.CurrentBeat == Beat.Sixteenth };
+            var sixteenthNote = (this.CurrentTempo.Speed / 4) / this.ZoomVariable;
+            //var sixteenthNoteOffset = (this.CurrentTime / 16) % Settings.ZoomVariable;
+            for (int i = 0; i < 16; ++i)
+                this.SixteenthBeats[i] = new Line { Direction = "Vertical", Offset = this.Offset, OffsetRemainder = this.OffsetRemainder, BackColor = Color.MediumPurple, ForeColor = Color.MediumPurple, Location = new Point((sixteenthNote * i) + this.CurrentTime + this.Offset, 0), Size = new Size(1, panelHeight), Visible = Settings.CurrentBeat == Beat.Sixteenth };
 
-            for (int i = 1; i <= 32; ++i)
-                this.ThirtySecondBeats[i - 1] = new Panel { Width = 1, Height = panelHeight, Location = new Point((thirtySecondNote * i) + this.CurrentTime, 0), Visible = Settings.CurrentBeat == Beat.ThirtySecond };
+            var thirtySecondNote = (this.CurrentTempo.Speed / 8) / this.ZoomVariable;
+            //var thirtySecondNoteOffset = (this.CurrentTime / 32) % Settings.ZoomVariable;
+            for (int i = 0; i < 32; ++i)
+                this.ThirtySecondBeats[i] = new Line { Direction = "Vertical", Offset = this.Offset, OffsetRemainder = this.OffsetRemainder, BackColor = Color.MediumPurple, ForeColor = Color.MediumPurple, Location = new Point((thirtySecondNote * i) + this.CurrentTime + this.Offset, 0), Size = new Size(1, panelHeight), Visible = Settings.CurrentBeat == Beat.ThirtySecond };
+        }
+
+        public void ClearChartBeats(TransparentPanel chart)
+        {
+            for (int i = 0; i < this.WholeBeats.Count; ++i)
+                this.ClearChartBeat(this.WholeBeats[i], chart);
+
+            for (int i = 0; i < this.HalfBeats.Count; ++i)
+                this.ClearChartBeat(this.HalfBeats[i], chart);
+
+            for (int i = 0; i < this.QuarterBeats.Count; ++i)
+                this.ClearChartBeat(this.QuarterBeats[i], chart);
+
+            for (int i = 0; i < this.EighthBeats.Count; ++i)
+                this.ClearChartBeat(this.EighthBeats[i], chart);
+
+            for (int i = 0; i < this.SixteenthBeats.Count; ++i)
+                this.ClearChartBeat(this.SixteenthBeats[i], chart);
+
+            for (int i = 0; i < this.ThirtySecondBeats.Count; ++i)
+                this.ClearChartBeat(this.ThirtySecondBeats[i], chart);
+
+            chart.Visible = false;
+        }
+
+        private void ClearChartBeat(Line line, TransparentPanel chart)
+        {
+            if (line != null)
+            {
+                chart.Controls.Remove(line);
+
+                line.Visible = false;
+                line = null;
+            }
+        }
+
+        private Line FindClosestBeat(List<Line> beats, int positionX)
+        {
+            var closestTime = beats.Aggregate((x, y) => Math.Abs(x.Location.X - positionX) < Math.Abs(y.Location.X - positionX) ? x : y);
+
+            beats.ForEach(x =>
+            {
+                if (x.Location.X == closestTime.Location.X)
+                {
+                    x.BackColor = Color.MediumPurple;
+                    x.ForeColor = Color.MediumPurple;
+                }
+                else
+                {
+                    x.BackColor = Color.Purple;
+                    x.ForeColor = Color.Purple;
+                }
+            });
+
+            return closestTime;
         }
     }
 }

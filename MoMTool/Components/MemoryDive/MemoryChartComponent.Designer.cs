@@ -47,6 +47,7 @@ namespace MoMTool.Logic
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.panelBeat = new MoMTool.Components.SelfContainedComponents.TransparentPanel();
             this.chartNotePanel.SuspendLayout();
             this.holderPanel.SuspendLayout();
             this.SuspendLayout();
@@ -55,6 +56,7 @@ namespace MoMTool.Logic
             // 
             this.chartNotePanel.AllowDrop = true;
             this.chartNotePanel.AutoScroll = true;
+            this.chartNotePanel.Controls.Add(this.panelBeat);
             this.chartNotePanel.Controls.Add(this.panelPlayerRight);
             this.chartNotePanel.Controls.Add(this.panelPlayerLeft);
             this.chartNotePanel.Controls.Add(this.panelPlayerCenter);
@@ -220,6 +222,14 @@ namespace MoMTool.Logic
             this.panel4.Size = new System.Drawing.Size(0, 25);
             this.panel4.TabIndex = 6;
             // 
+            // panelBeat
+            // 
+            this.panelBeat.Enabled = false;
+            this.panelBeat.Location = new System.Drawing.Point(4, 3);
+            this.panelBeat.Name = "panelBeat";
+            this.panelBeat.Size = new System.Drawing.Size(43, 458);
+            this.panelBeat.TabIndex = 8;
+            // 
             // MemoryChartComponent
             // 
             this.AllowDrop = true;
@@ -262,5 +272,6 @@ namespace MoMTool.Logic
         public Panel panel2;
         public Panel panel3;
         public Panel panel4;
+        private Components.SelfContainedComponents.TransparentPanel panelBeat;
     }
 }
