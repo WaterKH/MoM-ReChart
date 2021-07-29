@@ -76,6 +76,9 @@
     <Compile Update="Components\SelfContainedComponents\MemoryDive\MemoryNoteComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Components\SelfContainedComponents\OffsetComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Components\SelfContainedComponents\TimeShiftComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>

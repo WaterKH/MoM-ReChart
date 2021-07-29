@@ -256,6 +256,7 @@ namespace MoMTool
             this.Controls.Add(this.fileName);
             this.Controls.Add(this.difficultyControl);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
             this.Name = "Main";
             this.Text = "Melody of Memory Music Tool";

@@ -1,4 +1,5 @@
 ﻿using MoMMusicAnalysis;
+using MoMTool.Components.SelfContainedComponents;
 using MoMTool.Properties;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace MoMTool.Logic
     {
         public MusicFile MusicFile;
         public BossBattleSubChartManager BossBattleSubChartManager; // TODO Maybe make this private?
+        public BeatManager<BossLane> BeatManager;
 
         public int ZoomVariable = 10;
 
@@ -29,6 +31,7 @@ namespace MoMTool.Logic
             this.MusicFile = musicFile;
             this.ToolTip = new ToolTip();
             this.BossBattleSubChartManager = new BossBattleSubChartManager(this);
+            this.BeatManager = new BeatManager<BossLane>();
         }
 
         public void DecompileBossBattleSongs() 
@@ -39,6 +42,8 @@ namespace MoMTool.Logic
             {
                 this.BossCharts.Add(song.Difficulty, this.CreateChart(song));
             }
+
+            this.BeatManager.CalculateOffset(this.BossCharts[this.CurrentDifficultyTab]);
         }
 
         #region Recompile Boss Battle
@@ -323,10 +328,10 @@ namespace MoMTool.Logic
             return 0;
         }
 
-        public void MoveChartNote(Panel panel, Point point, string buttonName)
+        public void MoveChartNote(Panel panel, Point point, string buttonName, bool convert = false)
         {
             var buttonType = buttonName.Split('-')[0];
-            Point controlRelatedCoords = panel.PointToClient(point);
+            Point controlRelatedCoords = convert ? panel.PointToClient(point) : point;
 
             var lane = (BossLane)Enum.Parse(typeof(BossLane), panel.Name[5..]);
             var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
@@ -377,14 +382,17 @@ namespace MoMTool.Logic
             }
         }
 
-        public void CreateDroppedNote(Panel panel, Point point, string noteType)
+        public void CreateDroppedNote(Panel panel, string noteType, bool convert, Point point, Line closestTime)
         {
-            Point controlRelatedCoords = panel.PointToClient(point);
+            Point controlRelatedCoords = convert ? panel.PointToClient(point) : point;
 
             var lane = (BossLane)Enum.Parse(typeof(BossLane), panel.Name[5..]);
-            var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
+            var hitTime = controlRelatedCoords.X * Settings.ZoomVariable;
 
-            var bossChart = this.BossCharts[difficulty];
+            if (closestTime != null)
+                hitTime += closestTime.OffsetRemainder;
+
+            var bossChart = this.BossCharts[this.CurrentDifficultyTab];
 
             if (noteType.Equals("Boss Note"))
             {
@@ -394,7 +402,7 @@ namespace MoMTool.Logic
                     Lane = lane
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.NormalNote));
+                this.BossCharts[this.CurrentDifficultyTab].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.NormalNote));
             }
             else if (noteType.Equals("Performer Note"))
             {
@@ -406,7 +414,7 @@ namespace MoMTool.Logic
                     DuplicateType = PerformerType.L2
                 };
 
-                this.BossCharts[difficulty].Performers.Add(this.CreateChartButton(ref bossChart, bossChart.Performers.Count, performer, "Performer", Color.Purple, Resources.L2));
+                this.BossCharts[this.CurrentDifficultyTab].Performers.Add(this.CreateChartButton(ref bossChart, bossChart.Performers.Count, performer, "Performer", Color.Purple, Resources.L2));
             }
             else if (noteType.Equals("Time Shift"))
             {
@@ -416,7 +424,7 @@ namespace MoMTool.Logic
                     Lane = BossLane.PlayerTop
                 };
 
-                this.BossCharts[difficulty].Times.Add(this.CreateChartButton(ref bossChart, bossChart.Times.Count, time, "Time", Color.Yellow, Resources.BossTime));
+                this.BossCharts[this.CurrentDifficultyTab].Times.Add(this.CreateChartButton(ref bossChart, bossChart.Times.Count, time, "Time", Color.Yellow, Resources.BossTime));
             }
             else if (noteType.Equals("Dark Zone"))
             {
@@ -428,7 +436,7 @@ namespace MoMTool.Logic
                     EndAttackTime = (controlRelatedCoords.X * this.ZoomVariable) + 12000,
                 };
 
-                this.BossCharts[difficulty].DarkZones.Add(this.CreateChartButton(ref bossChart, bossChart.DarkZones.Count, darkZone, "DarkZone", Color.Black, Resources.DarkZone));
+                this.BossCharts[this.CurrentDifficultyTab].DarkZones.Add(this.CreateChartButton(ref bossChart, bossChart.DarkZones.Count, darkZone, "DarkZone", Color.Black, Resources.DarkZone));
             }
             // Specific Types
             else if (noteType.Equals("Normal Note"))
@@ -440,7 +448,7 @@ namespace MoMTool.Logic
                     BossNoteType = BossNoteType.Normal
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.NormalNote));
+                this.BossCharts[this.CurrentDifficultyTab].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.NormalNote));
             }
             else if (noteType.Equals("Swipe Up Note"))
             {
@@ -452,7 +460,7 @@ namespace MoMTool.Logic
                     SwipeDirection = SwipeType.Up
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.SwipeNote));
+                this.BossCharts[this.CurrentDifficultyTab].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.SwipeNote));
             }
             else if (noteType.Equals("Swipe Right Note"))
             {
@@ -464,7 +472,7 @@ namespace MoMTool.Logic
                     SwipeDirection = SwipeType.Right
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.SwipeNote));
+                this.BossCharts[this.CurrentDifficultyTab].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.SwipeNote));
             }
             else if (noteType.Equals("Swipe Down Note"))
             {
@@ -476,7 +484,7 @@ namespace MoMTool.Logic
                     SwipeDirection = SwipeType.Down
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.SwipeNote));
+                this.BossCharts[this.CurrentDifficultyTab].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.SwipeNote));
             }
             else if (noteType.Equals("Swipe Left Note"))
             {
@@ -488,7 +496,7 @@ namespace MoMTool.Logic
                     SwipeDirection = SwipeType.Left
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.SwipeNote));
+                this.BossCharts[this.CurrentDifficultyTab].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.SwipeNote));
             }
             else if (noteType.Equals("Hold Start Note"))
             {
@@ -499,7 +507,7 @@ namespace MoMTool.Logic
                     BossNoteType = BossNoteType.HoldStart
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.HoldNote));
+                this.BossCharts[this.CurrentDifficultyTab].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.HoldNote));
             }
             else if (noteType.Equals("Hold End Note"))
             {
@@ -510,7 +518,7 @@ namespace MoMTool.Logic
                     BossNoteType = BossNoteType.HoldEnd
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.HoldNote));
+                this.BossCharts[this.CurrentDifficultyTab].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.HoldNote));
             }
             else if (noteType.Equals("Crystal Note"))
             {
@@ -521,7 +529,7 @@ namespace MoMTool.Logic
                     BossNoteType = BossNoteType.Crystal
                 };
 
-                this.BossCharts[difficulty].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.Crystal_Base));
+                this.BossCharts[this.CurrentDifficultyTab].Notes.Add(this.CreateChartButton(ref bossChart, bossChart.Notes.Count, BossNote, "Note", Color.Red, Resources.Crystal_Base));
             }
         }
 

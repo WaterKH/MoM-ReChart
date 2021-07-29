@@ -27,7 +27,7 @@ namespace MoMTool
 
             this.noteListView.MouseDown += this.noteItem_MouseDown;
             this.difficultyControl.SelectedTab = this.tabProud;
-
+            
             this.difficultyControl.Selected += (sender, args) =>
             {
                 // Add an additional 49 as Difficulty -> Beginner: 49; Standard: 50; Proud: 51;
@@ -38,6 +38,8 @@ namespace MoMTool
                 else if (this.BossBattleChartManager != null)
                     this.BossBattleChartManager.CurrentDifficultyTab = (Difficulty)(args.TabPageIndex + 49);
             };
+
+            this.KeyDown += this.main_KeyDown;
         }
 
         private void recompileFieldSongButton_Click(object sender, EventArgs e)
@@ -128,6 +130,44 @@ namespace MoMTool
             this.recompileFieldButton.Visible = false;
             this.recompileMemoryButton.Visible = false;
             this.recompileBossButton.Visible = false;
+        }
+
+        private void main_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.O && Utilities.IsControlDown())
+            {
+                if (this.FieldBattleChartManager != null)
+                {
+                    this.FieldBattleChartManager.FieldBattleSubChartManager.LoadSubChartOffsetComponent();
+                }
+                else if (this.MemoryDiveChartManager != null)
+                {
+                    this.MemoryDiveChartManager.MemoryDiveSubChartManager.LoadSubChartOffsetComponent();
+                }
+                else if (this.BossBattleChartManager != null)
+                {
+                    this.BossBattleChartManager.BossBattleSubChartManager.LoadSubChartOffsetComponent();
+                }
+            }
+            else if ((this.FieldBattleChartManager != null && !this.FieldBattleChartManager.FieldBattleSubChartManager.DisplayingSubChart) ||
+                (this.MemoryDiveChartManager != null && !this.MemoryDiveChartManager.MemoryDiveSubChartManager.DisplayingSubChart) ||
+                (this.BossBattleChartManager != null && !this.BossBattleChartManager.BossBattleSubChartManager.DisplayingSubChart))
+            {
+                if (e.KeyCode == Keys.D1)
+                    Settings.CurrentBeat = Beat.Whole;
+                else if (e.KeyCode == Keys.D2)
+                    Settings.CurrentBeat = Beat.Half;
+                else if (e.KeyCode == Keys.D3)
+                    Settings.CurrentBeat = Beat.Quarter;
+                else if (e.KeyCode == Keys.D4)
+                    Settings.CurrentBeat = Beat.Eighth;
+                else if (e.KeyCode == Keys.D5)
+                    Settings.CurrentBeat = Beat.Sixteenth;
+                else if (e.KeyCode == Keys.D6)
+                    Settings.CurrentBeat = Beat.ThirtySecond;
+                else if (e.KeyCode == Keys.D0)
+                    Settings.CurrentBeat = Beat.None;
+            }
         }
 
         #region Helper Methods

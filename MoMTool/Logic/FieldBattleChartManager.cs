@@ -1,4 +1,5 @@
 ﻿using MoMMusicAnalysis;
+using MoMTool.Components.SelfContainedComponents;
 using MoMTool.Properties;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,9 @@ namespace MoMTool.Logic
     {
         public MusicFile MusicFile;
         public FieldBattleSubChartManager FieldBattleSubChartManager; // TODO Maybe make this private?
+        public BeatManager<FieldLane> BeatManager;
 
-        public int ZoomVariable = 10;
+        //public double ZoomVariable = 10.0;
 
         public Difficulty CurrentDifficultyTab { get; set; } = Difficulty.Proud;
         public Dictionary<Difficulty, FieldChartComponent> FieldCharts { get; set; }
@@ -29,6 +31,7 @@ namespace MoMTool.Logic
             this.MusicFile = musicFile; 
             this.ToolTip = new ToolTip();
             this.FieldBattleSubChartManager = new FieldBattleSubChartManager(this);
+            this.BeatManager = new BeatManager<FieldLane>();
         }
 
         public void DecompileFieldBattleSongs()
@@ -45,6 +48,8 @@ namespace MoMTool.Logic
                 if (chart.chartTimeValue.Text == "")
                     chart.chartTimeValue.Text = this.chartLength.ToString();
             }
+
+            this.BeatManager.CalculateOffset(this.FieldCharts[this.CurrentDifficultyTab]);
         }
 
 
@@ -419,7 +424,7 @@ namespace MoMTool.Logic
 
             momButton.Button.FlatAppearance.BorderSize = 0;
 
-            momButton.Button.Location = new Point(momButton.Note.HitTime / this.ZoomVariable, 0);
+            momButton.Button.Location = new Point(momButton.Note.HitTime / Settings.ZoomVariable, 0);
             momButton.Button.Click += (object sender, EventArgs e) => { FieldBattleSubChartManager.LoadSubChartComponent(momButton.Id, momButton.Note); };
             momButton.Button.MouseDown += (object sender, MouseEventArgs e) => { this.MouseDown(sender, e); };
 
@@ -433,24 +438,24 @@ namespace MoMTool.Logic
         public int CalculateChartLength(string text)
         {
             if (int.TryParse(text, out int value))
-                return (value + 5000) / this.ZoomVariable; // Add 5 seconds and apply our zoom
+                return (value + 5000) / Settings.ZoomVariable; // Add 5 seconds and apply our zoom
 
             return 0;
         }
 
-        public void MoveChartNote(Panel panel, Point point, string buttonName)
+        public void MoveChartNote(Panel panel, Point point, string buttonName, bool convert = false)
         {
             var buttonType = buttonName.Split('-')[0];
-            Point controlRelatedCoords = panel.PointToClient(point);
+            Point controlRelatedCoords = convert ? panel.PointToClient(point) : point;
 
             var lane = (FieldLane)Enum.Parse(typeof(FieldLane), panel.Name[5..]);
-            var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
+            var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Parent.Name[3..]);
 
             if (buttonType == "note")
             {
-                var diff = this.FieldCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime - (controlRelatedCoords.X * this.ZoomVariable);
+                var diff = this.FieldCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime - (controlRelatedCoords.X * Settings.ZoomVariable);
 
-                this.FieldCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.FieldCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * Settings.ZoomVariable;
                 this.FieldCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.FieldCharts[difficulty].AddToLane(lane, this.FieldCharts[difficulty].Notes.FirstOrDefault(x => x.Button.Name == buttonName).Button);
 
@@ -469,9 +474,9 @@ namespace MoMTool.Logic
             }
             else if (buttonType == "asset")
             {
-                var diff = this.FieldCharts[difficulty].Assets.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime - (controlRelatedCoords.X * this.ZoomVariable);
+                var diff = this.FieldCharts[difficulty].Assets.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime - (controlRelatedCoords.X * Settings.ZoomVariable);
 
-                this.FieldCharts[difficulty].Assets.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.FieldCharts[difficulty].Assets.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * Settings.ZoomVariable;
                 this.FieldCharts[difficulty].Assets.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.FieldCharts[difficulty].AddToLane(lane, this.FieldCharts[difficulty].Assets.FirstOrDefault(x => x.Button.Name == buttonName).Button);
 
@@ -490,7 +495,7 @@ namespace MoMTool.Logic
             }
             else if (buttonType == "performer")
             {
-                this.FieldCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.FieldCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * Settings.ZoomVariable;
                 this.FieldCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.FieldCharts[difficulty].AddToLane(lane, this.FieldCharts[difficulty].Performers.FirstOrDefault(x => x.Button.Name == buttonName).Button);
 
@@ -498,7 +503,7 @@ namespace MoMTool.Logic
             }
             else if (buttonType == "time")
             {
-                this.FieldCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * this.ZoomVariable;
+                this.FieldCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Note.HitTime = controlRelatedCoords.X * Settings.ZoomVariable;
                 this.FieldCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button.Location = new Point(controlRelatedCoords.X, 0);
                 this.FieldCharts[difficulty].AddToLane(lane, this.FieldCharts[difficulty].Times.FirstOrDefault(x => x.Button.Name == buttonName).Button);
 
@@ -518,21 +523,23 @@ namespace MoMTool.Logic
             }
         }
 
-        public void CreateDroppedNote(Panel panel, Point point, string noteType)
-        {
-            Point controlRelatedCoords = panel.PointToClient(point);
+        public void CreateDroppedNote(Panel panel, string noteType, bool convert, Point point, Line closestTime)
+        { 
+            Point controlRelatedCoords = convert ? panel.PointToClient(point) : point;
 
             var lane = (FieldLane)Enum.Parse(typeof(FieldLane), panel.Name[5..]);
-            var difficulty = (Difficulty)Enum.Parse(typeof(Difficulty), panel.Parent.Parent.Parent.Name[3..]);
-            var hitTime = controlRelatedCoords.X * this.ZoomVariable;
+            var hitTime = controlRelatedCoords.X * Settings.ZoomVariable;
 
-            var fieldChart = this.FieldCharts[difficulty];
+            if (closestTime != null)
+                hitTime += closestTime.OffsetRemainder;
+
+            var fieldChart = this.FieldCharts[this.CurrentDifficultyTab];
 
             if (noteType.Equals("Field Note"))
             {
                 var fieldNote = this.CreateFieldNote(hitTime, lane);
 
-                this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red, Resources.Shadow));
+                this.FieldCharts[this.CurrentDifficultyTab].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red, Resources.Shadow));
             }
             //else if (noteType.Equals("Field Asset"))
             //{
@@ -544,29 +551,29 @@ namespace MoMTool.Logic
             {
                 var performer = new PerformerNote<FieldLane>
                 {
-                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    HitTime = controlRelatedCoords.X * Settings.ZoomVariable,
                     Lane = lane,
                     PerformerType = PerformerType.L2,
                     DuplicateType = PerformerType.L2
                 };
 
-                this.FieldCharts[difficulty].Performers.Add(this.CreateChartButton(ref fieldChart, fieldChart.Performers.Count, performer, "Performer", Color.Purple, Resources.L2));
+                this.FieldCharts[this.CurrentDifficultyTab].Performers.Add(this.CreateChartButton(ref fieldChart, fieldChart.Performers.Count, performer, "Performer", Color.Purple, Resources.L2));
             }
             else if (noteType.Equals("Time Shift"))
             {
                 var time = new TimeShift<FieldLane>
                 {
-                    HitTime = controlRelatedCoords.X * this.ZoomVariable,
+                    HitTime = controlRelatedCoords.X * Settings.ZoomVariable,
                     Lane = FieldLane.OutOfMapLeft
                 };
 
-                this.FieldCharts[difficulty].Times.Add(this.CreateChartButton(ref fieldChart, fieldChart.Times.Count, time, "Time", Color.Yellow, Resources.FieldTime));
+                this.FieldCharts[this.CurrentDifficultyTab].Times.Add(this.CreateChartButton(ref fieldChart, fieldChart.Times.Count, time, "Time", Color.Yellow, Resources.FieldTime));
             }
             else
             {
                 if (this.CreateFieldNote(hitTime, lane, noteType, hitTime - 3000, hitTime) is var fieldNote && fieldNote != null)
                 {
-                    this.FieldCharts[difficulty].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red, this.GetImageForModelType(fieldNote.ModelType, fieldNote.NoteType, fieldNote.Unk3)));
+                    this.FieldCharts[this.CurrentDifficultyTab].Notes.Add(this.CreateChartButton(ref fieldChart, fieldChart.Notes.Count, fieldNote, "Note", Color.Red, this.GetImageForModelType(fieldNote.ModelType, fieldNote.NoteType, fieldNote.Unk3)));
 
                     var assetType = FieldAssetType.None;
                     var assetTime = 0;
@@ -626,7 +633,7 @@ namespace MoMTool.Logic
 
                         if (this.CreateFieldAsset(assetTime, lane, assetType, assetTime - 3000, assetTime) is var fieldAsset && fieldAsset != null)
                         {
-                            this.FieldCharts[difficulty].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Assets.Count, fieldAsset, "Asset", Color.Blue, this.GetImageForModelType(fieldAsset.ModelType)));
+                            this.FieldCharts[this.CurrentDifficultyTab].Assets.Add(this.CreateChartButton(ref fieldChart, fieldChart.Assets.Count, fieldAsset, "Asset", Color.Blue, this.GetImageForModelType(fieldAsset.ModelType)));
                         }
                     }
                 }
@@ -642,6 +649,7 @@ namespace MoMTool.Logic
             var model = FieldModelType.None;
             var noteType = 0;
             var unk3 = 0;
+
             if (modelString == "Enemy Shooter Projectile")
             {
                 model = FieldModelType.EnemyShooterProjectile;

@@ -11,7 +11,7 @@ namespace MoMTool.Logic
     public class MemoryDiveSubChartManager
     {
         public MemoryDiveChartManager ParentChartManager { get; set; }
-
+        public bool DisplayingSubChart { get; set; } = false;
         public dynamic MemorySubChartComponent { get; set; }
         //public PerformerComponent PerformerComponent { get; set; }
         //public TimeShiftComponent TimeShiftComponent { get; set; }
@@ -41,6 +41,8 @@ namespace MoMTool.Logic
 
             this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.Add(this.MemorySubChartComponent);
             this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab].Controls[^1].BringToFront();
+            
+            this.DisplayingSubChart = true;
         }
 
         public void LoadSubChartComponent(int id, MemoryNote note)
@@ -82,11 +84,32 @@ namespace MoMTool.Logic
             this.MemorySubChartComponent.speedValue.Text = time.Speed.ToString();
         }
 
+        public void LoadSubChartOffsetComponent()
+        {
+            if (this.MemorySubChartComponent != null)
+            {
+                this.Close();
+            }
+
+            this.MemorySubChartComponent = new OffsetComponent { Visible = true };
+            this.MemorySubChartComponent.SubChartManager = this;
+            this.MemorySubChartComponent.ParentChartComponent = this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab];
+
+            this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.Add(this.MemorySubChartComponent);
+            this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab].Controls[^1].BringToFront();
+
+            this.MemorySubChartComponent.valueOffset.Text = ((this.ParentChartManager.BeatManager.Offset * Settings.ZoomVariable) + this.ParentChartManager.BeatManager.OffsetRemainder).ToString();
+
+            this.DisplayingSubChart = true;
+        }
+
         public void Close()
         {
             this.ParentChartManager.MemoryCharts[this.ParentChartManager.CurrentDifficultyTab].Controls.RemoveByKey(this.MemorySubChartComponent.Name);
             this.MemorySubChartComponent.Visible = false;
             this.MemorySubChartComponent = null;
+
+            this.DisplayingSubChart = false;
         }
     }
 }
