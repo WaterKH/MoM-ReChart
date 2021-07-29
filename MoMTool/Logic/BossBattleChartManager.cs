@@ -42,6 +42,8 @@ namespace MoMTool.Logic
             {
                 this.BossCharts.Add(song.Difficulty, this.CreateChart(song));
             }
+
+            this.BeatManager.CalculateOffset(this.BossCharts[this.CurrentDifficultyTab]);
         }
 
         #region Recompile Boss Battle

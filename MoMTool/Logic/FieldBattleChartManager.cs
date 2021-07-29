@@ -49,7 +49,7 @@ namespace MoMTool.Logic
                     chart.chartTimeValue.Text = this.chartLength.ToString();
             }
 
-            //this.BeatManager.CalculateOffset(this.FieldCharts[this.CurrentDifficultyTab]);
+            this.BeatManager.CalculateOffset(this.FieldCharts[this.CurrentDifficultyTab]);
         }
 
 

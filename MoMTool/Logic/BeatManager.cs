@@ -25,15 +25,29 @@ namespace MoMTool.Logic
         public List<Line> SixteenthBeats { get; set; } = new List<Line> { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null };
         public List<Line> ThirtySecondBeats { get; set; } = new List<Line> { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null };
 
-        //public void CalculateOffset(FieldChartComponent chart)
-        //{
-        //    this.Offset = chart.Notes.FirstOrDefault().Note.HitTime % chart.Times.FirstOrDefault().Note.Speed;
+        public void CalculateOffset(FieldChartComponent chart)
+        {
+            this.Offset = chart.Notes.Select(x => x.Note.HitTime).Concat(chart.Assets.OrderBy(x => x.Note.HitTime).Select(x => x.Note.HitTime)).OrderBy(x => x).FirstOrDefault();
 
-        //    this.OffsetRemainder = this.Offset % Settings.ZoomVariable;
-        //    this.Offset /= Settings.ZoomVariable;
+            this.OffsetRemainder = this.Offset % Settings.ZoomVariable;
+            this.Offset /= Settings.ZoomVariable;
+        }
 
-            //chart.Times.FirstOrDefault().Button.Location = new Point(this.Offset, 0);
-        //}
+        public void CalculateOffset(MemoryChartComponent chart)
+        {
+            this.Offset = chart.Notes.Select(x => x.Note.HitTime).OrderBy(x => x).FirstOrDefault();
+
+            this.OffsetRemainder = this.Offset % Settings.ZoomVariable;
+            this.Offset /= Settings.ZoomVariable;
+        }
+
+        public void CalculateOffset(BossChartComponent chart)
+        {
+            this.Offset = chart.Notes.Select(x => x.Note.HitTime).OrderBy(x => x).FirstOrDefault();
+
+            this.OffsetRemainder = this.Offset % Settings.ZoomVariable;
+            this.Offset /= Settings.ZoomVariable;
+        }
 
         public Line SnapToBeat(int positionX)
         {

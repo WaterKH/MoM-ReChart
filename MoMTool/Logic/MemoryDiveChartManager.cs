@@ -41,6 +41,8 @@ namespace MoMTool.Logic
             {
                 this.MemoryCharts.Add(song.Difficulty, this.CreateChart(song));
             }
+
+            this.BeatManager.CalculateOffset(this.MemoryCharts[this.CurrentDifficultyTab]);
         }
 
 
